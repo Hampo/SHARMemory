@@ -1,0 +1,367 @@
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using SHARMemory.SHAR.Classes;
+using SHARMemory.SHAR.Pointers;
+
+namespace SHARMemory.SHAR
+{
+    /// <summary>
+    /// Class <c>SHAR.Memory</c> inherits <c>ProcessMemory</c>, and adds additional SHAR-specific methods and properties.
+    /// Initially created by Lucas Cardellini, further developed by Proddy.
+    /// </summary>
+    public class Memory : ProcessMemory
+    {
+        /// <summary>
+        /// An enum of supported game versions.
+        /// </summary>
+        public enum GameVersions
+        {
+            /// <summary>
+            /// The English release of the game.
+            /// </summary>
+            ReleaseEnglish,
+            /// <summary>
+            /// The International release of the game.
+            /// </summary>
+            ReleaseInternational,
+            /// <summary>
+            /// The Best Seller release of the game.
+            /// </summary>
+            BestSellerSeries,
+            /// <summary>
+            /// The Demo release of the game.
+            /// </summary>
+            Demo,
+            /// <summary>
+            /// An Unknown release of the game.
+            /// </summary>
+            Unknown
+        }
+
+        /// <summary>
+        /// An enum of game sub versions - <see cref="GameVersions.ReleaseInternational"/>
+        /// </summary>
+        public enum GameSubVersions
+        {
+            /// <summary>
+            /// The English language release of <see cref="GameVersions.ReleaseInternational"/>.
+            /// </summary>
+            English,
+            /// <summary>
+            /// The French language release of <see cref="GameVersions.ReleaseInternational"/>.
+            /// </summary>
+            French,
+            /// <summary>
+            /// The German language release of <see cref="GameVersions.ReleaseInternational"/>.
+            /// </summary>
+            German,
+            /// <summary>
+            /// The Spanish language release of <see cref="GameVersions.ReleaseInternational"/>.
+            /// </summary>
+            Spanish,
+            /// <summary>
+            /// An Unknown release of <see cref="GameVersions.ReleaseInternational"/>.
+            /// </summary>
+            Unknown
+        }
+
+        /// <summary>
+        /// The detected <see cref="GameVersions"/>
+        /// </summary>
+        public GameVersions GameVersion { get; }
+        /// <summary>
+        /// The detected <see cref="GameVersions"/>
+        /// </summary>
+        public GameSubVersions GameSubVersion { get; }
+
+        /// <summary>
+        /// A <c>byte</c> containing how many levels in the game. Usually 7, but can differ when using the mod laucher.
+        /// </summary>
+        public byte LevelCount => ReadByte(SelectAddress(0x4798A8, 0x479748, 0x479618, 0x4793D8) + 3);
+
+
+        /// <summary>
+        /// A class to manage SHAR's cheats.
+        /// </summary>
+        public Cheats Cheats { get; }
+
+
+        /// <summary>
+        /// A reference to SHAR's static <c>CharacterManager</c>.
+        /// </summary>
+        public CharacterManager CharacterManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>CharacterSheetManager</c>.
+        /// </summary>
+        public CharacterSheetManager CharacterSheetManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>CharacterTune</c>.
+        /// </summary>
+        public CharacterTune CharacterTune { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>GameFlow</c>.
+        /// </summary>
+        public GameFlow GameFlow { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>GameplayManager</c>.
+        /// </summary>
+        public GameplayManager GameplayManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>HitNRunManager</c>.
+        /// </summary>
+        public HitNRunManager HitNRunManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>InteriorManager</c>.
+        /// </summary>
+        public InteriorManager InteriorManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>IntersectManager</c>.
+        /// </summary>
+        public IntersectManager IntersectManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>LoadingManager</c>.
+        /// </summary>
+        public LoadingManager LoadingManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>TrafficManager</c>.
+        /// </summary>
+        public TrafficManager TrafficManager { get; }
+
+        /// <summary>
+        /// A reference to SHAR's static <c>VehicleCentral</c>.
+        /// </summary>
+        public VehicleCentral VehicleCentral { get; }
+
+        /// <summary>
+        /// If <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" /> is loaded, query loaded hacks.
+        /// Credits: Lucas Cardellini
+        /// </summary>
+        /// <returns>
+        /// A string array containing the names of loaded hacks.
+        /// </returns>
+        public string[] GetLoadedHacks()
+        {
+            uint EventHacks = GetModuleProcAddress("Hacks.dll", 3151);
+            if (EventHacks == 0)
+                return null;
+
+            uint HacksLoaded = ReadUInt32(EventHacks + 8);
+            if (HacksLoaded == 0)
+                return null;
+
+            string[] Hacks = new string[HacksLoaded];
+
+            int i = 0;
+            uint node = ReadUInt32(EventHacks);
+            while (node != 0)
+            {
+                uint hack = ReadUInt32(node + 12);
+                Hacks[i] = ReadString(hack + 562, Encoding.Unicode, 128u);
+                i++;
+
+                node = ReadUInt32(node + 8);
+            }
+
+            return Hacks;
+        }
+
+        /// <summary>
+        /// If <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" /> is loaded, check if a hack is loaded.
+        /// Credits: Lucas Cardellini
+        /// </summary>
+        /// <param name="HackName">
+        /// The name of the hack to check for.
+        /// </param>
+        /// <returns>
+        /// A boolean if reporting if the specified hack is found to be loaded.
+        /// </returns>
+        public bool IsHackLoaded(string HackName)
+        {
+            ProcessModule hackModule = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.ModuleName) && x.ModuleName.Equals($"{HackName}.lmlh", StringComparison.OrdinalIgnoreCase));
+            if (hackModule != null)
+                return true;
+
+            uint EventHacks = GetModuleProcAddress("Hacks.dll", 3151);
+            if (EventHacks == 0)
+                return false;
+
+            uint node = ReadUInt32(EventHacks);
+            while (node != 0)
+            {
+                uint hack = ReadUInt32(node + 12);
+                if (ReadString(hack + 562, Encoding.Unicode, 128u).Equals(HackName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                node = ReadUInt32(node + 8);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks a somewhat arbitrary memory value to try determine what version of the game is running.
+        /// Credits: Lucas Cardellini
+        /// </summary>
+        /// <param name="GameSubVersion">
+        /// If the return value is <c>GameVersions.ReleaseInternational</c>, which sub version of the International release it is.
+        /// </param>
+        /// <returns>
+        /// One of the <c>GameVersions</c> enum matching which version was detected.
+        /// </returns>
+        private GameVersions DetectVersion(ref GameSubVersions GameSubVersion)
+        {
+            switch (ReadUInt32(0x593FFF))
+            {
+                case 0xFAE804C5:
+                    return GameVersions.Demo;
+                case 0x4B8B2274:
+                    return GameVersions.ReleaseEnglish;
+                case 0xC985ED33:
+                    GameSubVersion = ReadUInt32(0x494FB1) switch
+                    {
+                        0xF984BAE8 => GameSubVersions.French,
+                        0xF6C12AE8 => GameSubVersions.German,
+                        0xF6C0FAE8 => GameSubVersions.Spanish,
+                        0xF6C10AE8 => GameSubVersions.English,
+                        _ => GameSubVersions.Unknown,
+                    };
+                    return GameVersions.ReleaseInternational;
+                case 0xFC468D05:
+                    return GameVersions.BestSellerSeries;
+                default:
+                    return GameVersions.Unknown;
+            }
+        }
+
+        /// <summary>
+        /// Based on the detected game version, returns the matching address.
+        /// Credits: Lucas Cardellini
+        /// </summary>
+        /// <param name="ReleaseEnglishAddress">
+        /// The address of the English release.
+        /// </param>
+        /// <param name="DemoAddress">
+        /// The address of the Demo release.
+        /// </param>
+        /// <param name="ReleaseInternationalAddress">
+        /// The address of the International release.
+        /// </param>
+        /// <param name="BestSellerSeriesAddress">
+        /// The address of the Best Seller release.
+        /// </param>
+        /// <returns>
+        /// The given <c>uint</c> that matches the game version.
+        /// </returns>
+        /// <exception cref="Exception">
+        /// Throws an error in the detected game version is unknown.
+        /// </exception>
+        internal uint SelectAddress(uint ReleaseEnglishAddress, uint DemoAddress, uint ReleaseInternationalAddress, uint BestSellerSeriesAddress)
+        {
+            return GameVersion switch
+            {
+                GameVersions.ReleaseEnglish => ReleaseEnglishAddress,
+                GameVersions.Demo => DemoAddress,
+                GameVersions.ReleaseInternational => ReleaseInternationalAddress,
+                GameVersions.BestSellerSeries => BestSellerSeriesAddress,
+                _ => throw new Exception("Unrecognised game version."),
+            };
+        }
+
+        /// <summary>
+        /// The <c>SHAR.Memory</c> constructor.
+        /// </summary>
+        /// <param name="Process">
+        /// A <c>Process</c> that points to a SHAR instance. See: <see cref="GetSHARProcess"/>.
+        /// </param>
+        public Memory(Process Process) : base(Process)
+        {
+            GameSubVersions subVersion = GameSubVersions.Unknown;
+            GameVersion = DetectVersion(ref subVersion);
+            GameSubVersion = subVersion;
+
+            Cheats = new Cheats(this);
+
+            CharacterManager = new CharacterManager(this);
+            CharacterSheetManager = new CharacterSheetManager(this);
+            CharacterTune = new CharacterTune(this);
+            GameFlow = new GameFlow(this);
+            GameplayManager = new GameplayManager(this);
+            HitNRunManager = new HitNRunManager(this);
+            InteriorManager = new InteriorManager(this);
+            IntersectManager = new IntersectManager(this);
+            LoadingManager = new LoadingManager(this);
+            TrafficManager = new TrafficManager(this);
+            VehicleCentral = new VehicleCentral(this);
+        }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        private static IntPtr GetGameWindow() => FindWindow("The Simpsons Hit & Run", null);
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowThreadProcessId(IntPtr hwnd, ref int lpwdProcessId);
+
+        /// <summary>
+        /// Tries to get a SHAR <c>Process</c> based on window title.
+        /// </summary>
+        /// <returns>
+        /// A SHAR <c>Process</c> or <c>null</c>.
+        /// </returns>
+        public static Process GetSHARProcess()
+        {
+            IntPtr GameWindow = GetGameWindow();
+            if (GameWindow != IntPtr.Zero)
+            {
+                int ProcessId = 0;
+                _ = GetWindowThreadProcessId(GameWindow, ref ProcessId);
+                return Process.GetProcessById(ProcessId);
+            }
+            return null;
+        }
+
+        internal Box3D ReadBox3D(uint Address) => new Box3D(ReadVector3(Address), ReadVector3(Address + 12));
+
+        internal void WriteBox3D(uint Address, Box3D Value)
+        {
+            WriteVector3(Address, Value.Low);
+            WriteVector3(Address + 12, Value.High);
+        }
+
+        internal Sphere ReadSphere(uint Address) => new Sphere(ReadVector3(Address), ReadSingle(Address + 12));
+
+        internal void WriteSphere(uint Address, Sphere Value)
+        {
+            WriteVector3(Address, Value.Centre);
+            WriteSingle(Address + 12, Value.Radius);
+        }
+
+        internal Smoother ReadSmoother(uint Address) => new Smoother(ReadSingle(Address), ReadSingle(Address + 4));
+
+        internal void WriteSmoother(uint Address, Smoother Value)
+        {
+            WriteSingle(Address, Value.RollingAverage);
+            WriteSingle(Address + 4, Value.Factor);
+        }
+
+        internal SimVelocityState ReadSimVelocityState(uint Address) => new SimVelocityState(ReadVector3(Address), ReadVector3(Address + 12));
+
+        internal void WriteSimVelocityState(uint Address, SimVelocityState Value)
+        {
+            WriteVector3(Address, Value.Linear);
+            WriteVector3(Address + 12, Value.Angular);
+        }
+    }
+}

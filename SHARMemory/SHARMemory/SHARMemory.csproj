@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <ApplicationIcon>256x256.ico</ApplicationIcon>
+    <PlatformTarget>x86</PlatformTarget>
+    <Authors>Proddy,Lucas Cardellini</Authors>
+    <Company>ZHBot</Company>
+    <Description>A class library designed to help with interacting with SHAR memory</Description>
+    <PackageIcon>128x128.png</PackageIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Title>SHARMemory</Title>
+    <RepositoryUrl>https://github.com/Hampo/SHARMemory.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Hampo/SHARMemory</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="256x256.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Pictures\Programming Icon\128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+</Project>
