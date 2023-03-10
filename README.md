@@ -5,7 +5,7 @@ A class library designed to help with interacting with SHAR memory. Written in .
 A special thanks to [Lucas Cardellini](https://github.com/lucasc190) for the original memory classes and concept, plus all their additional help with locating the pointer addresses for the different game versions.
 
 ## Setup
-* Download or build the [latest release](https://github.com/Hampo/SHARMemory/releases/latest).
+* Download the [latest release](https://github.com/Hampo/SHARMemory/releases/latest) or clone and build the repository.
 * Add `SHARMemory.dll` as a reference in your project.
 
 ## Usage
