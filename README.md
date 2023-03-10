@@ -1,5 +1,5 @@
 # SHARMemory
-A class library designed to help with interacting with SHAR memory. Written in .NET Standard 2.1.
+A class library designed to help with interacting with SHAR memory. Written with support for `.NET Standard 2.0` and `.NET Framework 4.0`.
 
 ## Special Thanks
 A special thanks to [Lucas Cardellini](https://github.com/lucasc190) for the original memory classes and concept, plus all their additional help with locating the pointer addresses for the different game versions.
