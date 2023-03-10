@@ -186,6 +186,8 @@ namespace SHARMemory.SHAR.Classes
 
         public Wheel Wheels(uint index) => new Wheel(Memory, ReadUInt32(1044 + index * 4));
 
+        public SimStateArticulated SimStateArticulated => new SimStateArticulated(Memory, ReadUInt32(1192));
+
         public ArticulatedPhysicsObject ArticulatedPhysicsObject => new ArticulatedPhysicsObject(Memory, ReadUInt32(1196));
     }
 }
