@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
-using System.Numerics;
 
 namespace SHARMemory
 {
@@ -383,46 +382,13 @@ namespace SHARMemory
             return BitConverter.ToUInt64(array, 0);
         }
 
-        /// <summary>
-        /// Reads <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Vector3</c> at the given address.
-        /// </returns>
-        public Vector3 ReadVector3(uint Address) => new Vector3(ReadSingle(Address), ReadSingle(Address + 4), ReadSingle(Address + 8));
-
-        /// <summary>
-        /// Reads <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Matrix3x2</c> at the given address.
-        /// </returns>
-        public Matrix3x2 ReadMatrix3x2(uint Address) => new Matrix3x2(ReadSingle(Address), ReadSingle(Address + 4), ReadSingle(Address + 8), ReadSingle(Address + 12), ReadSingle(Address + 16), ReadSingle(Address + 20));
-
-        /// <summary>
-        /// Reads <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Matrix4x4</c> at the given address.
-        /// </returns>
-        public Matrix4x4 ReadMatrix4x4(uint Address) => new Matrix4x4(ReadSingle(Address), ReadSingle(Address + 4), ReadSingle(Address + 8), ReadSingle(Address + 12), ReadSingle(Address + 16), ReadSingle(Address + 20), ReadSingle(Address + 24), ReadSingle(Address + 28), ReadSingle(Address + 32), ReadSingle(Address + 36), ReadSingle(Address + 40), ReadSingle(Address + 44), ReadSingle(Address + 48), ReadSingle(Address + 52), ReadSingle(Address + 56), ReadSingle(Address + 60));
-
         private static string NullTerminate(string String)
         {
             int num = String.IndexOf('\0');
             if (num == -1)
                 return String;
 
-            return String[..num];
+            return String.Substring(0, num);
         }
 
         /// <summary>
@@ -637,70 +603,6 @@ namespace SHARMemory
         {
             byte[] bytes = BitConverter.GetBytes(Value);
             Write(Address, bytes, out _);
-        }
-
-        /// <summary>
-        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Vector3</c> value to write.
-        /// </param>
-        public void WriteVector3(uint Address, Vector3 Value)
-        {
-            WriteSingle(Address, Value.X);
-            WriteSingle(Address + 4, Value.Y);
-            WriteSingle(Address + 8, Value.Z);
-        }
-
-        /// <summary>
-        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Matrix3x2</c> value to write.
-        /// </param>
-        public void WriteMatrix3x2(uint Address, Matrix3x2 Value)
-        {
-            WriteSingle(Address, Value.M11);
-            WriteSingle(Address + 4, Value.M12);
-            WriteSingle(Address + 8, Value.M21);
-            WriteSingle(Address + 12, Value.M22);
-            WriteSingle(Address + 16, Value.M31);
-            WriteSingle(Address + 20, Value.M32);
-        }
-
-        /// <summary>
-        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Matrix4x4</c> value to write.
-        /// </param>
-        public void WriteMatrix4x4(uint Address, Matrix4x4 Value)
-        {
-            WriteSingle(Address, Value.M11);
-            WriteSingle(Address + 4, Value.M12);
-            WriteSingle(Address + 8, Value.M13);
-            WriteSingle(Address + 12, Value.M14);
-            WriteSingle(Address + 16, Value.M21);
-            WriteSingle(Address + 20, Value.M22);
-            WriteSingle(Address + 24, Value.M23);
-            WriteSingle(Address + 28, Value.M24);
-            WriteSingle(Address + 32, Value.M31);
-            WriteSingle(Address + 36, Value.M32);
-            WriteSingle(Address + 40, Value.M33);
-            WriteSingle(Address + 44, Value.M34);
-            WriteSingle(Address + 48, Value.M41);
-            WriteSingle(Address + 52, Value.M42);
-            WriteSingle(Address + 56, Value.M43);
-            WriteSingle(Address + 60, Value.M44);
         }
 
         /// <summary>

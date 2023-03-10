@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.SHAR.Classes;
 
 namespace SHARMemory.SHAR.Pointers
 {

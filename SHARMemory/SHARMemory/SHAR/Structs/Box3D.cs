@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SHARMemory.SHAR.Classes
+﻿namespace SHARMemory.SHAR.Structs
 {
-    public class Box3D
+    public struct Box3D
     {
-        public Vector3 Low { get ; set; }
+        public Vector3 Low { get; set; }
 
         public Vector3 High { get; set; }
 

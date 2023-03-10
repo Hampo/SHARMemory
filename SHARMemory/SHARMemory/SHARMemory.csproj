@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
     <ApplicationIcon>256x256.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>
     <Authors>Proddy,Lucas Cardellini</Authors>
