@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -333,7 +332,7 @@ namespace SHARMemory.SHAR
         /// </param>
         public Memory(Process Process) : base(Process)
         {
-            GameSubVersions subVersion = GameSubVersions.Unknown;
+            GameSubVersions subVersion = GameSubVersions.English;
             GameVersion = DetectVersion(ref subVersion);
             GameSubVersion = subVersion;
 
