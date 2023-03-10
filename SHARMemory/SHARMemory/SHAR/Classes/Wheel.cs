@@ -8,14 +8,14 @@
 
         public bool IsSteerWheel
         {
-            get => ReadByte(4) != 0;
-            set => WriteByte(4, (byte)(value ? 1 : 0));
+            get => ReadBoolean(4);
+            set => WriteBoolean(4, value);
         }
 
         public bool IsDriveWheel
         {
-            get => ReadByte(5) != 0;
-            set => WriteByte(5, (byte)(value ? 1 : 0));
+            get => ReadBoolean(5);
+            set => WriteBoolean(5, value);
         }
 
         public int Number
@@ -80,14 +80,14 @@
 
         public bool InCollision
         {
-            get => ReadByte(52) != 0;
-            set => WriteByte(52, (byte)(value ? 1 : 0));
+            get => ReadBoolean(52);
+            set => WriteBoolean(52, value);
         }
 
         public bool BottomedOutThisFrame
         {
-            get => ReadByte(53) != 0;
-            set => WriteByte(53, (byte)(value ? 1 : 0));
+            get => ReadBoolean(53);
+            set => WriteBoolean(53, value);
         }
 
         public float SpringRelaxRate

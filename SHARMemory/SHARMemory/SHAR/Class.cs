@@ -1,4 +1,5 @@
 ﻿using SHARMemory.SHAR.Structs;
+using System;
 using System.Text;
 
 namespace SHARMemory.SHAR
@@ -54,6 +55,17 @@ namespace SHARMemory.SHAR
         /// The <c>byte</c> at the given offset.
         /// </returns>
         public byte ReadByte(uint Offset) => Memory.ReadByte(Address + Offset);
+
+        /// <summary>
+        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Offset">
+        /// The offset to read.
+        /// </param>
+        /// <returns>
+        /// The <c>bool</c> at the given offset.
+        /// </returns>
+        public bool ReadBoolean(uint Offset) => Memory.ReadBoolean(Address + Offset);
 
         /// <summary>
         /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
@@ -275,6 +287,17 @@ namespace SHARMemory.SHAR
         /// The <c>byte</c> value to write.
         /// </param>
         public void WriteByte(uint Offset, byte Value) => Memory.WriteByte(Address + Offset, Value);
+
+        /// <summary>
+        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Offset">
+        /// The offset to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>bool</c> value to write.
+        /// </param>
+        public void WriteBoolean(uint Offset, bool Value) => Memory.WriteBoolean(Address + Offset, Value);
 
         /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.

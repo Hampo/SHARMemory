@@ -238,6 +238,17 @@ namespace SHARMemory
         /// <param name="Address">
         /// The address to read.
         /// </param>
+        /// <returns>
+        /// The <c>bool</c> at the given address.
+        /// </returns>
+        public bool ReadBoolean(uint Address) => ReadByte(Address) != 0;
+
+        /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Address">
+        /// The address to read.
+        /// </param>
         /// <param name="Length">
         /// The number of bytes to read.
         /// </param>
@@ -470,6 +481,17 @@ namespace SHARMemory
             Value
             }, out _);
         }
+
+        /// <summary>
+        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Address">
+        /// The address to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>bool</c> value to write.
+        /// </param>
+        public void WriteBoolean(uint Address, bool Value) => WriteByte(Address, (byte)(Value ? 1 : 0));
 
         /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.

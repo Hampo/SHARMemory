@@ -12,8 +12,8 @@
 
         public bool Translucent
         {
-            get => ReadByte(4) != 0;
-            set => WriteByte(4, (byte)(value ? 1 : 0));
+            get => ReadBoolean(4);
+            set => WriteBoolean(4, value);
         }
 
         // TODO: Implement the name bullshit for shader name (8)

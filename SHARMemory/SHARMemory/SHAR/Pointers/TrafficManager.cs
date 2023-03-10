@@ -11,8 +11,8 @@ namespace SHARMemory.SHAR.Pointers
 
         public bool TrafficEnabled
         {
-            get => ReadByte(100) != 0;
-            set => WriteByte(100, (byte)(value ? 1 : 0));
+            get => ReadBoolean(100);
+            set => WriteBoolean(100, value);
         }
     }
 }

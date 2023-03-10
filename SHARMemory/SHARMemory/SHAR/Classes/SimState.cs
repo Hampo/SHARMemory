@@ -52,8 +52,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool ObjectMoving
         {
-            get => ReadByte(132) != 0;
-            set => WriteByte(132, (byte)(value ? 1 : 0));
+            get => ReadBoolean(132);
+            set => WriteBoolean(132, value);
         }
 
         public float SafeTimeBeforeCollision
@@ -70,8 +70,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool Articulated
         {
-            get => ReadByte(144) != 0;
-            set => WriteByte(144, (byte)(value ? 1 : 0));
+            get => ReadBoolean(144);
+            set => WriteBoolean(144, value);
         }
     }
 }

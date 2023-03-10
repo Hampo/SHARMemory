@@ -8,8 +8,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool IsHit
         {
-            get => ReadByte(124) != 0;
-            set => WriteByte(124, (byte)(value ? 1 : 0));
+            get => ReadBoolean(124);
+            set => WriteBoolean(124, value);
         }
 
         public Smoother PastLinear

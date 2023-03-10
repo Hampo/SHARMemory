@@ -163,8 +163,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool LocoTest
         {
-            get => Memory.ReadByte(Memory.SelectAddress(0x6C83E0, 0x6C83A0, 0x6C83A0, 0x6C83D8)) != 0;
-            set => Memory.WriteByte(Memory.SelectAddress(0x6C83E0, 0x6C83A0, 0x6C83A0, 0x6C83D8), (byte)(value ? 1 : 0));
+            get => Memory.ReadBoolean(Memory.SelectAddress(0x6C83E0, 0x6C83A0, 0x6C83A0, 0x6C83D8));
+            set => Memory.WriteBoolean(Memory.SelectAddress(0x6C83E0, 0x6C83A0, 0x6C83A0, 0x6C83D8), value);
         }
 
         public float LocoDecceleration

@@ -65,6 +65,17 @@ namespace SHARMemory.SHAR
         /// <param name="Offset">
         /// The offset to read.
         /// </param>
+        /// <returns>
+        /// The <c>bool</c> at the given offset.
+        /// </returns>
+        public bool ReadBoolean(uint Offset) => Memory.ReadBoolean(Value + Offset);
+
+        /// <summary>
+        /// Reads <see cref="Memory"/> at the class's pointer <see cref="Value"/> + <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Offset">
+        /// The offset to read.
+        /// </param>
         /// <param name="Length">
         /// The number of bytes to read
         /// </param>
@@ -279,6 +290,17 @@ namespace SHARMemory.SHAR
         /// The <c>byte</c> value to write.
         /// </param>
         public void WriteByte(uint Offset, byte Value) => Memory.WriteByte(this.Value + Offset, Value);
+
+        /// <summary>
+        /// Writes the given value to <see cref="Memory"/> at the class's pointer <see cref="Value"/> + <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Offset">
+        /// The offset to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>bool</c> value to write.
+        /// </param>
+        public void WriteBoolean(uint Offset, bool Value) => Memory.WriteBoolean(this.Value + Offset, Value);
 
         /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's pointer <see cref="Value"/> + <paramref name="Offset"/>.

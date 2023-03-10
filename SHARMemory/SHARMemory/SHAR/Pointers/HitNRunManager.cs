@@ -152,14 +152,14 @@
 
         public bool ChaseOn
         {
-            get => ReadByte(164) != 0;
-            set => WriteByte(164, (byte)(value ? 1 : 0));
+            get => ReadBoolean(164);
+            set => WriteBoolean(164, value);
         }
 
         public bool SpawnOn
         {
-            get => ReadByte(165) != 0;
-            set => WriteByte(165, (byte)(value ? 1 : 0));
+            get => ReadBoolean(165);
+            set => WriteBoolean(165, value);
         }
 
         public float DecayDelayMS
@@ -188,14 +188,14 @@
 
         public bool Disabled
         {
-            get => ReadByte(184) != 0;
-            set => WriteByte(184, (byte)(value ? 1 : 0));
+            get => ReadBoolean(184);
+            set => WriteBoolean(184, value);
         }
 
         public bool DecayDisabled
         {
-            get => ReadByte(185) != 0;
-            set => WriteByte(185, (byte)(value ? 1 : 0));
+            get => ReadBoolean(185);
+            set => WriteBoolean(185, value);
         }
 
         public float TicketDistance
@@ -242,8 +242,8 @@
 
         public bool VehicleReset
         {
-            get => ReadByte(216) != 0;
-            set => WriteByte(216, (byte)(value ? 1 : 0));
+            get => ReadBoolean(216);
+            set => WriteBoolean(216, value);
         }
 
         public float VehicleResetTimer
@@ -260,8 +260,8 @@
 
         public bool FadeDone
         {
-            get => ReadByte(228) != 0;
-            set => WriteByte(228, (byte)(value ? 1 : 0));
+            get => ReadBoolean(228);
+            set => WriteBoolean(228, value);
         }
 
         public float FadeTimer

@@ -45,8 +45,8 @@
 
         public bool Active
         {
-            get => ReadByte(20) != 0;
-            set => WriteByte(20, (byte)(value ? 1 : 0));
+            get => ReadBoolean(20);
+            set => WriteBoolean(20, value);
         }
     }
 }

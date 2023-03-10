@@ -30,8 +30,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool AlreadyCalledAutoResetOnSpot
         {
-            get => ReadByte(160) != 0;
-            set => WriteByte(160, (byte)(value ? 1 : 0));
+            get => ReadBoolean(160);
+            set => WriteBoolean(160, value);
         }
 
         public VehicleTypes VehicleType
@@ -86,8 +86,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool DoingJumpBoost
         {
-            get => ReadByte(276) != 0;
-            set => WriteByte(276, (byte)(value ? 1 : 0));
+            get => ReadBoolean(276);
+            set => WriteBoolean(276, value);
         }
 
         public Vector3 VehicleFacing
@@ -164,8 +164,8 @@ namespace SHARMemory.SHAR.Classes
 
         public bool Interior
         {
-            get => ReadByte(376) != 0;
-            set => WriteByte(376, (byte)(value ? 1 : 0));
+            get => ReadBoolean(376);
+            set => WriteBoolean(376, value);
         }
 
         public VehicleStates VehicleState

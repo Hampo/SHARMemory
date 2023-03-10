@@ -20,8 +20,8 @@
 
         public bool WasParticleEffectTriggered
         {
-            get => ReadByte(52) != 0;
-            set => WriteByte(52, (byte)(value ? 1 : 0));
+            get => ReadBoolean(52);
+            set => WriteBoolean(52, value);
         }
 
         public RenderEnums.LayerEnum RenderLayer
