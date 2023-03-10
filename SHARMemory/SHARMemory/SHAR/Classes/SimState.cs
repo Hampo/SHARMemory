@@ -46,8 +46,6 @@ namespace SHARMemory.SHAR.Classes
 
         public PhysicsObject PhysicsObject => new PhysicsObject(Memory, ReadUInt32(112));
 
-        // TODO: SimulatedObject (112)
-
         // TODO: CollisionObject (116)
 
         // TODO: VirtualCM (120)
