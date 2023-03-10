@@ -8,8 +8,8 @@
 
         public uint RequestTail => ReadUInt32(0x73A8);
 
-        public bool IsLoading => ReadByte(0x73AC) != 0;
+        public bool IsLoading => ReadBoolean(0x73AC);
 
-        public bool IsCancellingLoads => ReadByte(0x73AD) != 0;
+        public bool IsCancellingLoads => ReadBoolean(0x73AD);
     }
 }
