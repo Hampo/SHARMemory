@@ -14,14 +14,14 @@ namespace SHARMemory.SHAR.Classes
 
         public Smoother PastLinear
         {
-            get => ReadSmoother(128);
-            set => WriteSmoother(128, value);
+            get => ReadStruct<Smoother>(128);
+            set => WriteStruct(128, value);
         }
 
         public Smoother PastAngular
         {
-            get => ReadSmoother(136);
-            set => WriteSmoother(136, value);
+            get => ReadStruct<Smoother>(136);
+            set => WriteStruct(136, value);
         }
 
         public int GroundPlaneIndex

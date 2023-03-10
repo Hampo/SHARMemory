@@ -60,14 +60,14 @@ namespace SHARMemory.SHAR.Classes
 
         public GeometryVehicle GeometryVehicle => new GeometryVehicle(Memory, ReadUInt32(180));
 
-        public Matrix4x4 Transform => ReadMatrix4x4(184);
+        public Matrix4x4 Transform => ReadStruct<Matrix4x4>(184);
 
         public string Name => ReadNullString(248, Encoding.UTF8);
 
         public Vector3 InitialPosition
         {
-            get => ReadVector3(252);
-            set => WriteVector3(252, value);
+            get => ReadStruct<Vector3>(252);
+            set => WriteStruct(252, value);
         }
 
         public float ResetFacingRadians
@@ -92,26 +92,26 @@ namespace SHARMemory.SHAR.Classes
 
         public Vector3 VehicleFacing
         {
-            get => ReadVector3(280);
-            set => WriteVector3(280, value);
+            get => ReadStruct<Vector3>(280);
+            set => WriteStruct(280, value);
         }
 
         public Vector3 VehicleUp
         {
-            get => ReadVector3(292);
-            set => WriteVector3(292, value);
+            get => ReadStruct<Vector3>(292);
+            set => WriteStruct(292, value);
         }
 
         public Vector3 VehicleTransverse
         {
-            get => ReadVector3(304);
-            set => WriteVector3(304, value);
+            get => ReadStruct<Vector3>(304);
+            set => WriteStruct(304, value);
         }
 
         public Vector3 VelocityCM
         {
-            get => ReadVector3(316);
-            set => WriteVector3(316, value);
+            get => ReadStruct<Vector3>(316);
+            set => WriteStruct(316, value);
         }
 
         public float Speed
@@ -146,14 +146,14 @@ namespace SHARMemory.SHAR.Classes
 
         public Vector3 OriginalCMOffset
         {
-            get => ReadVector3(348);
-            set => WriteVector3(348, value);
+            get => ReadStruct<Vector3>(348);
+            set => WriteStruct(348, value);
         }
 
         public Vector3 CMOffset
         {
-            get => ReadVector3(360);
-            set => WriteVector3(360, value);
+            get => ReadStruct<Vector3>(360);
+            set => WriteStruct(360, value);
         }
 
         public Pointers.IntersectManager.TerrainType TerrainType

@@ -175,39 +175,6 @@ namespace SHARMemory.SHAR
         /// <param name="Offset">
         /// The offset to read.
         /// </param>
-        /// <returns>
-        /// The <c>Vector3</c> at the given offset.
-        /// </returns>
-        public Vector3 ReadVector3(uint Offset) => Memory.ReadVector3(Address + Offset);
-
-        /// <summary>
-        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Matrix3x2</c> at the given offset.
-        /// </returns>
-        public Matrix3x2 ReadMatrix3x2(uint Offset) => Memory.ReadMatrix3x2(Address + Offset);
-
-        /// <summary>
-        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Matrix4x4</c> at the given offset.
-        /// </returns>
-        public Matrix4x4 ReadMatrix4x4(uint Offset) => Memory.ReadMatrix4x4(Address + Offset);
-
-        /// <summary>
-        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to read.
-        /// </param>
         /// <param name="Encoding">
         /// The character encoding to use.
         /// </param>
@@ -236,13 +203,16 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
         /// </summary>
+        /// <param name="Type">
+        /// The type to read.
+        /// </param>
         /// <param name="Offset">
         /// The offset to read.
         /// </param>
         /// <returns>
-        /// The <c>Box3D</c> at the given offset.
+        /// The <paramref name="Type"/> at the given offset.
         /// </returns>
-        public Box3D ReadBox3D(uint Offset) => Memory.ReadBox3D(Address + Offset);
+        public object ReadStruct(Type Type, uint Offset) => Memory.ReadStruct(Type, Address + Offset);
 
         /// <summary>
         /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
@@ -251,31 +221,9 @@ namespace SHARMemory.SHAR
         /// The offset to read.
         /// </param>
         /// <returns>
-        /// The <c>Sphere</c> at the given offset.
+        /// The <c>T</c> at the given offset.
         /// </returns>
-        public Sphere ReadSphere(uint Offset) => Memory.ReadSphere(Address + Offset);
-
-        /// <summary>
-        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Smoother</c> at the given offset.
-        /// </returns>
-        public Smoother ReadSmoother(uint Offset) => Memory.ReadSmoother(Address + Offset);
-
-        /// <summary>
-        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to read.
-        /// </param>
-        /// <returns>
-        /// The <c>SimVelocityState</c> at the given offset.
-        /// </returns>
-        public SimVelocityState ReadSimVelocityState(uint Offset) => Memory.ReadSimVelocityState(Address + Offset);
+        public T ReadStruct<T>(uint Offset) => (T)ReadStruct(typeof(T), Offset);
 
         /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
@@ -401,78 +349,26 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
         /// </summary>
+        /// <param name="Type">
+        /// The type to write.
+        /// </param>
         /// <param name="Offset">
-        /// The offset to write to.
+        /// The address to write to.
         /// </param>
         /// <param name="Value">
-        /// The <c>Vector3</c> value to write.
+        /// The <paramref name="Type"/> value to write.
         /// </param>
-        public void WriteVector3(uint Offset, Vector3 Value) => Memory.WriteVector3(Address + Offset, Value);
+        public void WriteStruct(Type Type, uint Offset, object Value) => Memory.WriteStruct(Type, Address + Offset, Value);
 
         /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
         /// </summary>
         /// <param name="Offset">
-        /// The offset to write to.
+        /// The address to write to.
         /// </param>
         /// <param name="Value">
-        /// The <c>Matrix3x2</c> value to write.
+        /// The <c>T</c> value to write.
         /// </param>
-        public void WriteMatrix3x2(uint Offset, Matrix3x2 Value) => Memory.WriteMatrix3x2(Address + Offset, Value);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Matrix4x4</c> value to write.
-        /// </param>
-        public void WriteMatrix4x4(uint Offset, Matrix4x4 Value) => Memory.WriteMatrix4x4(Address + Offset, Value);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Box3D</c> value to write.
-        /// </param>
-        public void WriteBox3D(uint Offset, Box3D Value) => Memory.WriteBox3D(Address + Offset, Value);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Sphere</c> value to write.
-        /// </param>
-        public void WriteSphere(uint Offset, Sphere Value) => Memory.WriteSphere(Address + Offset, Value);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Smoother</c> value to write.
-        /// </param>
-        public void WriteSmoother(uint Offset, Smoother Value) => Memory.WriteSmoother(Address + Offset, Value);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
-        /// </summary>
-        /// <param name="Offset">
-        /// The offset to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>SimVelocityState</c> value to write.
-        /// </param>
-        public void WriteSimVelocityState(uint Offset, SimVelocityState Value) => Memory.WriteSimVelocityState(Address + Offset, Value);
+        public void WriteStruct<T>(uint Offset, T Value) => WriteStruct(typeof(T), Offset, Value);
     }
 }

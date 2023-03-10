@@ -391,204 +391,53 @@ namespace SHARMemory.SHAR
         }
 
         /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Type">
+        /// The type to read.
+        /// </param>
+        /// <param name="Address">
+        /// The address to read.
+        /// </param>
+        /// <returns>
+        /// The <paramref name="Type"/> at the given address.
+        /// </returns>
+        public object ReadStruct(Type Type, uint Address) => StructAttribute.Get(Type).Read(this, Address);
+
+        /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
         /// </summary>
         /// <param name="Address">
         /// The address to read.
         /// </param>
         /// <returns>
-        /// The <c>Vector3</c> at the given address.
+        /// The <c>T</c> at the given address.
         /// </returns>
-        public Vector3 ReadVector3(uint Address) => new Vector3(ReadSingle(Address), ReadSingle(Address + 4), ReadSingle(Address + 8));
+        public T ReadStruct<T>(uint Address) => (T)ReadStruct(typeof(T), Address);
 
         /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
+        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Type">
+        /// The type to write.
+        /// </param>
+        /// <param name="Address">
+        /// The address to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <paramref name="Type"/> value to write.
+        /// </param>
+        public void WriteStruct(Type Type, uint Address, object Value) => StructAttribute.Get(Type).Write(this, Address, Value);
+
+        /// <summary>
+        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
         /// </summary>
         /// <param name="Address">
         /// The address to write to.
         /// </param>
         /// <param name="Value">
-        /// The <c>Vector3</c> value to write.
+        /// The <c>T</c> value to write.
         /// </param>
-        public void WriteVector3(uint Address, Vector3 Value)
-        {
-            WriteSingle(Address, Value.X);
-            WriteSingle(Address + 4, Value.Y);
-            WriteSingle(Address + 8, Value.Z);
-        }
-
-        /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Matrix3x2</c> at the given address.
-        /// </returns>
-        public Matrix3x2 ReadMatrix3x2(uint Address) => new Matrix3x2(ReadSingle(Address), ReadSingle(Address + 4), ReadSingle(Address + 8), ReadSingle(Address + 12), ReadSingle(Address + 16), ReadSingle(Address + 20));
-
-        /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Matrix3x2</c> value to write.
-        /// </param>
-        public void WriteMatrix3x2(uint Address, Matrix3x2 Value)
-        {
-            WriteSingle(Address, Value.M11);
-            WriteSingle(Address + 4, Value.M12);
-            WriteSingle(Address + 8, Value.M21);
-            WriteSingle(Address + 12, Value.M22);
-            WriteSingle(Address + 16, Value.M31);
-            WriteSingle(Address + 20, Value.M32);
-        }
-
-        /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Matrix4x4</c> at the given address.
-        /// </returns>
-        public Matrix4x4 ReadMatrix4x4(uint Address) => new Matrix4x4(ReadSingle(Address), ReadSingle(Address + 4), ReadSingle(Address + 8), ReadSingle(Address + 12), ReadSingle(Address + 16), ReadSingle(Address + 20), ReadSingle(Address + 24), ReadSingle(Address + 28), ReadSingle(Address + 32), ReadSingle(Address + 36), ReadSingle(Address + 40), ReadSingle(Address + 44), ReadSingle(Address + 48), ReadSingle(Address + 52), ReadSingle(Address + 56), ReadSingle(Address + 60));
-
-        /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Matrix4x4</c> value to write.
-        /// </param>
-        public void WriteMatrix4x4(uint Address, Matrix4x4 Value)
-        {
-            WriteSingle(Address, Value.M11);
-            WriteSingle(Address + 4, Value.M12);
-            WriteSingle(Address + 8, Value.M13);
-            WriteSingle(Address + 12, Value.M14);
-            WriteSingle(Address + 16, Value.M21);
-            WriteSingle(Address + 20, Value.M22);
-            WriteSingle(Address + 24, Value.M23);
-            WriteSingle(Address + 28, Value.M24);
-            WriteSingle(Address + 32, Value.M31);
-            WriteSingle(Address + 36, Value.M32);
-            WriteSingle(Address + 40, Value.M33);
-            WriteSingle(Address + 44, Value.M34);
-            WriteSingle(Address + 48, Value.M41);
-            WriteSingle(Address + 52, Value.M42);
-            WriteSingle(Address + 56, Value.M43);
-            WriteSingle(Address + 60, Value.M44);
-        }
-
-        /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Box3D</c> at the given address.
-        /// </returns>
-        public Box3D ReadBox3D(uint Address) => new Box3D(ReadVector3(Address), ReadVector3(Address + 12));
-
-        /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Box3D</c> value to write.
-        /// </param>
-        public void WriteBox3D(uint Address, Box3D Value)
-        {
-            WriteVector3(Address, Value.Low);
-            WriteVector3(Address + 12, Value.High);
-        }
-
-        /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Sphere</c> at the given address.
-        /// </returns>
-        public Sphere ReadSphere(uint Address) => new Sphere(ReadVector3(Address), ReadSingle(Address + 12));
-
-        /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Sphere</c> value to write.
-        /// </param>
-        public void WriteSphere(uint Address, Sphere Value)
-        {
-            WriteVector3(Address, Value.Centre);
-            WriteSingle(Address + 12, Value.Radius);
-        }
-
-        /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Smoother</c> at the given address.
-        /// </returns>
-        public Smoother ReadSmoother(uint Address) => new Smoother(ReadSingle(Address), ReadSingle(Address + 4));
-
-        /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>Smoother</c> value to write.
-        /// </param>
-        public void WriteSmoother(uint Address, Smoother Value)
-        {
-            WriteSingle(Address, Value.RollingAverage);
-            WriteSingle(Address + 4, Value.Factor);
-        }
-
-        /// <summary>
-        /// Reads <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>SimVelocityState</c> at the given address.
-        /// </returns>
-        public SimVelocityState ReadSimVelocityState(uint Address) => new SimVelocityState(ReadVector3(Address), ReadVector3(Address + 12));
-
-        /// <summary>
-        /// Writes the given value to <see cref="ProcessMemory.Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>SimVelocityState</c> value to write.
-        /// </param>
-        public void WriteSimVelocityState(uint Address, SimVelocityState Value)
-        {
-            WriteVector3(Address, Value.Linear);
-            WriteVector3(Address + 12, Value.Angular);
-        }
+        public void WriteStruct<T>(uint Address, T Value) => WriteStruct(typeof(T), Address, Value);
     }
 }

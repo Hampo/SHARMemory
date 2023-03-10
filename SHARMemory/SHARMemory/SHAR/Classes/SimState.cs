@@ -20,14 +20,14 @@ namespace SHARMemory.SHAR.Classes
 
         public Matrix4x4 Transform
         {
-            get => ReadMatrix4x4(16);
-            set => WriteMatrix4x4(16, value);
+            get => ReadStruct<Matrix4x4>(16);
+            set => WriteStruct(16, value);
         }
 
         public SimVelocityState VelocityState
         {
-            get => ReadSimVelocityState(80);
-            set => WriteSimVelocityState(80, value);
+            get => ReadStruct<SimVelocityState>(80);
+            set => WriteStruct(80, value);
         }
 
         public float Scale

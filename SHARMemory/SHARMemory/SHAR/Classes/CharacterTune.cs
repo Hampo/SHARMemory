@@ -193,8 +193,8 @@ namespace SHARMemory.SHAR.Classes
 
         public Vector3 GetInPosition
         {
-            get => Memory.ReadVector3(Memory.SelectAddress(0x6C921C, 0x6C91DC, 0x6C91DC, 0x6C9214));
-            set => Memory.WriteVector3(Memory.SelectAddress(0x6C921C, 0x6C91DC, 0x6C91DC, 0x6C9214), value);
+            get => Memory.ReadStruct<Vector3>(Memory.SelectAddress(0x6C921C, 0x6C91DC, 0x6C91DC, 0x6C9214));
+            set => Memory.WriteStruct(Memory.SelectAddress(0x6C921C, 0x6C91DC, 0x6C91DC, 0x6C9214), value);
         }
     }
 }
