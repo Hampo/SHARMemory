@@ -6,6 +6,13 @@
         public float Y { get; set; }
         public float Z { get; set; }
 
+        public Vector3(float value)
+        {
+            X = value;
+            Y = value;
+            Z = value;
+        }
+
         public Vector3(float x, float y, float z)
         {
             X = x;
