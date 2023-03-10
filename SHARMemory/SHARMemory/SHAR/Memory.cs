@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -146,7 +147,54 @@ namespace SHARMemory.SHAR
         public VehicleCentral VehicleCentral { get; }
 
         /// <summary>
-        /// If <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" /> is loaded, query loaded hacks.
+        /// Checks if <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded.
+        /// </summary>
+        public bool IsModLauncherLoaded { get; }
+
+        /// <summary>
+        /// A <c>Dictionary</c> containing a list of ordinals used by <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> and their addresses.
+        /// </summary>
+        public Dictionary<uint, uint> ModLauncherOrdinals { get; } = new Dictionary<uint, uint>()
+        {
+            { 3151, 0 }, // Event Hacks
+            { 3360, 0 }, // Max Cars
+            { 3364, 0 }, // Cars Offset
+        };
+        private void LoadModLauncherOrdinals(ProcessModule hacksModule)
+        {
+            IntPtr dll = LoadLibraryEx(hacksModule.FileName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES);
+            if (dll == IntPtr.Zero)
+            {
+                Debug.WriteLine($"Couldn't load module: {hacksModule.FileName}");
+                return;
+            }
+
+            try
+            {
+                foreach (uint ordinal in ModLauncherOrdinals.Keys)
+                {
+                    UIntPtr method = GetProcAddressOrdinal(dll, new UIntPtr(ordinal));
+                    if (method == UIntPtr.Zero)
+                    {
+                        Debug.WriteLine($"Couldn't find method: {ordinal}");
+                        continue;
+                    }
+
+                    uint offset = (uint)(method.ToUInt32() - dll.ToInt32());
+
+                    uint address = (uint)(hacksModule.BaseAddress.ToInt32() + offset);
+
+                    ModLauncherOrdinals[ordinal] = address;
+                }
+            }
+            finally
+            {
+                FreeLibrary(dll);
+            }
+        }
+
+        /// <summary>
+        /// If <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded, query loaded hacks.
         /// Credits: Lucas Cardellini
         /// </summary>
         /// <returns>
@@ -154,7 +202,10 @@ namespace SHARMemory.SHAR
         /// </returns>
         public string[] GetLoadedHacks()
         {
-            uint EventHacks = GetModuleProcAddress("Hacks.dll", 3151);
+            if (!IsModLauncherLoaded)
+                return null;
+
+            uint EventHacks = ModLauncherOrdinals[3151];
             if (EventHacks == 0)
                 return null;
 
@@ -179,7 +230,7 @@ namespace SHARMemory.SHAR
         }
 
         /// <summary>
-        /// If <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" /> is loaded, check if a hack is loaded.
+        /// If <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded, check if a hack is loaded.
         /// Credits: Lucas Cardellini
         /// </summary>
         /// <param name="HackName">
@@ -190,11 +241,10 @@ namespace SHARMemory.SHAR
         /// </returns>
         public bool IsHackLoaded(string HackName)
         {
-            ProcessModule hackModule = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.ModuleName) && x.ModuleName.Equals($"{HackName}.lmlh", StringComparison.OrdinalIgnoreCase));
-            if (hackModule != null)
-                return true;
+            if (!IsModLauncherLoaded)
+                return false;
 
-            uint EventHacks = GetModuleProcAddress("Hacks.dll", 3151);
+            uint EventHacks = ModLauncherOrdinals[3151];
             if (EventHacks == 0)
                 return false;
 
@@ -291,6 +341,19 @@ namespace SHARMemory.SHAR
             GameSubVersions subVersion = GameSubVersions.Unknown;
             GameVersion = DetectVersion(ref subVersion);
             GameSubVersion = subVersion;
+
+            using (ProcessModule hacksModule = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => x.ModuleName.Equals("Hacks.dll", StringComparison.OrdinalIgnoreCase)))
+            {
+                if (hacksModule == null)
+                {
+                    IsModLauncherLoaded = false;
+                }
+                else
+                {
+                    IsModLauncherLoaded = true;
+                    LoadModLauncherOrdinals(hacksModule);
+                }
+            }
 
             Cheats = new Cheats(this);
 

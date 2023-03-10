@@ -20,19 +20,19 @@ namespace SHARMemory
         /// </summary>
         public Process Process { get; }
 
-        private const int PROCESS_CREATE_THREAD = 0x0002;
-        private const int PROCESS_QUERY_INFORMATION = 0x0400;
-        private const int PROCESS_VM_OPERATION = 0x0008;
-        private const int PROCESS_VM_WRITE = 0x0020;
-        private const int PROCESS_VM_READ = 0x0010;
+        internal const int PROCESS_CREATE_THREAD = 0x0002;
+        internal const int PROCESS_QUERY_INFORMATION = 0x0400;
+        internal const int PROCESS_VM_OPERATION = 0x0008;
+        internal const int PROCESS_VM_WRITE = 0x0020;
+        internal const int PROCESS_VM_READ = 0x0010;
 
-        private const uint MEM_COMMIT = 0x00001000;
-        private const uint MEM_RESERVE = 0x00002000;
-        private const uint MEM_RELEASE = 0x00008000;
-        private const uint PAGE_READWRITE = 4;
+        internal const uint MEM_COMMIT = 0x00001000;
+        internal const uint MEM_RESERVE = 0x00002000;
+        internal const uint MEM_RELEASE = 0x00008000;
+        internal const uint PAGE_READWRITE = 4;
 
         [Flags]
-        private enum LoadLibraryFlags : uint
+        internal enum LoadLibraryFlags : uint
         {
             DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
             LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
@@ -46,57 +46,57 @@ namespace SHARMemory
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool VirtualProtectEx(IntPtr hProcess, UIntPtr lpAddress, int dwSize, int flNewProtect, [Out] int lpflOldProtect);
+        internal static extern bool VirtualProtectEx(IntPtr hProcess, UIntPtr lpAddress, int dwSize, int flNewProtect, [Out] int lpflOldProtect);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, uint dwFreeType);
+        internal static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, uint dwFreeType);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool ReadProcessMemory(IntPtr hProcess, UIntPtr lpBaseAddress, [Out] byte[] lpBuffer, IntPtr nSize, UIntPtr lpNumberOfBytesRead);
+        internal static extern bool ReadProcessMemory(IntPtr hProcess, UIntPtr lpBaseAddress, [Out] byte[] lpBuffer, IntPtr nSize, UIntPtr lpNumberOfBytesRead);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr LoadLibraryEx(string dllToLoad, IntPtr hFile, LoadLibraryFlags flags);
+        internal static extern IntPtr LoadLibraryEx(string dllToLoad, IntPtr hFile, LoadLibraryFlags flags);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern void FreeLibrary(IntPtr module);
+        internal static extern void FreeLibrary(IntPtr module);
 
         [DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
-        private extern static UIntPtr GetProcAddressOrdinal(IntPtr hwnd, UIntPtr procedureName);
+        internal extern static UIntPtr GetProcAddressOrdinal(IntPtr hwnd, UIntPtr procedureName);
 
         [DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
-        private extern static UIntPtr GetProcAddress(IntPtr hwnd, string procedureName);
+        internal extern static UIntPtr GetProcAddress(IntPtr hwnd, string procedureName);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+        internal static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr GetModuleHandle(string lpModuleName);
+        internal static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        private static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+        internal static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool WriteProcessMemory(IntPtr hProcess, UIntPtr lpBaseAddress, byte[] lpBuffer, IntPtr nSize, out UIntPtr lpNumberOfBytesWritten);
+        internal static extern bool WriteProcessMemory(IntPtr hProcess, UIntPtr lpBaseAddress, byte[] lpBuffer, IntPtr nSize, out UIntPtr lpNumberOfBytesWritten);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, out UIntPtr lpNumberOfBytesWritten);
+        internal static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, out UIntPtr lpNumberOfBytesWritten);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, uint nSize, out UIntPtr lpNumberOfBytesWritten);
+        internal static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, uint nSize, out UIntPtr lpNumberOfBytesWritten);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+        internal static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
+        internal static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool GetExitCodeThread(IntPtr hHandle, out uint lpExitCode);
+        internal static extern bool GetExitCodeThread(IntPtr hHandle, out uint lpExitCode);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool CloseHandle(IntPtr handle);
+        internal static extern bool CloseHandle(IntPtr handle);
 
-        private readonly List<IntPtr> ASMFunctions = new List<IntPtr>();
+        internal readonly List<IntPtr> ASMFunctions = new List<IntPtr>();
 
         /// <summary>
         /// The <c>ProcessMemory</c> constructor.
@@ -632,7 +632,7 @@ namespace SHARMemory
         /// </returns>
         public IntPtr GetModuleBaseAddress(string ModuleName)
         {
-            ProcessModule hacksModule = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.ModuleName) && x.ModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase));
+            ProcessModule hacksModule = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => x.ModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase));
             return hacksModule == null ? IntPtr.Zero : hacksModule.BaseAddress;
         }
 
@@ -655,29 +655,24 @@ namespace SHARMemory
             if (ordinalAddressCache.ContainsKey(ModuleName) && ordinalAddressCache[ModuleName].ContainsKey(Proc))
                 return ordinalAddressCache[ModuleName][Proc];
 
-            ProcessModule module = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.ModuleName) && x.ModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase));
+            ProcessModule module = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => x.ModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase));
             if (module == null)
             {
-                Console.WriteLine($"Couldn't find module: {ModuleName}");
-                return 0;
-            }
-            if (string.IsNullOrWhiteSpace(module.FileName))
-            {
-                Console.WriteLine($"Empty filename on module: {ModuleName}");
+                Debug.WriteLine($"Couldn't find module: {ModuleName}");
                 return 0;
             }
 
             IntPtr dll = LoadLibraryEx(module.FileName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES);
             if (dll == IntPtr.Zero)
             {
-                Console.WriteLine($"Couldn't load module: {module.FileName}");
+                Debug.WriteLine($"Couldn't load module: {module.FileName}");
                 return 0;
             }
 
             UIntPtr method = GetProcAddressOrdinal(dll, (UIntPtr)Proc);
             if (method == UIntPtr.Zero)
             {
-                Console.WriteLine($"Couldn't find method: {Proc}");
+                Debug.WriteLine($"Couldn't find method: {Proc}");
                 FreeLibrary(dll);
                 return 0;
             }
@@ -685,7 +680,7 @@ namespace SHARMemory
             uint offset = (uint)(method.ToUInt32() - dll.ToInt32());
 
             FreeLibrary(dll);
-            uint address = (uint)(GetModuleBaseAddress(ModuleName).ToInt32() + offset);
+            uint address = (uint)(module.BaseAddress.ToInt32() + offset);
 
             if (!ordinalAddressCache.ContainsKey(ModuleName))
                 ordinalAddressCache[ModuleName] = new Dictionary<uint, uint>();
@@ -714,29 +709,24 @@ namespace SHARMemory
             if (namedAddressCache.ContainsKey(ModuleName) && namedAddressCache[ModuleName].ContainsKey(Proc))
                 return namedAddressCache[ModuleName][Proc];
 
-            ProcessModule module = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.ModuleName) && x.ModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase));
+            ProcessModule module = Process.Modules.Cast<ProcessModule>().FirstOrDefault(x => x.ModuleName.Equals(ModuleName, StringComparison.OrdinalIgnoreCase));
             if (module == null)
             {
-                Console.WriteLine($"Couldn't find module: {ModuleName}");
-                return 0;
-            }
-            if (string.IsNullOrWhiteSpace(module.FileName))
-            {
-                Console.WriteLine($"Empty filename on module: {ModuleName}");
+                Debug.WriteLine($"Couldn't find module: {ModuleName}");
                 return 0;
             }
 
             IntPtr dll = LoadLibraryEx(module.FileName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES);
             if (dll == IntPtr.Zero)
             {
-                Console.WriteLine($"Couldn't load module: {module.FileName}");
+                Debug.WriteLine($"Couldn't load module: {module.FileName}");
                 return 0;
             }
 
             UIntPtr method = GetProcAddress(dll, Proc);
             if (method == UIntPtr.Zero)
             {
-                Console.WriteLine($"Couldn't find method: {Proc}");
+                Debug.WriteLine($"Couldn't find method: {Proc}");
                 FreeLibrary(dll);
                 return 0;
             }
@@ -744,7 +734,7 @@ namespace SHARMemory
             uint offset = (uint)(method.ToUInt32() - dll.ToInt32());
 
             FreeLibrary(dll);
-            uint address = (uint)(GetModuleBaseAddress(ModuleName).ToInt32() + offset);
+            uint address = (uint)(module.BaseAddress.ToInt32() + offset);
 
             if (!namedAddressCache.ContainsKey(ModuleName))
                 namedAddressCache[ModuleName] = new Dictionary<string, uint>();
