@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -151,15 +152,16 @@ namespace SHARMemory.SHAR
         /// </summary>
         public bool IsModLauncherLoaded { get; }
 
+        private static readonly uint[] ModLauncherOrdinalKeys = new uint[]
+        {
+            3151, // Event Hacks
+            3360, // Max Cars
+            3364, // Cars Offset
+        };
         /// <summary>
         /// A <c>Dictionary</c> containing a list of ordinals used by <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> and their addresses.
         /// </summary>
-        public Dictionary<uint, uint> ModLauncherOrdinals { get; } = new Dictionary<uint, uint>()
-        {
-            { 3151, 0 }, // Event Hacks
-            { 3360, 0 }, // Max Cars
-            { 3364, 0 }, // Cars Offset
-        };
+        public Dictionary<uint, uint> ModLauncherOrdinals { get; } = new Dictionary<uint, uint>(ModLauncherOrdinalKeys.Length);
         private void LoadModLauncherOrdinals(ProcessModule hacksModule)
         {
             IntPtr dll = LoadLibraryEx(hacksModule.FileName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES);
@@ -171,7 +173,7 @@ namespace SHARMemory.SHAR
 
             try
             {
-                foreach (uint ordinal in ModLauncherOrdinals.Keys)
+                foreach (uint ordinal in ModLauncherOrdinalKeys)
                 {
                     UIntPtr method = GetProcAddressOrdinal(dll, new UIntPtr(ordinal));
                     if (method == UIntPtr.Zero)
@@ -184,7 +186,7 @@ namespace SHARMemory.SHAR
 
                     uint address = (uint)(hacksModule.BaseAddress.ToInt32() + offset);
 
-                    ModLauncherOrdinals[ordinal] = address;
+                    ModLauncherOrdinals.Add(ordinal, address);
                 }
             }
             finally
@@ -202,28 +204,25 @@ namespace SHARMemory.SHAR
         /// </returns>
         public string[] GetLoadedHacks()
         {
-            if (!IsModLauncherLoaded)
-                return null;
-
-            uint EventHacks = ModLauncherOrdinals[3151];
-            if (EventHacks == 0)
+            if (!ModLauncherOrdinals.TryGetValue(3351, out uint EventHacks))
                 return null;
 
             uint HacksLoaded = ReadUInt32(EventHacks + 8);
-            if (HacksLoaded == 0)
-                return null;
 
             string[] Hacks = new string[HacksLoaded];
 
-            int i = 0;
-            uint node = ReadUInt32(EventHacks);
-            while (node != 0)
+            if (HacksLoaded > 0)
             {
-                uint hack = ReadUInt32(node + 12);
-                Hacks[i] = ReadString(hack + 562, Encoding.Unicode, 128u);
-                i++;
+                int i = 0;
+                uint node = ReadUInt32(EventHacks);
+                while (node != 0)
+                {
+                    uint hack = ReadUInt32(node + 12);
+                    Hacks[i] = ReadString(hack + 562, Encoding.Unicode, 128u);
+                    i++;
 
-                node = ReadUInt32(node + 8);
+                    node = ReadUInt32(node + 8);
+                }
             }
 
             return Hacks;
@@ -241,11 +240,7 @@ namespace SHARMemory.SHAR
         /// </returns>
         public bool IsHackLoaded(string HackName)
         {
-            if (!IsModLauncherLoaded)
-                return false;
-
-            uint EventHacks = ModLauncherOrdinals[3151];
-            if (EventHacks == 0)
+            if (!ModLauncherOrdinals.TryGetValue(3351, out uint EventHacks))
                 return false;
 
             uint node = ReadUInt32(EventHacks);
