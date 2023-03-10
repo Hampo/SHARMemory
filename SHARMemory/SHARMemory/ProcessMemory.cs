@@ -110,28 +110,6 @@ namespace SHARMemory
         }
 
         /// <summary>
-        /// Returns a <c>bool</c> if the process us still running.
-        /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                if (Process == null)
-                    return false;
-
-                try
-                {
-                    using Process p = Process.GetProcessById(Process.Id);
-                    return !p.HasExited;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>
         /// Reads the memory of <see cref="Process"/>.
         /// </summary>
         /// <param name="Address">
@@ -148,12 +126,6 @@ namespace SHARMemory
         /// </exception>
         public void Read(uint Address, byte[] Buffer, out uint Read)
         {
-            if (!IsRunning)
-            {
-                Read = 0;
-                return;
-            }
-
             UIntPtr lpNumberOfBytesRead = default;
             if (!ReadProcessMemory(Process.Handle, new UIntPtr(Address), Buffer, new IntPtr(Buffer.Length), lpNumberOfBytesRead))
             {
@@ -179,12 +151,6 @@ namespace SHARMemory
         /// </exception>
         public void Write(uint Address, byte[] Buffer, out uint Written)
         {
-            if (!IsRunning)
-            {
-                Written = 0;
-                return;
-            }
-
             IntPtr intPtr = OpenProcess(40, bInheritHandle: false, Process.Id);
             if (intPtr == IntPtr.Zero)
             {
