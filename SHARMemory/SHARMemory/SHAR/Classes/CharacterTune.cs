@@ -10,11 +10,6 @@ namespace SHARMemory.SHAR.Classes
         {
             Memory = memory;
         }
-        public float ShockTime
-        {
-            get => Memory.ReadSingle(Memory.SelectAddress(0x6C8378, 0x6C8338, 0x6C8338, 0x6C8370));
-            set => Memory.WriteSingle(Memory.SelectAddress(0x6C8378, 0x6C8338, 0x6C8338, 0x6C8370), value);
-        }
 
         public float SlamForce
         {
@@ -198,8 +193,8 @@ namespace SHARMemory.SHAR.Classes
 
         public Vector3 GetInPosition
         {
-            get => Memory.ReadVector3(Memory.SelectAddress(0x6C8BBC, 0x6C8B7C, 0x6C8B7C, 0x6C8BB4));
-            set => Memory.WriteVector3(Memory.SelectAddress(0x6C8BBC, 0x6C8B7C, 0x6C8B7C, 0x6C8BB4), value);
+            get => Memory.ReadVector3(Memory.SelectAddress(0x6C921C, 0x6C91DC, 0x6C91DC, 0x6C9214));
+            set => Memory.WriteVector3(Memory.SelectAddress(0x6C921C, 0x6C91DC, 0x6C91DC, 0x6C9214), value);
         }
     }
 }
