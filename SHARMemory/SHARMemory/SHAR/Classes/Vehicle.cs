@@ -1,4 +1,5 @@
 ﻿using SHARMemory.SHAR.Structs;
+using System.Drawing;
 using System.Text;
 
 namespace SHARMemory.SHAR.Classes
@@ -189,5 +190,56 @@ namespace SHARMemory.SHAR.Classes
         public SimStateArticulated SimStateArticulated => new(Memory, ReadUInt32(1192));
 
         public ArticulatedPhysicsObject ArticulatedPhysicsObject => new(Memory, ReadUInt32(1196));
+
+        /// <summary>
+        /// Stops all vehicle momentum.
+        /// </summary>
+        public void Stop()
+        {
+            SimStateArticulated simStateArticulated = SimStateArticulated;
+            if (simStateArticulated.IsAddressValid)
+            {
+                SimVelocityState simVelocityState = simStateArticulated.VelocityState;
+                simVelocityState.Linear = new(0);
+                simVelocityState.Angular = new(0);
+                simStateArticulated.VelocityState = simVelocityState;
+                simStateArticulated.PhysicsObject.AngularMomentum = new(0);
+            }
+        }
+
+        /// <summary>
+        /// Launches the vehicle upwards and in the direction it's facing
+        /// </summary>
+        /// <param name="Height">
+        /// How high to send the vehicle. Defaults to <c>20</c>.
+        /// </param>
+        /// <param name="LaunchPower">
+        /// How hard to launch the vehicle forwards. Defaults to <c>5</c>.
+        /// </param>
+        public void Launch(float Height = 20, float LaunchPower = 5)
+        {
+            SimStateArticulated simStateArticulated = SimStateArticulated;
+            if (simStateArticulated.IsAddressValid)
+            {
+                SimVelocityState simVelocityState = simStateArticulated.VelocityState;
+                Vector3 linear = Vector3.Add(simVelocityState.Linear, VehicleFacing * LaunchPower);
+                linear.Y += Height;
+                simVelocityState.Linear = linear;
+                simStateArticulated.VelocityState = simVelocityState;
+            }
+        }
+
+        /// <summary>
+        /// Sets the traffic body colour if applicable.
+        /// </summary>
+        /// <param name="Colour">
+        /// The colour to set.
+        /// </param>
+        public void SetTrafficBodyColour(Color Colour)
+        {
+            GeometryVehicle geometryVehicle = GeometryVehicle;
+            if (geometryVehicle.IsAddressValid)
+                geometryVehicle.SetTrafficBodyColour(Colour);
+        }
     }
 }
