@@ -14,6 +14,8 @@
             RollingAverage = rollingAverage;
             Factor = factor;
         }
+
+        public override string ToString() => $"{RollingAverage} | {Factor}";
     }
 
     internal class SmootherStruct : IStruct

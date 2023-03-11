@@ -14,6 +14,8 @@
             Centre = centre;
             Radius = radius;
         }
+
+        public override string ToString() => $"{Centre} | {Radius}";
     }
 
     internal class SphereStruct : IStruct

@@ -24,6 +24,8 @@
             Low = low;
             High = high;
         }
+
+        public override string ToString() => $"{Low} | {High}";
     }
 
     internal class Box3DStruct : IStruct

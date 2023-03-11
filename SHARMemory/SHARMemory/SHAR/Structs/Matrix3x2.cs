@@ -25,6 +25,8 @@
             this.M31 = M31;
             this.M32 = M32;
         }
+
+        public override string ToString() => $"{{ {{M11:{M11} M12:{M12}}} {{M21:{M21} M22:{M22}}} {{M31:{M31} M32:{M32}}} }}";
     }
 
     internal class Matrix3x2Struct : IStruct

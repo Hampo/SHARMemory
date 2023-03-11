@@ -14,6 +14,8 @@
             Linear = linear;
             Angular = angular;
         }
+
+        public override string ToString() => $"{Linear} | {Angular}";
     }
 
     internal class SimVelocityStateStruct : IStruct
