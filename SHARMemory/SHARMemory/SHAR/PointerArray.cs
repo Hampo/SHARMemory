@@ -78,8 +78,14 @@ namespace SHARMemory.SHAR
 
             public bool MoveNext()
             {
-                position++;
-                return position < array.Count;
+                do
+                {
+                    position++;
+                    if (position >= array.Count)
+                        return false;
+                }
+                while (Current == null);
+                return true;
             }
 
             public void Reset()
