@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace SHARMemory.SHAR
 {
@@ -9,7 +10,7 @@ namespace SHARMemory.SHAR
     /// <typeparam name="T">
     /// The <see cref="Class" /> this is an array of.
     /// </typeparam>
-    public class PointerArray<T> : IEnumerable where T : Class
+    public class PointerArray<T> : IEnumerable<T> where T : Class
     {
         private readonly Memory Memory;
         private readonly uint Address;
@@ -62,11 +63,13 @@ namespace SHARMemory.SHAR
             Count = count;
         }
 
-        private class PointerEnumerator : IEnumerator
+        private class PointerEnumerator : IEnumerator<T>
         {
             private readonly PointerArray<T> array;
             private int position = -1;
-            public object Current => array[position];
+
+            public T Current => array[position];
+            object IEnumerator.Current => Current;
 
             public PointerEnumerator(PointerArray<T> array)
             {
@@ -83,6 +86,8 @@ namespace SHARMemory.SHAR
             {
                 position = -1;
             }
+
+            public void Dispose() { }
         }
 
         /// <summary>
@@ -91,6 +96,8 @@ namespace SHARMemory.SHAR
         /// <returns>
         /// A new enumerator for this array.
         /// </returns>
-        public IEnumerator GetEnumerator() => new PointerEnumerator(this);
+        public IEnumerator<T> GetEnumerator() => new PointerEnumerator(this);
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

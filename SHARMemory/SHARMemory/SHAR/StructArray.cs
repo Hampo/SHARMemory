@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace SHARMemory.SHAR
 {
@@ -9,7 +10,7 @@ namespace SHARMemory.SHAR
     /// <typeparam name="T">
     /// The <c>struct</c> this is an array of.
     /// </typeparam>
-    public class StructArray<T> : IEnumerable where T : struct
+    public class StructArray<T> : IEnumerable<T> where T : struct
     {
         private readonly Memory Memory;
         private readonly uint Address;
@@ -74,11 +75,13 @@ namespace SHARMemory.SHAR
             Count = count;
         }
 
-        private class StructEnumerator : IEnumerator
+        private class StructEnumerator : IEnumerator<T>
         {
             private readonly StructArray<T> array;
             private int position = -1;
-            public object Current => array[position];
+
+            public T Current => array[position];
+            object IEnumerator.Current => Current;
 
             public StructEnumerator(StructArray<T> array)
             {
@@ -95,6 +98,8 @@ namespace SHARMemory.SHAR
             {
                 position = -1;
             }
+
+            public void Dispose() { }
         }
 
         /// <summary>
@@ -103,6 +108,8 @@ namespace SHARMemory.SHAR
         /// <returns>
         /// A new enumerator for this array.
         /// </returns>
-        public IEnumerator GetEnumerator() => new StructEnumerator(this);
+        public IEnumerator<T> GetEnumerator() => new StructEnumerator(this);
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
