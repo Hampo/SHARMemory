@@ -1,4 +1,4 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Pointers
 {

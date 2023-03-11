@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Pointers;
-using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR
 {

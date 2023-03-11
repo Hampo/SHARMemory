@@ -58,7 +58,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(176, value);
         }
 
-        public GeometryVehicle GeometryVehicle => new GeometryVehicle(Memory, ReadUInt32(180));
+        public GeometryVehicle GeometryVehicle => new(Memory, ReadUInt32(180));
 
         public Matrix4x4 Transform => ReadStruct<Matrix4x4>(184);
 
@@ -82,7 +82,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(268, value);
         }
 
-        public VehicleEventListener VehicleEventListener => new VehicleEventListener(Memory, ReadUInt32(272));
+        public VehicleEventListener VehicleEventListener => new(Memory, ReadUInt32(272));
 
         public bool DoingJumpBoost
         {
@@ -174,7 +174,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(380, (uint)value);
         }
 
-        public VehicleLocomotion VehicleLocomotion => new VehicleLocomotion(Memory, ReadUInt32(384));
+        public VehicleLocomotion VehicleLocomotion => new(Memory, ReadUInt32(384));
 
         public VehicleLocomotionTypes VehicleLocomotionType
         {
@@ -186,8 +186,8 @@ namespace SHARMemory.SHAR.Classes
 
         public Wheel Wheels(uint index) => new Wheel(Memory, ReadUInt32(1044 + index * 4));
 
-        public SimStateArticulated SimStateArticulated => new SimStateArticulated(Memory, ReadUInt32(1192));
+        public SimStateArticulated SimStateArticulated => new(Memory, ReadUInt32(1192));
 
-        public ArticulatedPhysicsObject ArticulatedPhysicsObject => new ArticulatedPhysicsObject(Memory, ReadUInt32(1196));
+        public ArticulatedPhysicsObject ArticulatedPhysicsObject => new(Memory, ReadUInt32(1196));
     }
 }

@@ -16,7 +16,7 @@
             set => WriteUInt32(44, value);
         }
 
-        public CollisionAttributes CollisionAttributes => new CollisionAttributes(Memory, ReadUInt32(48));
+        public CollisionAttributes CollisionAttributes => new(Memory, ReadUInt32(48));
 
         public bool WasParticleEffectTriggered
         {

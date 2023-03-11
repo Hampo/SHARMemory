@@ -6,6 +6,6 @@ namespace SHARMemory.SHAR.Pointers
     {
         public CharacterSheetManager(Memory memory) : base(memory, memory.SelectAddress(0x6C8984, 0x6C8944, 0x6C8944, 0x6C897C)) { }
 
-        public CharacterSheet CharacterSheet => new CharacterSheet(Memory, Value + 4);
+        public CharacterSheet CharacterSheet => new(Memory, Value + 4);
     }
 }

@@ -24,7 +24,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteStruct(100, value);
         }
 
-        public SimState SimState => new SimState(Memory, ReadUInt32(112));
+        public SimState SimState => new(Memory, ReadUInt32(112));
 
         // TODO: Drawable Shadow (116)
 

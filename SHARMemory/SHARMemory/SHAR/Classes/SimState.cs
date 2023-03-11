@@ -42,9 +42,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(108, (uint)value);
         }
 
-        public SimulatedObject SimulatedObject => new SimulatedObject(Memory, ReadUInt32(112));
+        public SimulatedObject SimulatedObject => new(Memory, ReadUInt32(112));
 
-        public PhysicsObject PhysicsObject => new PhysicsObject(Memory, ReadUInt32(112));
+        public PhysicsObject PhysicsObject => new(Memory, ReadUInt32(112));
 
         // TODO: CollisionObject (116)
 

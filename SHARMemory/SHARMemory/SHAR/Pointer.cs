@@ -1,5 +1,4 @@
-﻿using SHARMemory.SHAR.Structs;
-using System.Diagnostics;
+﻿using System;
 using System.Text;
 
 namespace SHARMemory.SHAR
@@ -216,7 +215,7 @@ namespace SHARMemory.SHAR
         /// <returns>
         /// The <paramref name="Type"/> at the given offset.
         /// </returns>
-        public object ReadStruct(System.Type Type, uint Offset) => Memory.ReadStruct(Type, Value + Offset);
+        public object ReadStruct(Type Type, uint Offset) => Memory.ReadStruct(Type, Value + Offset);
 
         /// <summary>
         /// Reads <see cref="Memory"/> at the class's pointer <see cref="Value"/> + <paramref name="Offset"/>.
@@ -362,7 +361,7 @@ namespace SHARMemory.SHAR
         /// <param name="Value">
         /// The <paramref name="Type"/> value to write.
         /// </param>
-        public void WriteStruct(System.Type Type, uint Offset, object Value) => Memory.WriteStruct(Type, this.Value + Offset, Value);
+        public void WriteStruct(Type Type, uint Offset, object Value) => Memory.WriteStruct(Type, this.Value + Offset, Value);
 
         /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's pointer <see cref="Value"/> + <paramref name="Offset"/>.

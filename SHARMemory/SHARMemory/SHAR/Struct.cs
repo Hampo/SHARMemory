@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR
+﻿using System;
+
+namespace SHARMemory.SHAR
 {
     /// <summary>
     /// Interface <c>SHAR.IStruct</c> is an interface to handle the reading/writing a SHAR struct.
@@ -37,7 +39,7 @@
     /// <summary>
     /// Class <c>SHAR.StructAttribute</c> is an attribute to be given to SHAR structs to handle reading/writing.
     /// </summary>
-    public class StructAttribute : System.Attribute
+    public class StructAttribute : Attribute
     {
         /// <summary>
         /// Gets the <see cref="IStruct"/> related to the given SHAR struct.
@@ -48,14 +50,14 @@
         /// <returns>
         /// The <see cref="IStruct"/> interface for the given SHAR struct.
         /// </returns>
-        /// <exception cref="System.ArgumentException">
+        /// <exception cref="ArgumentException">
         /// Throws if the given <paramref name="Type"/> does not have a <see cref="StructAttribute"/>.
         /// </exception>
-        public static IStruct Get(System.Type Type)
+        public static IStruct Get(Type Type)
         {
             var StructAttributes = (StructAttribute[])Type.GetCustomAttributes(typeof(StructAttribute), false);
             if (StructAttributes.Length < 1)
-                throw new System.ArgumentException($"'{nameof(Type)}' must have attribute '{nameof(SHAR.StructAttribute)}'.", nameof(Type));
+                throw new ArgumentException($"'{nameof(Type)}' must have attribute '{nameof(SHAR.StructAttribute)}'.", nameof(Type));
             var StructAttribute = StructAttributes[0];
 
             return StructAttribute.Struct;
@@ -69,9 +71,9 @@
         /// <param name="Type">
         /// The SHAR struct to manage.
         /// </param>
-        public StructAttribute(System.Type Type)
+        public StructAttribute(Type Type)
         {
-            Struct = (IStruct)System.Activator.CreateInstance(Type);
+            Struct = (IStruct)Activator.CreateInstance(Type);
         }
     }
 }
