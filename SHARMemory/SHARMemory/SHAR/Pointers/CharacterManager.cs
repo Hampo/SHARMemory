@@ -6,8 +6,8 @@ namespace SHARMemory.SHAR.Pointers
     {
         public CharacterManager(Memory memory) : base(memory, memory.SelectAddress(0x6C8470, 0x6C8430, 0x6C8430, 0x6C8468)) { }
 
-        public Character Characters(uint Index) => new Character(Memory, ReadUInt32(192u + Index * 4u));
+        public PointerArray<Character> Characters => new(Memory, Value + 192, 64);
 
-        public Character Player => Characters(0);
+        public Character Player => Characters[0];
     }
 }

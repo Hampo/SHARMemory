@@ -18,9 +18,8 @@ namespace SHARMemory.SHAR.Pointers
             }
         }
 
-        public uint MaxVehicles { get; }
-
-        private uint ActiveVehiclesOffset { get; }
-        public Vehicle ActiveVehicles(uint Index) => new Vehicle(Memory, ReadUInt32(ActiveVehiclesOffset + Index * 4u));
+        private readonly uint MaxVehicles;
+        private readonly uint ActiveVehiclesOffset;
+        public PointerArray<Vehicle> ActiveVehicles => new(Memory, Value + ActiveVehiclesOffset, MaxVehicles);
     }
 }

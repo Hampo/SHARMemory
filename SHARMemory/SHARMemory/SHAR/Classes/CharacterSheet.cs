@@ -4,6 +4,7 @@ namespace SHARMemory.SHAR.Classes
 {
     public class CharacterSheet : Class
     {
+        // TODO: Use Arrays and Structs and shit
         public CharacterSheet(Memory memory, uint address) : base(memory, address) { }
 
         public string PlayerName => ReadString(0, Encoding.ASCII, 16u);

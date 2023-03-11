@@ -7,7 +7,7 @@ namespace SHARMemory.SHAR.Pointers
 
         public TrafficManager(Memory memory) : base(memory, memory.SelectAddress(0x6C8468, 0x6C8428, 0x6C8428, 0x6C8460)) { }
 
-        public SwatchColour SwatchColours(uint index) => new SwatchColour(Memory, Memory.SelectAddress(0x64A700, 0x64A6F0, 0x64A6F0, 0x64A700) + index * 12);
+        public StructArray<SwatchColour> SwatchColours => new(Memory, Memory.SelectAddress(0x64A700, 0x64A6F0, 0x64A6F0, 0x64A700), SwatchColour.Size, 25);
 
         public bool TrafficEnabled
         {

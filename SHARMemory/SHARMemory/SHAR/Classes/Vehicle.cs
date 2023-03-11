@@ -184,7 +184,7 @@ namespace SHARMemory.SHAR.Classes
 
         public float Mass => ReadSingle(696);
 
-        public Wheel Wheels(uint index) => new Wheel(Memory, ReadUInt32(1044 + index * 4));
+        public PointerArray<Wheel> Wheels => new(Memory, Address + 1044, 4);
 
         public SimStateArticulated SimStateArticulated => new(Memory, ReadUInt32(1192));
 
