@@ -6,8 +6,8 @@
 
         public float Rotation => ReadSingle(272);
 
-        public Vehicle Car => new(Memory, ReadUInt32(348));
+        public Vehicle Car => Memory.CreateClass<Vehicle>(ReadUInt32(348));
 
-        public CharacterController Controller => new(Memory, ReadUInt32(256u));
+        public CharacterController Controller => Memory.CreateClass<CharacterController>(ReadUInt32(256u));
     }
 }

@@ -146,6 +146,26 @@ namespace SHARMemory.SHAR
         public VehicleCentral VehicleCentral { get; }
 
         /// <summary>
+        /// Create an instance of a <see cref="Class"/> at the given address.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The <see cref="Class"/> type to use.
+        /// </typeparam>
+        /// <param name="Address">
+        /// The base address of the class.
+        /// </param>
+        /// <returns>
+        /// A new instance of <see cref="Class"/> or <c>null</c>.
+        /// </returns>
+        public T CreateClass<T>(uint Address) where T : Class
+        {
+            if (Address == 0)
+                return null;
+
+            return (T)Activator.CreateInstance(typeof(T), this, Address);
+        }
+
+        /// <summary>
         /// Checks if <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded.
         /// </summary>
         public bool IsModLauncherLoaded { get; }

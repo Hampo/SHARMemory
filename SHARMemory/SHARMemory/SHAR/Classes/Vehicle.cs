@@ -59,7 +59,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(176, value);
         }
 
-        public GeometryVehicle GeometryVehicle => new(Memory, ReadUInt32(180));
+        public GeometryVehicle GeometryVehicle => Memory.CreateClass<GeometryVehicle>(ReadUInt32(180));
 
         public Matrix4x4 Transform => ReadStruct<Matrix4x4>(184);
 
@@ -83,7 +83,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(268, value);
         }
 
-        public VehicleEventListener VehicleEventListener => new(Memory, ReadUInt32(272));
+        public VehicleEventListener VehicleEventListener => Memory.CreateClass<VehicleEventListener>(ReadUInt32(272));
 
         public bool DoingJumpBoost
         {
@@ -175,7 +175,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(380, (uint)value);
         }
 
-        public VehicleLocomotion VehicleLocomotion => new(Memory, ReadUInt32(384));
+        public VehicleLocomotion VehicleLocomotion => Memory.CreateClass<VehicleLocomotion>(ReadUInt32(384));
 
         public VehicleLocomotionTypes VehicleLocomotionType
         {
@@ -187,9 +187,9 @@ namespace SHARMemory.SHAR.Classes
 
         public PointerArray<Wheel> Wheels => new(Memory, Address + 1044, 4);
 
-        public SimStateArticulated SimStateArticulated => new(Memory, ReadUInt32(1192));
+        public SimStateArticulated SimStateArticulated => Memory.CreateClass<SimStateArticulated>(ReadUInt32(1192));
 
-        public ArticulatedPhysicsObject ArticulatedPhysicsObject => new(Memory, ReadUInt32(1196));
+        public ArticulatedPhysicsObject ArticulatedPhysicsObject => Memory.CreateClass<ArticulatedPhysicsObject>(ReadUInt32(1196));
 
         /// <summary>
         /// Stops all vehicle momentum.
@@ -197,14 +197,14 @@ namespace SHARMemory.SHAR.Classes
         public void Stop()
         {
             SimStateArticulated simStateArticulated = SimStateArticulated;
-            if (simStateArticulated.IsAddressValid)
-            {
-                SimVelocityState simVelocityState = simStateArticulated.VelocityState;
-                simVelocityState.Linear = new(0);
-                simVelocityState.Angular = new(0);
-                simStateArticulated.VelocityState = simVelocityState;
-                simStateArticulated.PhysicsObject.AngularMomentum = new(0);
-            }
+            if (simStateArticulated == null)
+                return;
+
+            SimVelocityState simVelocityState = simStateArticulated.VelocityState;
+            simVelocityState.Linear = new(0);
+            simVelocityState.Angular = new(0);
+            simStateArticulated.VelocityState = simVelocityState;
+            simStateArticulated.PhysicsObject.AngularMomentum = new(0);
         }
 
         /// <summary>
@@ -219,14 +219,14 @@ namespace SHARMemory.SHAR.Classes
         public void Launch(float Height = 20, float LaunchPower = 5)
         {
             SimStateArticulated simStateArticulated = SimStateArticulated;
-            if (simStateArticulated.IsAddressValid)
-            {
-                SimVelocityState simVelocityState = simStateArticulated.VelocityState;
-                Vector3 linear = Vector3.Add(simVelocityState.Linear, VehicleFacing * LaunchPower);
-                linear.Y += Height;
-                simVelocityState.Linear = linear;
-                simStateArticulated.VelocityState = simVelocityState;
-            }
+            if (simStateArticulated == null)
+                return;
+            
+            SimVelocityState simVelocityState = simStateArticulated.VelocityState;
+            Vector3 linear = Vector3.Add(simVelocityState.Linear, VehicleFacing * LaunchPower);
+            linear.Y += Height;
+            simVelocityState.Linear = linear;
+            simStateArticulated.VelocityState = simVelocityState;
         }
 
         /// <summary>
@@ -235,11 +235,6 @@ namespace SHARMemory.SHAR.Classes
         /// <param name="Colour">
         /// The colour to set.
         /// </param>
-        public void SetTrafficBodyColour(Color Colour)
-        {
-            GeometryVehicle geometryVehicle = GeometryVehicle;
-            if (geometryVehicle.IsAddressValid)
-                geometryVehicle.SetTrafficBodyColour(Colour);
-        }
+        public void SetTrafficBodyColour(Color Colour) => GeometryVehicle?.SetTrafficBodyColour(Colour);
     }
 }

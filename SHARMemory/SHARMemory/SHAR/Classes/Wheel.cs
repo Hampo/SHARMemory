@@ -4,7 +4,7 @@
     {
         public Wheel(Memory memory, uint address) : base(memory, address) { }
 
-        public Vehicle Car => new(Memory, ReadUInt32(0));
+        public Vehicle Car => Memory.CreateClass<Vehicle>(ReadUInt32(0));
 
         public bool IsSteerWheel
         {

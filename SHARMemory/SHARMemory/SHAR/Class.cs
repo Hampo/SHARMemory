@@ -16,18 +16,6 @@ namespace SHARMemory.SHAR
         /// The base address of this class in memory.
         /// </summary>
         public uint Address { get; }
-        /// <summary>
-        /// A <c>bool</c> representing if this is a valid address in memory.
-        /// </summary>
-        /// <example>
-        /// Get the player's class object from <see cref="Pointers.CharacterManager"/> and if invalid, return.
-        /// <code>
-        /// SHAR.Classes.Character player = memory.CharacterManager.Player;
-        /// if (!player.IsAddressValid)
-        ///     return;
-        /// </code>
-        /// </example>
-        public bool IsAddressValid => Address != 0;
 
         /// <summary>
         /// The <c>SHAR.Class</c> constructor.

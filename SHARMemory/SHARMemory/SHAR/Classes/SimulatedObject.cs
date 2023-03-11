@@ -4,6 +4,6 @@
     {
         public SimulatedObject(Memory memory, uint address) : base(memory, address) { }
 
-        public SimState SimState => new(Memory, ReadUInt32(16));
+        public SimState SimState => Memory.CreateClass<SimState>(ReadUInt32(16));
     }
 }
