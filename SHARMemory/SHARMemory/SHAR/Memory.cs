@@ -392,7 +392,7 @@ namespace SHARMemory.SHAR
         private static extern int GetWindowThreadProcessId(IntPtr hwnd, ref int lpwdProcessId);
 
         /// <summary>
-        /// Tries to get a SHAR <c>Process</c> based on window title.
+        /// Tries to get a SHAR <c>Process</c> based on window class.
         /// </summary>
         /// <returns>
         /// A SHAR <c>Process</c> or <c>null</c>.
@@ -400,13 +400,12 @@ namespace SHARMemory.SHAR
         public static Process GetSHARProcess()
         {
             IntPtr GameWindow = GetGameWindow();
-            if (GameWindow != IntPtr.Zero)
-            {
-                int ProcessId = 0;
-                _ = GetWindowThreadProcessId(GameWindow, ref ProcessId);
-                return Process.GetProcessById(ProcessId);
-            }
-            return null;
+            if (GameWindow == IntPtr.Zero)
+                return null;
+
+            int ProcessId = 0;
+            _ = GetWindowThreadProcessId(GameWindow, ref ProcessId);
+            return Process.GetProcessById(ProcessId);
         }
 
         /// <summary>
