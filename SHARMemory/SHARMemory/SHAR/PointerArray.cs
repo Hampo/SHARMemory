@@ -63,6 +63,23 @@ namespace SHARMemory.SHAR
             Count = count;
         }
 
+        /// <summary>
+        /// Creates a <see cref="PointerArray{T}"/> from an <c>IPtrArray</c> in SHAR.
+        /// </summary>
+        /// <param name="memory">
+        /// The <see cref="SHAR.Memory"/> to use.
+        /// </param>
+        /// <param name="class">
+        /// The <see cref="Class"/> the array is in.
+        /// </param>
+        /// <param name="offset">
+        /// The address offset in the class.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
+        /// </returns>
+        public static PointerArray<T> FromPtrArray(Memory memory, Class @class, uint offset) => new(memory, @class.ReadUInt32(offset + 8), @class.ReadUInt32(offset + 4));
+
         private class PointerEnumerator : IEnumerator<T>
         {
             private readonly PointerArray<T> array;

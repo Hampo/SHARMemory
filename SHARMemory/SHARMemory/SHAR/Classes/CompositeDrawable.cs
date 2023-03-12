@@ -6,6 +6,6 @@ namespace SHARMemory.SHAR.Classes
     {
         public CompositeDrawable(Memory memory, uint address) : base(memory, address) { }
 
-        public PtrArray<DrawableElement> Elements => Memory.CreateClass<PtrArray<DrawableElement>>(Address + 68);
+        public PointerArray<DrawableElement> Elements => PointerArray<DrawableElement>.FromPtrArray(Memory, this, 68);
     }
 }

@@ -25,6 +25,6 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(56, value);
         }
 
-        public PtrArray<PrimGroup> PrimGroups => Memory.CreateClass<PtrArray<PrimGroup>>(Address + 60);
+        public PointerArray<PrimGroup> PrimGroups => PointerArray<PrimGroup>.FromPtrArray(Memory, this, 60);
     }
 }
