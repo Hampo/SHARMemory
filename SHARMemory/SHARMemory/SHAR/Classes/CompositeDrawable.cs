@@ -2,7 +2,7 @@
 
 namespace SHARMemory.SHAR.Classes
 {
-    public class CompositeDrawable : Class
+    public class CompositeDrawable : DrawablePose
     {
         public CompositeDrawable(Memory memory, uint address) : base(memory, address) { }
 

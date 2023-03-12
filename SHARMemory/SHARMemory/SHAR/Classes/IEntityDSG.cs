@@ -1,6 +1,6 @@
 ﻿namespace SHARMemory.SHAR.Classes
 {
-    public class IEntityDSG : Class
+    public class IEntityDSG : Drawable
     {
         public IEntityDSG(Memory memory, uint address) : base(memory, address) { }
 
