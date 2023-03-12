@@ -16,6 +16,6 @@ namespace SHARMemory.SHAR.Classes
 
         public Types Type => (Types)ReadInt32(4);
 
-        public T As<T>() where T : DrawableElement => Memory.CreateClass<T>(Address);
+        public T ReinterpretCast<T>() where T : DrawableElement => Memory.CreateClass<T>(Address);
     }
 }

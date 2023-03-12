@@ -28,6 +28,6 @@
             }
         }
 
-        public T As<T>() where T : Drawable => Memory.CreateClass<T>(Address);
+        public T ReinterpretCast<T>() where T : Drawable => Memory.CreateClass<T>(Address);
     }
 }
