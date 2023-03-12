@@ -4,7 +4,9 @@
     {
         public enum Types
         {
+            BillboardQuadGroup,
             Mesh,
+            TrafficBodyDrawable,
             Unknown
         }
 
@@ -15,8 +17,12 @@
             get
             {
                 uint VFTableAddress = ReadUInt32(0);
-                if (VFTableAddress == Memory.SelectAddress(0x5FA8F4, 0x5FA8EC, 0x5FA8E4, 0x5FA8E4))
+                if (VFTableAddress == Memory.SelectAddress(0x5FA8F4, 0x5FA8EC, 0x5FA8E4, 0x5F744C))
                     return Types.Mesh;
+                if (VFTableAddress == Memory.SelectAddress(0x5FA664, 0x5FA65C, 0x5FA654, 0x5F719C))
+                    return Types.BillboardQuadGroup;
+                if (VFTableAddress == Memory.SelectAddress(0x60849C, 0x60848C, 0x60847C, 0x6084C4))
+                    return Types.TrafficBodyDrawable;
 
                 return Types.Unknown;
             }

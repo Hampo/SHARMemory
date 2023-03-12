@@ -2,7 +2,7 @@
 
 namespace SHARMemory.SHAR.Classes
 {
-    public class TrafficBodyDrawable : Class
+    public class TrafficBodyDrawable : Drawable
     {
         public TrafficBodyDrawable(Memory memory, uint address) : base(memory, address) { }
 
@@ -18,9 +18,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(20, value);
         }
 
-        // tDrawable mBodyPropDrawable (24)
+        public Drawable BodyPropDrawable => Memory.CreateClass<Drawable>(ReadUInt32(24));
 
-        // tShader mBodyShader (28)
+        public Shader BodyShader => Memory.CreateClass<Shader>(ReadUInt32(28));
 
         public pddiColour DesiredColour
         {
