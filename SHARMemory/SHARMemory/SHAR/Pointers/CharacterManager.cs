@@ -8,6 +8,6 @@ namespace SHARMemory.SHAR.Pointers
 
         public PointerArray<Character> Characters => new(Memory, Value + 192, 64);
 
-        public Character Player => Characters[0];
+        public Character Player => IsPointerValid ? Characters[0] : null;
     }
 }
