@@ -84,8 +84,8 @@ namespace SHARMemory
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, IntPtr lpBuffer, uint nSize, out UIntPtr lpNumberOfBytesWritten);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //internal static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
@@ -732,206 +732,206 @@ namespace SHARMemory
             return address;
         }
 
-        /// <summary>
-        /// Injects the given path into <see cref="Process"/>.
-        /// </summary>
-        /// <param name="path">
-        /// The filepath to inject.
-        /// </param>
-        /// <exception cref="Win32Exception"></exception>
-        protected void Inject(string path)
-        {
-            IntPtr procHandle = IntPtr.Zero;
-            IntPtr allocMemAddress = IntPtr.Zero;
-            IntPtr hThread = IntPtr.Zero;
-            try
-            {
-                procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
-                if (procHandle == IntPtr.Zero)
-                    throw new Win32Exception();
+        ///// <summary>
+        ///// Injects the given path into <see cref="Process"/>.
+        ///// </summary>
+        ///// <param name="path">
+        ///// The filepath to inject.
+        ///// </param>
+        ///// <exception cref="Win32Exception"></exception>
+        //protected void Inject(string path)
+        //{
+        //    IntPtr procHandle = IntPtr.Zero;
+        //    IntPtr allocMemAddress = IntPtr.Zero;
+        //    IntPtr hThread = IntPtr.Zero;
+        //    try
+        //    {
+        //        procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
+        //        if (procHandle == IntPtr.Zero)
+        //            throw new Win32Exception();
 
 
-                UIntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryW");
-                byte[] pathBytes = Encoding.Unicode.GetBytes(path + '\0');
-                uint pathLength = (uint)pathBytes.Length;
-                allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, pathLength, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-                if (allocMemAddress == IntPtr.Zero)
-                    throw new Win32Exception();
+        //        UIntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryW");
+        //        byte[] pathBytes = Encoding.Unicode.GetBytes(path + '\0');
+        //        uint pathLength = (uint)pathBytes.Length;
+        //        allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, pathLength, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        //        if (allocMemAddress == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                if (!WriteProcessMemory(procHandle, allocMemAddress, pathBytes, pathLength, out _))
-                    throw new Win32Exception();
+        //        if (!WriteProcessMemory(procHandle, allocMemAddress, pathBytes, pathLength, out _))
+        //            throw new Win32Exception();
 
-                hThread = CreateRemoteThread(procHandle, IntPtr.Zero, 0, (IntPtr)loadLibraryAddr.ToUInt32(), allocMemAddress, 0, IntPtr.Zero);
-                if (hThread == IntPtr.Zero)
-                    throw new Win32Exception();
+        //        hThread = CreateRemoteThread(procHandle, IntPtr.Zero, 0, (IntPtr)loadLibraryAddr.ToUInt32(), allocMemAddress, 0, IntPtr.Zero);
+        //        if (hThread == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                if (WaitForSingleObject(hThread, 0xFFFFFFFF) == 0xFFFFFFFF)
-                    throw new Win32Exception();
-            }
-            finally
-            {
-                if (hThread != IntPtr.Zero)
-                    if (!CloseHandle(hThread))
-                        throw new Win32Exception();
+        //        if (WaitForSingleObject(hThread, 0xFFFFFFFF) == 0xFFFFFFFF)
+        //            throw new Win32Exception();
+        //    }
+        //    finally
+        //    {
+        //        if (hThread != IntPtr.Zero)
+        //            if (!CloseHandle(hThread))
+        //                throw new Win32Exception();
 
-                if (allocMemAddress != IntPtr.Zero)
-                    if (!VirtualFreeEx(procHandle, allocMemAddress, 0, MEM_RELEASE))
-                        throw new Win32Exception();
+        //        if (allocMemAddress != IntPtr.Zero)
+        //            if (!VirtualFreeEx(procHandle, allocMemAddress, 0, MEM_RELEASE))
+        //                throw new Win32Exception();
 
-                if (procHandle != IntPtr.Zero)
-                    if (!CloseHandle(procHandle))
-                        throw new Win32Exception();
-            }
-        }
+        //        if (procHandle != IntPtr.Zero)
+        //            if (!CloseHandle(procHandle))
+        //                throw new Win32Exception();
+        //    }
+        //}
 
-        /// <summary>
-        /// Executes a procedure in <see cref="Process"/> at the given address, with the specified parameter.
-        /// </summary>
-        /// <param name="Address">
-        /// The address of the procedure to execute.
-        /// </param>
-        /// <param name="Parameter">
-        /// The parameter to pass to the procedure.
-        /// </param>
-        /// <returns>
-        /// A <c>uint</c> that is the procedure's exit code.
-        /// </returns>
-        /// <exception cref="Win32Exception"></exception>
-        protected uint Execute(IntPtr Address, object Parameter)
-        {
-            IntPtr procHandle = IntPtr.Zero;
-            IntPtr allocMemAddress = IntPtr.Zero;
-            IntPtr hThread = IntPtr.Zero;
-            IntPtr paramsMemory = IntPtr.Zero;
-            try
-            {
-                procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
-                if (procHandle == IntPtr.Zero)
-                    throw new Win32Exception();
+        ///// <summary>
+        ///// Executes a procedure in <see cref="Process"/> at the given address, with the specified parameter.
+        ///// </summary>
+        ///// <param name="Address">
+        ///// The address of the procedure to execute.
+        ///// </param>
+        ///// <param name="Parameter">
+        ///// The parameter to pass to the procedure.
+        ///// </param>
+        ///// <returns>
+        ///// A <c>uint</c> that is the procedure's exit code.
+        ///// </returns>
+        ///// <exception cref="Win32Exception"></exception>
+        //protected uint Execute(IntPtr Address, object Parameter)
+        //{
+        //    IntPtr procHandle = IntPtr.Zero;
+        //    IntPtr allocMemAddress = IntPtr.Zero;
+        //    IntPtr hThread = IntPtr.Zero;
+        //    IntPtr paramsMemory = IntPtr.Zero;
+        //    try
+        //    {
+        //        procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
+        //        if (procHandle == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                uint paramsSize = (uint)Marshal.SizeOf(Parameter);
-                paramsMemory = Marshal.AllocHGlobal((int)paramsSize);
-                Marshal.StructureToPtr(Parameter, paramsMemory, false);
+        //        uint paramsSize = (uint)Marshal.SizeOf(Parameter);
+        //        paramsMemory = Marshal.AllocHGlobal((int)paramsSize);
+        //        Marshal.StructureToPtr(Parameter, paramsMemory, false);
 
-                allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, paramsSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-                if (allocMemAddress == IntPtr.Zero)
-                    throw new Win32Exception();
+        //        allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, paramsSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        //        if (allocMemAddress == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                if (!WriteProcessMemory(procHandle, allocMemAddress, paramsMemory, paramsSize, out _))
-                    throw new Win32Exception();
+        //        if (!WriteProcessMemory(procHandle, allocMemAddress, paramsMemory, paramsSize, out _))
+        //            throw new Win32Exception();
 
-                hThread = CreateRemoteThread(procHandle, IntPtr.Zero, 0, Address, allocMemAddress, 0, IntPtr.Zero);
-                if (hThread == IntPtr.Zero)
-                    throw new Win32Exception();
+        //        hThread = CreateRemoteThread(procHandle, IntPtr.Zero, 0, Address, allocMemAddress, 0, IntPtr.Zero);
+        //        if (hThread == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                if (WaitForSingleObject(hThread, 0xFFFFFFFF) == 0xFFFFFFFF)
-                    throw new Win32Exception();
+        //        if (WaitForSingleObject(hThread, 0xFFFFFFFF) == 0xFFFFFFFF)
+        //            throw new Win32Exception();
 
-                if (!GetExitCodeThread(hThread, out uint retVal))
-                    throw new Win32Exception();
+        //        if (!GetExitCodeThread(hThread, out uint retVal))
+        //            throw new Win32Exception();
 
-                return retVal;
-            }
-            finally
-            {
-                if (paramsMemory != IntPtr.Zero)
-                    Marshal.FreeHGlobal(paramsMemory);
+        //        return retVal;
+        //    }
+        //    finally
+        //    {
+        //        if (paramsMemory != IntPtr.Zero)
+        //            Marshal.FreeHGlobal(paramsMemory);
 
-                if (hThread != IntPtr.Zero)
-                    if (!CloseHandle(hThread))
-                        throw new Win32Exception();
+        //        if (hThread != IntPtr.Zero)
+        //            if (!CloseHandle(hThread))
+        //                throw new Win32Exception();
 
-                if (allocMemAddress != IntPtr.Zero)
-                    if (!VirtualFreeEx(procHandle, allocMemAddress, 0, MEM_RELEASE))
-                        throw new Win32Exception();
+        //        if (allocMemAddress != IntPtr.Zero)
+        //            if (!VirtualFreeEx(procHandle, allocMemAddress, 0, MEM_RELEASE))
+        //                throw new Win32Exception();
 
-                if (procHandle != IntPtr.Zero)
-                    if (!CloseHandle(procHandle))
-                        throw new Win32Exception();
-            }
-        }
+        //        if (procHandle != IntPtr.Zero)
+        //            if (!CloseHandle(procHandle))
+        //                throw new Win32Exception();
+        //    }
+        //}
 
-        /// <summary>
-        /// Injects and then executes a procedure in <see cref="Process"/> at the given address, with the specified parameter.
-        /// Cleans up injected procedure afterwards.
-        /// </summary>
-        /// <param name="Bytes">
-        /// The bytes of the procedure.
-        /// </param>
-        /// <param name="Parameter">
-        /// The parameter to pass to the procedure.
-        /// </param>
-        /// <returns>
-        /// A <c>uint</c> that is the procedure's exit code.
-        /// </returns>
-        /// <exception cref="Win32Exception"></exception>
-        protected uint Execute(byte[] Bytes, object Parameter)
-        {
-            IntPtr procHandle = IntPtr.Zero;
-            IntPtr funcMemoryAddress = IntPtr.Zero;
-            try
-            {
-                procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
-                if (procHandle == IntPtr.Zero)
-                    throw new Win32Exception();
+        ///// <summary>
+        ///// Injects and then executes a procedure in <see cref="Process"/> at the given address, with the specified parameter.
+        ///// Cleans up injected procedure afterwards.
+        ///// </summary>
+        ///// <param name="Bytes">
+        ///// The bytes of the procedure.
+        ///// </param>
+        ///// <param name="Parameter">
+        ///// The parameter to pass to the procedure.
+        ///// </param>
+        ///// <returns>
+        ///// A <c>uint</c> that is the procedure's exit code.
+        ///// </returns>
+        ///// <exception cref="Win32Exception"></exception>
+        //protected uint Execute(byte[] Bytes, object Parameter)
+        //{
+        //    IntPtr procHandle = IntPtr.Zero;
+        //    IntPtr funcMemoryAddress = IntPtr.Zero;
+        //    try
+        //    {
+        //        procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
+        //        if (procHandle == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                uint funcSize = (uint)Bytes.Length;
-                funcMemoryAddress = VirtualAllocEx(procHandle, IntPtr.Zero, funcSize, MEM_COMMIT | MEM_RESERVE, 0x40);
-                if (funcMemoryAddress == IntPtr.Zero)
-                    throw new Win32Exception();
+        //        uint funcSize = (uint)Bytes.Length;
+        //        funcMemoryAddress = VirtualAllocEx(procHandle, IntPtr.Zero, funcSize, MEM_COMMIT | MEM_RESERVE, 0x40);
+        //        if (funcMemoryAddress == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                return Execute(funcMemoryAddress, Parameter);
-            }
-            finally
-            {
-                if (funcMemoryAddress != IntPtr.Zero)
-                    if (!VirtualFreeEx(procHandle, funcMemoryAddress, 0, MEM_RELEASE))
-                        throw new Win32Exception();
+        //        return Execute(funcMemoryAddress, Parameter);
+        //    }
+        //    finally
+        //    {
+        //        if (funcMemoryAddress != IntPtr.Zero)
+        //            if (!VirtualFreeEx(procHandle, funcMemoryAddress, 0, MEM_RELEASE))
+        //                throw new Win32Exception();
 
-                if (procHandle != IntPtr.Zero)
-                    if (!CloseHandle(procHandle))
-                        throw new Win32Exception();
-            }
-        }
+        //        if (procHandle != IntPtr.Zero)
+        //            if (!CloseHandle(procHandle))
+        //                throw new Win32Exception();
+        //    }
+        //}
 
-        /// <summary>
-        /// Injects a procedure into <see cref="Process"/>.
-        /// </summary>
-        /// <param name="Bytes">
-        /// The bytes of the procedure.
-        /// </param>
-        /// <returns>
-        /// An <c>IntPtr</c> of the procedure's address.
-        /// </returns>
-        /// <exception cref="Win32Exception"></exception>
-        protected IntPtr InjectFunction(byte[] Bytes)
-        {
-            IntPtr procHandle = IntPtr.Zero;
-            try
-            {
-                procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
-                if (procHandle == IntPtr.Zero)
-                    throw new Win32Exception();
+        ///// <summary>
+        ///// Injects a procedure into <see cref="Process"/>.
+        ///// </summary>
+        ///// <param name="Bytes">
+        ///// The bytes of the procedure.
+        ///// </param>
+        ///// <returns>
+        ///// An <c>IntPtr</c> of the procedure's address.
+        ///// </returns>
+        ///// <exception cref="Win32Exception"></exception>
+        //protected IntPtr InjectFunction(byte[] Bytes)
+        //{
+        //    IntPtr procHandle = IntPtr.Zero;
+        //    try
+        //    {
+        //        procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
+        //        if (procHandle == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                uint funcSize = (uint)Bytes.Length;
-                IntPtr funcMemoryAddress = VirtualAllocEx(procHandle, IntPtr.Zero, funcSize, MEM_COMMIT | MEM_RESERVE, 0x40);
+        //        uint funcSize = (uint)Bytes.Length;
+        //        IntPtr funcMemoryAddress = VirtualAllocEx(procHandle, IntPtr.Zero, funcSize, MEM_COMMIT | MEM_RESERVE, 0x40);
 
-                if (funcMemoryAddress == IntPtr.Zero)
-                    throw new Win32Exception();
+        //        if (funcMemoryAddress == IntPtr.Zero)
+        //            throw new Win32Exception();
 
-                if (!WriteProcessMemory(procHandle, funcMemoryAddress, Bytes, funcSize, out _))
-                    throw new Win32Exception();
+        //        if (!WriteProcessMemory(procHandle, funcMemoryAddress, Bytes, funcSize, out _))
+        //            throw new Win32Exception();
 
-                ASMFunctions.Add(funcMemoryAddress);
-                return funcMemoryAddress;
-            }
-            finally
-            {
-                if (procHandle != IntPtr.Zero)
-                    if (!CloseHandle(procHandle))
-                        throw new Win32Exception();
-            }
-        }
+        //        ASMFunctions.Add(funcMemoryAddress);
+        //        return funcMemoryAddress;
+        //    }
+        //    finally
+        //    {
+        //        if (procHandle != IntPtr.Zero)
+        //            if (!CloseHandle(procHandle))
+        //                throw new Win32Exception();
+        //    }
+        //}
 
         /// <summary>
         /// Disposes the <see cref="Process"/>, and also cleans up all injected functions.
