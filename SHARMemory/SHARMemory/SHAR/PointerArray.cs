@@ -31,7 +31,7 @@ namespace SHARMemory.SHAR
         /// <exception cref="IndexOutOfRangeException">
         /// Thrown if index is out of viable range.
         /// </exception>
-        public T this[int index]
+        public T this[uint index]
         {
             get
             {
@@ -85,7 +85,7 @@ namespace SHARMemory.SHAR
             private readonly PointerArray<T> array;
             private int position = -1;
 
-            public T Current => array[position];
+            public T Current => array[(uint)position];
             object IEnumerator.Current => Current;
 
             public PointerEnumerator(PointerArray<T> array)
