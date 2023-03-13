@@ -19,7 +19,7 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// The current value of the pointer.
         /// </summary>
-        public uint Value => Memory.ReadUInt32(Address);
+        public virtual uint Value => Memory.ReadUInt32(Address);
         /// <summary>
         /// A <c>bool</c> representing if the current value of the pointer in memory is valid.
         /// </summary>

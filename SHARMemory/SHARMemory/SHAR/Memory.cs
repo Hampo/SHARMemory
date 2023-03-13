@@ -106,6 +106,11 @@ namespace SHARMemory.SHAR
         public CharacterTune CharacterTune { get; }
 
         /// <summary>
+        /// A reference to SHAR's static <c>FeTextBible</c>.
+        /// </summary>
+        public FeTextBible FeTextBible { get; }
+
+        /// <summary>
         /// A reference to SHAR's static <c>GameFlow</c>.
         /// </summary>
         public GameFlow GameFlow { get; }
@@ -370,17 +375,18 @@ namespace SHARMemory.SHAR
 
             Cheats = new Cheats(this);
 
-            CharacterManager = new CharacterManager(this);
-            CharacterSheetManager = new CharacterSheetManager(this);
-            CharacterTune = new CharacterTune(this);
-            GameFlow = new GameFlow(this);
-            GameplayManager = new GameplayManager(this);
-            HitNRunManager = new HitNRunManager(this);
-            InteriorManager = new InteriorManager(this);
-            IntersectManager = new IntersectManager(this);
-            LoadingManager = new LoadingManager(this);
-            TrafficManager = new TrafficManager(this);
-            VehicleCentral = new VehicleCentral(this);
+            CharacterManager = new(this);
+            CharacterSheetManager = new(this);
+            CharacterTune = new(this);
+            FeTextBible = new(this);
+            GameFlow = new(this);
+            GameplayManager = new(this);
+            HitNRunManager = new(this);
+            InteriorManager = new(this);
+            IntersectManager = new(this);
+            LoadingManager = new(this);
+            TrafficManager = new(this);
+            VehicleCentral = new(this);
         }
 
         [DllImport("user32.dll")]
