@@ -99,6 +99,154 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(156, (int)value);
         }
 
+        public CarStartLocator VehicleRestart => new(Memory, ReadUInt32(160));
+
+        public Locator PlayerRestart => new(Memory, ReadUInt32(164));
+
+        public ZoneEventLocator DynaloadLoc => new(Memory, ReadUInt32(168));
+
+        public ZoneEventLocator StreetRacePropsLoad => new(Memory, ReadUInt32(172));
+
+        public ZoneEventLocator StreetRacePropsUnload => new(Memory, ReadUInt32(176));
+
+        public int ResetToStage
+        {
+            get => ReadInt32(180);
+            set => WriteInt32(180, value);
+        }
+
+        private byte Bitfield_0xB8
+        {
+            get => ReadByte(184);
+            set => WriteByte(184, value);
+        }
+
+        public bool SundayDrive
+        {
+            get => (Bitfield_0xB8 & 0b00000001) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0xB8 |= 0b00000001;
+                else
+                    Bitfield_0xB8 &= 0b11111110;
+            }
+        }
+
+        public bool BonusMission
+        {
+            get => (Bitfield_0xB8 & 0b00000010) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0xB8 |= 0b00000010;
+                else
+                    Bitfield_0xB8 &= 0b11111101;
+            }
+        }
+
+        public PointerArray<BonusObjective> BonusObjectives => new(Memory, Address + 188, 3);
+
+        public uint NumBonusObjectives
+        {
+            get => ReadUInt32(192);
+            set => WriteUInt32(192, value);
+        }
+
+        public bool IsForcedCar
+        {
+            get => ReadBoolean(196);
+            set => WriteBoolean(196, value);
+        }
+
+        public bool AutoRepairCar
+        {
+            get => ReadBoolean(197);
+            set => WriteBoolean(197, value);
+        }
+
+        public bool SwappedCars
+        {
+            get => ReadBoolean(198);
+            set => WriteBoolean(198, value);
+        }
+
+        public bool CarryOverOutOfCarCondition
+        {
+            get => ReadBoolean(199);
+            set => WriteBoolean(199, value);
+        }
+
+        public bool TriggerPattyAndSelmaScreen
+        {
+            get => ReadBoolean(200);
+            set => WriteBoolean(200, value);
+        }
+
+        public int FinalDelay
+        {
+            get => ReadInt32(204);
+            set => WriteInt32(204, value);
+        }
+
+        public int CompleteDelay
+        {
+            get => ReadInt32(208);
+            set => WriteInt32(208, value);
+        }
+
+        public bool ChangingStages
+        {
+            get => ReadBoolean(212);
+            set => WriteBoolean(212, value);
+        }
+
+        public bool NoTimeUpdate
+        {
+            get => ReadBoolean(213);
+            set => WriteBoolean(213, value);
+        }
+
+        public bool JumpBackStage
+        {
+            get => ReadBoolean(214);
+            set => WriteBoolean(214, value);
+        }
+
+        public byte JumpBackStageBy
+        {
+            get => ReadByte(215);
+            set => WriteByte(215, value);
+        }
+
+        public int NumStatePropCollectibles
+        {
+            get => ReadInt32(216);
+            set => WriteInt32(216, value);
+        }
+
+        public PointerArray<StatePropCollectible> StatePropCollectibles => new(Memory, Address + 220, (uint)NumStatePropCollectibles);
+
+        public AnimatedIcon DoorStars => new(Memory, ReadUInt32(224));
+
+        public int InitPedGroupId
+        {
+            get => ReadInt32(228);
+            set => WriteInt32(228, value);
+        }
+
+        public bool ShowHUD
+        {
+            get => ReadBoolean(232);
+            set => WriteBoolean(232, value);
+        }
+
+        public int NumValidFailureHints
+        {
+            get => ReadInt32(236);
+            set => WriteInt32(236, value);
+        }
+
         public MissionStage GetCurrentStage()
         {
             int currStage = CurrentStage;
