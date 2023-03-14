@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace SHARMemory.SHAR
 {
@@ -40,7 +41,7 @@ namespace SHARMemory.SHAR
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}.");
 
-                return Memory.CreateClass<T>(Memory.ReadUInt32(Address + (uint)index * 4));
+                return Memory.CreateClass<T>(Memory.ReadUInt32(Address + index * 4));
             }
         }
 
@@ -173,5 +174,13 @@ namespace SHARMemory.SHAR
         public IEnumerator<T> GetEnumerator() => new PointerEnumerator(this);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        /// <summary>
+        /// Override <c>ToString</c> to provide a nicer string response.
+        /// </summary>
+        /// <returns>
+        /// The array information
+        /// </returns>
+        public override string ToString() => $"{nameof(T)}[{Count}]";
     }
 }

@@ -41,14 +41,14 @@ namespace SHARMemory.SHAR
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}");
 
-                return Memory.ReadStruct<T>(Address + Size * (uint)index);
+                return Memory.ReadStruct<T>(Address + Size * index);
             }
             set
             {
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}");
 
-                Memory.WriteStruct(Address + Size * (uint)index, value);
+                Memory.WriteStruct(Address + Size * index, value);
             }
         }
 
@@ -111,5 +111,13 @@ namespace SHARMemory.SHAR
         public IEnumerator<T> GetEnumerator() => new StructEnumerator(this);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        /// <summary>
+        /// Override <c>ToString</c> to provide a nicer string response.
+        /// </summary>
+        /// <returns>
+        /// The array information
+        /// </returns>
+        public override string ToString() => $"{nameof(T)}[{Count}]";
     }
 }

@@ -141,6 +141,11 @@ namespace SHARMemory.SHAR
         public LoadingManager LoadingManager { get; }
 
         /// <summary>
+        /// A reference to SHAR's static <c>MissionManager</c>.
+        /// </summary>
+        public MissionManager MissionManager { get; }
+
+        /// <summary>
         /// A reference to SHAR's static <c>TrafficManager</c>.
         /// </summary>
         public TrafficManager TrafficManager { get; }
@@ -178,8 +183,12 @@ namespace SHARMemory.SHAR
         private static readonly uint[] ModLauncherOrdinalKeys = new uint[]
         {
             3151, // Event Hacks
+
             3360, // Max Cars
             3364, // Cars Offset
+
+            3947, // Max Stages
+            3948, // Stages Offset
         };
         /// <summary>
         /// A <c>Dictionary</c> containing a list of ordinals used by <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> and their addresses.
@@ -385,6 +394,7 @@ namespace SHARMemory.SHAR
             InteriorManager = new(this);
             IntersectManager = new(this);
             LoadingManager = new(this);
+            MissionManager = new(this);
             TrafficManager = new(this);
             VehicleCentral = new(this);
         }
