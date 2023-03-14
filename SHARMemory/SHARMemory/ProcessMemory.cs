@@ -399,7 +399,7 @@ namespace SHARMemory
         /// </returns>
         public string ReadNullString(uint Address, Encoding Encoding)
         {
-            List<byte> bytes = new List<byte>();
+            List<byte> bytes = new();
             uint Pointer = ReadUInt32(Address);
             while (true)
             {
@@ -410,25 +410,6 @@ namespace SHARMemory
                 Pointer++;
             }
             return Encoding.GetString(bytes.ToArray());
-        }
-
-        /// <summary>
-        /// Reads <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>Color</c> at the given address.
-        /// </returns>
-        public Color ReadIntColour(uint Address)
-        {
-            int red = ReadInt32(Address);
-            int green = ReadInt32(Address + 4);
-            int blue = ReadInt32(Address + 8);
-
-            Color colour = Color.FromArgb((byte)red, (byte)green, (byte)blue);
-            return colour;
         }
 
         /// <summary>
@@ -600,13 +581,26 @@ namespace SHARMemory
         /// The address to write to.
         /// </param>
         /// <param name="Value">
-        /// The <c>Color</c> value to write.
+        /// The <c>string</c> value to write.
         /// </param>
-        public void WriteIntColor(uint Address, Color Value)
+        /// <param name="Encoding">
+        /// The character encoding to use.
+        /// </param>
+        /// <param name="Length">
+        /// The number of bytes to write.
+        /// </param>
+        public void WriteString(uint Address, string Value, Encoding Encoding, int Length)
         {
-            WriteInt32(Address, Value.R);
-            WriteInt32(Address + 4, Value.G);
-            WriteInt32(Address + 8, Value.B);
+            string Value2;
+            if (Value.Length > Length)
+                Value2 = Value.Substring(0, Length);
+            else if (Value.Length < Length)
+                Value2 = Value.PadRight(Length, '\0');
+            else
+                Value2 = Value;
+
+            byte[] bytes = Encoding.GetBytes(Value2);
+            Write(Address, bytes, out _);
         }
 
         /// <summary>

@@ -350,6 +350,23 @@ namespace SHARMemory.SHAR
         public void WriteUInt64(uint Offset, ulong Value) => Memory.WriteUInt64(this.Value + Offset, Value);
 
         /// <summary>
+        /// Writes the given value to <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Offset">
+        /// The offset to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>string</c> value to write.
+        /// </param>
+        /// <param name="Encoding">
+        /// The character encoding to use.
+        /// </param>
+        /// <param name="Length">
+        /// The number of bytes to write.
+        /// </param>
+        public void WriteString(uint Offset, string Value, Encoding Encoding, int Length) => Memory.WriteString(this.Value + Offset, Value, Encoding, Length);
+
+        /// <summary>
         /// Writes the given value to <see cref="Memory"/> at the class's pointer <see cref="Value"/> + <paramref name="Offset"/>.
         /// </summary>
         /// <param name="Type">
@@ -373,5 +390,13 @@ namespace SHARMemory.SHAR
         /// The <c>T</c> value to write.
         /// </param>
         public void WriteStruct<T>(uint Offset, T Value) => WriteStruct(typeof(T), Offset, Value);
+
+        /// <summary>
+        /// Override <c>ToString</c> to provide a nicer string response.
+        /// </summary>
+        /// <returns>
+        /// The hex value of <see cref="Address"/> and <see cref="Value"/>
+        /// </returns>
+        public override string ToString() => $"(0x{Address:X} | 0x{Value:X})";
     }
 }
