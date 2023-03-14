@@ -11,6 +11,7 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// The <see cref="SHAR.Memory"/> manager this class is linked to.
         /// </summary>
+        [System.ComponentModel.Browsable(false)]
         public Memory Memory { get; }
         /// <summary>
         /// The base address of this class in memory.
