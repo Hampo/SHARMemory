@@ -63,7 +63,7 @@ namespace SHARMemory.SHAR.Classes
 
         public Matrix4x4 Transform => ReadStruct<Matrix4x4>(184);
 
-        public string Name => ReadNullString(248, Encoding.UTF8);
+        public string Name => ReadNullStringPointer(248, Encoding.UTF8);
 
         public Vector3 InitialPosition
         {

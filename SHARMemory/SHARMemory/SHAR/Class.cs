@@ -190,6 +190,20 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
         /// </summary>
+        /// <param name="Offset">
+        /// The offset to read.
+        /// </param>
+        /// <param name="Encoding">
+        /// The character encoding to use.
+        /// </param>
+        /// <returns>
+        /// The <c>string</c> pointer at the given offset.
+        /// </returns>
+        public string ReadNullStringPointer(uint Offset, Encoding Encoding) => Memory.ReadNullStringPointer(Address + Offset, Encoding);
+
+        /// <summary>
+        /// Reads <see cref="Memory"/> at the class's base <see cref="Address"/> + <paramref name="Offset"/>.
+        /// </summary>
         /// <param name="Type">
         /// The type to read.
         /// </param>

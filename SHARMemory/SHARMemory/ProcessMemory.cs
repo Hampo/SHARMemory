@@ -400,17 +400,30 @@ namespace SHARMemory
         public string ReadNullString(uint Address, Encoding Encoding)
         {
             List<byte> bytes = new();
-            uint Pointer = ReadUInt32(Address);
             while (true)
             {
-                byte b = ReadByte(Pointer);
+                byte b = ReadByte(Address);
                 if (b == 0)
                     break;
                 bytes.Add(b);
-                Pointer++;
+                Address++;
             }
             return Encoding.GetString(bytes.ToArray());
         }
+
+        /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Address">
+        /// The address to read.
+        /// </param>
+        /// <param name="Encoding">
+        /// The character encoding to use.
+        /// </param>
+        /// <returns>
+        /// The <c>string</c> pointer at the given address.
+        /// </returns>
+        public string ReadNullStringPointer(uint Address, Encoding Encoding) => ReadNullString(ReadUInt32(Address), Encoding);
 
         /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.
