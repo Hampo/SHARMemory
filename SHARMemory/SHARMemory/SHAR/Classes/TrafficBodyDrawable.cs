@@ -1,4 +1,4 @@
-﻿using SHARMemory.SHAR.Structs;
+﻿using System.Drawing;
 
 namespace SHARMemory.SHAR.Classes
 {
@@ -22,9 +22,9 @@ namespace SHARMemory.SHAR.Classes
 
         public Shader BodyShader => Memory.CreateClass<Shader>(ReadUInt32(28));
 
-        public pddiColour DesiredColour
+        public Color DesiredColour
         {
-            get => ReadStruct<pddiColour>(32);
+            get => ReadStruct<Color>(32);
             set => WriteStruct(32, value);
         }
     }

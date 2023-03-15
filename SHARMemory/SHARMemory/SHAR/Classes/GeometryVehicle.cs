@@ -39,11 +39,11 @@ namespace SHARMemory.SHAR.Classes
         {
             TrafficBodyDrawable trafficBodyDrawable = TrafficBodyDrawable;
             if (trafficBodyDrawable != null)
-                trafficBodyDrawable.DesiredColour = new(Colour);
+                trafficBodyDrawable.DesiredColour = Colour;
 
             TrafficBodyDrawable trafficDoorDrawable = TrafficDoorDrawable;
             if (trafficDoorDrawable != null)
-                trafficDoorDrawable.DesiredColour = new(Colour);
+                trafficDoorDrawable.DesiredColour = Colour;
         }
     }
 }

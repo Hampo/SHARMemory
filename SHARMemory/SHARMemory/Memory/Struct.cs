@@ -3,7 +3,7 @@
 namespace SHARMemory.Memory
 {
     /// <summary>
-    /// Interface <c>SHAR.IStruct</c> is an interface to handle the reading/writing a SHAR struct.
+    /// Interface <c>Memory.IStruct</c> is an interface to handle the reading/writing a struct.
     /// </summary>
     public interface IStruct
     {
@@ -11,7 +11,7 @@ namespace SHARMemory.Memory
         /// Reads <paramref name="Memory"/> at <paramref name="Address"/>.
         /// </summary>
         /// <param name="Memory">
-        /// The <c>SHAR.Memory</c> to read.
+        /// The <c>ProcessMemory</c> to read.
         /// </param>
         /// <param name="Address">
         /// The address to read.
@@ -25,7 +25,7 @@ namespace SHARMemory.Memory
         /// Writes <paramref name="Value"/> to <paramref name="Memory"/> at <paramref name="Address"/>.
         /// </summary>
         /// <param name="Memory">
-        /// The <c>SHAR.Memory</c> to write to.
+        /// The <c>ProcessMemory</c> to write to.
         /// </param>
         /// <param name="Address">
         /// The address to write to.
@@ -37,27 +37,31 @@ namespace SHARMemory.Memory
     }
 
     /// <summary>
-    /// Class <c>SHAR.StructAttribute</c> is an attribute to be given to SHAR structs to handle reading/writing.
+    /// Class <c>Memory.StructAttribute</c> is an attribute to be given to structs to handle reading/writing.
     /// </summary>
     public class StructAttribute : Attribute
     {
         /// <summary>
-        /// Gets the <see cref="IStruct"/> related to the given SHAR struct.
+        /// Gets an <see cref="IStruct"/> link to a given <paramref name="Type"/> in <paramref name="Memory"/>.
         /// </summary>
+        /// <param name="Memory">
+        /// The <see cref="ProcessMemory"/> instance to search for an <see cref="IStruct"/>.
+        /// </param>
         /// <param name="Type">
-        /// The struct to get.
+        /// The <see cref="Type"/> to search for.
         /// </param>
         /// <returns>
-        /// The <see cref="IStruct"/> interface for the given SHAR struct.
+        /// The <see cref="IStruct"/> linked to the <paramref name="Type"/>.
         /// </returns>
-        /// <exception cref="ArgumentException">
-        /// Throws if the given <paramref name="Type"/> does not have a <see cref="StructAttribute"/>.
-        /// </exception>
-        public static IStruct Get(Type Type)
+        /// <exception cref="ArgumentException"></exception>
+        public static IStruct Get(ProcessMemory Memory, Type Type)
         {
+            if (Memory.Structs.Known.TryGetValue(Type, out var Struct))
+                return Struct;
+
             var StructAttributes = (StructAttribute[])Type.GetCustomAttributes(typeof(StructAttribute), false);
             if (StructAttributes.Length < 1)
-                throw new ArgumentException($"'{nameof(Type)}' must have attribute '{nameof(Memory.StructAttribute)}'.", nameof(Type));
+                throw new ArgumentException($"'{nameof(Type)}' must have attribute '{nameof(SHARMemory.Memory.StructAttribute)}'.", nameof(Type));
             var StructAttribute = StructAttributes[0];
 
             return StructAttribute.Struct;
@@ -66,10 +70,10 @@ namespace SHARMemory.Memory
         private readonly IStruct Struct;
 
         /// <summary>
-        /// The <c>SHAR.StructAttribute</c> constructor.
+        /// The <c>Memory.StructAttribute</c> constructor.
         /// </summary>
         /// <param name="Type">
-        /// The SHAR struct to manage.
+        /// The struct to manage.
         /// </param>
         public StructAttribute(Type Type)
         {

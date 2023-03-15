@@ -573,13 +573,13 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(796, value);
         }
 
-        public StructArray<Bool> DamperShouldNotPullDown => new(Memory, Address + 797, Bool.Size, 4);
+        public StructArray<bool> DamperShouldNotPullDown => new(Memory, Address + 797, sizeof(bool), 4);
 
         public PointerArray<SuspensionJointDriver> SuspensionJointDrivers => new(Memory, Address + 804, 4);
 
-        public StructArray<Int32> WheelToJointIndexMapping => new(Memory, Address + 808, Int32.Size, 4);
+        public StructArray<int> WheelToJointIndexMapping => new(Memory, Address + 808, sizeof(int), 4);
 
-        // TODO StructArray<Int32> JointIndexToWheelMapping = new(Memory, ReadUInt32(824), Int32.Size, GeometryVehicle.P3DPose.NumJoints);
+        // TODO StructArray<int> JointIndexToWheelMapping = new(Memory, ReadUInt32(824), sizeof(int), GeometryVehicle.P3DPose.NumJoints);
 
         public StructArray<Vector3> SuspensionRestPointsFromFile => new(Memory, Address + 840, Vector3.Size, 4);
 
@@ -617,7 +617,7 @@ namespace SHARMemory.SHAR.Classes
 
         public PointerArray<PhysicsJointInertialEffector> InertialJointDrivers => new(Memory, Address + 1064, 4);
 
-        // TODO StructArray<Int32> JointIndexToInertialJointDriverMapping = new(Memory, ReadUInt32(1080), Int32.Size, GeometryVehicle.P3DPose.NumJoints);
+        // TODO StructArray<int> JointIndexToInertialJointDriverMapping = new(Memory, ReadUInt32(1080), sizeof(int), GeometryVehicle.P3DPose.NumJoints);
 
         public PointerArray<PhysicsJointMatrixModifier> PhysicsJointMatrixModifiers => new(Memory, Address + 1084, 4);
 

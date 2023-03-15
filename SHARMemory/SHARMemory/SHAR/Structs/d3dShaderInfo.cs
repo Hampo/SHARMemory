@@ -8,19 +8,19 @@ namespace SHARMemory.SHAR.Structs
     public struct d3dShaderInfo
 #pragma warning restore IDE1006 // Naming Styles
     {
-        public const int Size = pddiColour.Size * 4 + sizeof(float);
+        public const int Size = sizeof(int) * 4 + sizeof(float);
 
-        public pddiColour Diffuse;
+        public Color Diffuse;
 
-        public pddiColour Specular;
+        public Color Specular;
 
-        public pddiColour Ambient;
+        public Color Ambient;
 
-        public pddiColour Emissive;
+        public Color Emissive;
 
         public float Shininess;
 
-        public d3dShaderInfo(pddiColour diffuse, pddiColour specular, pddiColour ambient, pddiColour emissive, float shininess)
+        public d3dShaderInfo(Color diffuse, Color specular, Color ambient, Color emissive, float shininess)
         {
             Diffuse = diffuse;
             Specular = specular;
@@ -36,7 +36,7 @@ namespace SHARMemory.SHAR.Structs
     internal class d3dShaderInfoStruct : IStruct
 #pragma warning restore IDE1006 // Naming Styles
     {
-        public object Read(ProcessMemory Memory, uint Address) => new d3dShaderInfo(Memory.ReadStruct<pddiColour>(Address), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size + pddiColour.Size), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size), Memory.ReadSingle(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size + pddiColour.Size));
+        public object Read(ProcessMemory Memory, uint Address) => new d3dShaderInfo(Memory.ReadStruct<Color>(Address), Memory.ReadStruct<Color>(Address + sizeof(int)), Memory.ReadStruct<Color>(Address + sizeof(int) + sizeof(int)), Memory.ReadStruct<Color>(Address + sizeof(int) + sizeof(int) + sizeof(int)), Memory.ReadSingle(Address + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int)));
 
         public void Write(ProcessMemory Memory, uint Address, object Value)
         {
@@ -44,10 +44,10 @@ namespace SHARMemory.SHAR.Structs
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(d3dShaderInfo)}'.", nameof(Value));
 
             Memory.WriteStruct(Address, Value2.Diffuse);
-            Memory.WriteStruct(Address + pddiColour.Size, Value2.Specular);
-            Memory.WriteStruct(Address + pddiColour.Size + pddiColour.Size, Value2.Ambient);
-            Memory.WriteStruct(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size, Value2.Emissive);
-            Memory.WriteSingle(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size + pddiColour.Size, Value2.Shininess);
+            Memory.WriteStruct(Address + sizeof(int), Value2.Specular);
+            Memory.WriteStruct(Address + sizeof(int) + sizeof(int), Value2.Ambient);
+            Memory.WriteStruct(Address + sizeof(int) + sizeof(int) + sizeof(int), Value2.Emissive);
+            Memory.WriteSingle(Address + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int), Value2.Shininess);
         }
     }
 }

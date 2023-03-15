@@ -18,17 +18,17 @@ namespace SHARMemory.SHAR.Classes
 
         public uint NumStrings => ReadUInt32(28);
 
-        public StructArray<Structs.UInt32> Hashes => new(Memory, ReadUInt32(32), Structs.UInt32.Size, NumStrings);
+        public StructArray<uint> Hashes => new(Memory, ReadUInt32(32), sizeof(uint), NumStrings);
 
-        public StructArray<Structs.UInt32> Offsets => new(Memory, ReadUInt32(36), Structs.UInt32.Size, NumStrings);
+        public StructArray<uint> Offsets => new(Memory, ReadUInt32(36), sizeof(uint), NumStrings);
 
-        public StructArray<Structs.UInt16> Buffer => new(Memory, ReadUInt32(40), Structs.UInt16.Size, BufferSize / 2);
+        public StructArray<ushort> Buffer => new(Memory, ReadUInt32(40), sizeof(ushort), BufferSize / 2);
 
         private uint? GetOffset(uint hash)
         {
             for (uint i = 0; i < NumStrings; i++)
-                if (Hashes[i].Value == hash)
-                    return Offsets[i].Value / 2;
+                if (Hashes[i] == hash)
+                    return Offsets[i] / 2;
 
             return null;
         }
@@ -42,7 +42,7 @@ namespace SHARMemory.SHAR.Classes
             List<ushort> data = new();
             while (true)
             {
-                ushort c = Buffer[offset.Value].Value;
+                ushort c = Buffer[offset.Value];
                 if (c == 0) break;
 
                 data.Add(c);
@@ -66,7 +66,7 @@ namespace SHARMemory.SHAR.Classes
             bool foundNull = false;
             while (offset.Value + maxLength < Buffer.Count)
             {
-                ushort c = Buffer[offset.Value + maxLength].Value;
+                ushort c = Buffer[offset.Value + maxLength];
                 if (c == 0)
                     foundNull = true;
                 else if (foundNull)
@@ -84,7 +84,7 @@ namespace SHARMemory.SHAR.Classes
 
             for (int i = 0; i < maxLength; i++)
             {
-                Buffer[(uint)(offset.Value + i)] = new((ushort)(i < chars.Length ? chars[i] : 0));
+                Buffer[(uint)(offset.Value + i)] = (ushort)(i < chars.Length ? chars[i] : 0);
             }
             return true;
         }

@@ -21,6 +21,11 @@ namespace SHARMemory.Memory
         /// </summary>
         public Process Process { get; }
 
+        /// <summary>
+        /// A <c>readonly</c> instance of <see cref="Structs"/>. Used for <see cref="Structs.Known"/>.
+        /// </summary>
+        public readonly Structs Structs = new();
+
         internal const int PROCESS_CREATE_THREAD = 0x0002;
         internal const int PROCESS_QUERY_INFORMATION = 0x0400;
         internal const int PROCESS_VM_OPERATION = 0x0008;
@@ -470,7 +475,7 @@ namespace SHARMemory.Memory
         /// <returns>
         /// The <paramref name="Type"/> at the given address.
         /// </returns>
-        public object ReadStruct(Type Type, uint Address) => StructAttribute.Get(Type).Read(this, Address);
+        public object ReadStruct(Type Type, uint Address) => StructAttribute.Get(this, Type).Read(this, Address);
 
         /// <summary>
         /// Reads <see cref="Process"/>'s memory at the given address.
@@ -686,7 +691,7 @@ namespace SHARMemory.Memory
         /// <param name="Value">
         /// The <paramref name="Type"/> value to write.
         /// </param>
-        public void WriteStruct(Type Type, uint Address, object Value) => StructAttribute.Get(Type).Write(this, Address, Value);
+        public void WriteStruct(Type Type, uint Address, object Value) => StructAttribute.Get(this, Type).Write(this, Address, Value);
 
         /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.
@@ -719,6 +724,15 @@ namespace SHARMemory.Memory
             return (T)Activator.CreateInstance(typeof(T), this, Address);
         }
 
+        /// <summary>
+        /// Allocates <c>4096</c> bytes of memory in <see cref="Process"/>.
+        /// </summary>
+        /// <returns>
+        /// The address of the allocated memory.
+        /// </returns>
+        /// <exception cref="Win32Exception">
+        /// Throws if any Windows exceptions happen.
+        /// </exception>
         public uint AllocateMemory()
         {
             IntPtr intPtr = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, bInheritHandle: false, Process.Id);
