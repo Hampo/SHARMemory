@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using System.Drawing;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -41,9 +42,9 @@ namespace SHARMemory.SHAR.Structs
 
     internal class SwatchColourStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new SwatchColour(Memory.ReadInt32(Address), Memory.ReadInt32(Address + sizeof(int)), Memory.ReadInt32(Address + sizeof(int) + sizeof(int)));
+        public object Read(ProcessMemory Memory, uint Address) => new SwatchColour(Memory.ReadInt32(Address), Memory.ReadInt32(Address + sizeof(int)), Memory.ReadInt32(Address + sizeof(int) + sizeof(int)));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not SwatchColour Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(SwatchColour)}'.", nameof(Value));

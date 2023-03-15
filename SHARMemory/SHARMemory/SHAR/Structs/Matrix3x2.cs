@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Structs
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(Matrix3x2Struct))]
     public struct Matrix3x2
@@ -31,9 +33,9 @@
 
     internal class Matrix3x2Struct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new Matrix3x2(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5));
+        public object Read(ProcessMemory Memory, uint Address) => new Matrix3x2(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not Matrix3x2 Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Matrix3x2)}'.", nameof(Value));

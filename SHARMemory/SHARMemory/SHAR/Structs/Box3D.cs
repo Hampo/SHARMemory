@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Structs
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(Box3DStruct))]
     public struct Box3D
@@ -30,9 +32,9 @@
 
     internal class Box3DStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new Box3D(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size));
+        public object Read(ProcessMemory Memory, uint Address) => new Box3D(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not Box3D Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Box3D)}'.", nameof(Value));

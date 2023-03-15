@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Pointers;
 
 namespace SHARMemory.SHAR.Structs
@@ -35,7 +36,7 @@ namespace SHARMemory.SHAR.Structs
 
     internal class LevelDataStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address)
+        public object Read(ProcessMemory Memory, uint Address)
         {
             RenderEnums.LevelEnum Level = (RenderEnums.LevelEnum)Memory.ReadInt32(Address);
             int NumMissions = Memory.ReadInt32(Address + sizeof(RenderEnums.LevelEnum));
@@ -49,7 +50,7 @@ namespace SHARMemory.SHAR.Structs
             return new LevelData(Level, NumMissions, Ratings, NumBonusCollectibles, NumBonusCollected, Mission);
         }
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not LevelData Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));

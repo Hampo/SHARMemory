@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Structs
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(Vector3Struct))]
     public struct Vector3
@@ -32,9 +34,9 @@
 
     internal class Vector3Struct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new Vector3(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) + sizeof(float)));
+        public object Read(ProcessMemory Memory, uint Address) => new Vector3(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) + sizeof(float)));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not Vector3 Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Vector3)}'.", nameof(Value));

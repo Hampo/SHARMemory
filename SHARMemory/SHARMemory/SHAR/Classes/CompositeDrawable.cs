@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
 
 namespace SHARMemory.SHAR.Classes
 {
@@ -6,6 +6,6 @@ namespace SHARMemory.SHAR.Classes
     {
         public CompositeDrawable(Memory memory, uint address) : base(memory, address) { }
 
-        public PointerArray<DrawableElement> Elements => PointerArray<DrawableElement>.FromPtrArray(Memory, this, 68);
+        public PointerArray<DrawableElement> Elements => PointerArrayExtensions.FromPtrArray<DrawableElement>(Memory, this, 68);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Structs
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(Matrix4x4Struct))]
     public struct Matrix4x4
@@ -53,9 +55,9 @@
 
     internal class Matrix4x4Struct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new Matrix4x4(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5), Memory.ReadSingle(Address + sizeof(float) * 6), Memory.ReadSingle(Address + sizeof(float) * 7), Memory.ReadSingle(Address + sizeof(float) * 8), Memory.ReadSingle(Address + sizeof(float) * 9), Memory.ReadSingle(Address + sizeof(float) * 10), Memory.ReadSingle(Address + sizeof(float) * 11), Memory.ReadSingle(Address + sizeof(float) * 12), Memory.ReadSingle(Address + sizeof(float) * 13), Memory.ReadSingle(Address + sizeof(float) * 14), Memory.ReadSingle(Address + sizeof(float) * 15));
+        public object Read(ProcessMemory Memory, uint Address) => new Matrix4x4(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5), Memory.ReadSingle(Address + sizeof(float) * 6), Memory.ReadSingle(Address + sizeof(float) * 7), Memory.ReadSingle(Address + sizeof(float) * 8), Memory.ReadSingle(Address + sizeof(float) * 9), Memory.ReadSingle(Address + sizeof(float) * 10), Memory.ReadSingle(Address + sizeof(float) * 11), Memory.ReadSingle(Address + sizeof(float) * 12), Memory.ReadSingle(Address + sizeof(float) * 13), Memory.ReadSingle(Address + sizeof(float) * 14), Memory.ReadSingle(Address + sizeof(float) * 15));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not Matrix4x4 Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Matrix4x4)}'.", nameof(Value));

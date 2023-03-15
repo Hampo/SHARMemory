@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using SHARMemory.Memory;
+using System.Text;
 
 namespace SHARMemory.SHAR.Classes
 {

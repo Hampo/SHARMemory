@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Structs;
 using System.Runtime.InteropServices;
 using System.Text;

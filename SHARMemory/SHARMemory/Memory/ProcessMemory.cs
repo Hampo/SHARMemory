@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
+using System.Net;
 
-namespace SHARMemory
+namespace SHARMemory.Memory
 {
     /// <summary>
     /// Class <c>ProcessMemory</c> is a base class for reading and writing to a <c>Process</c>'s memory.
@@ -28,6 +28,7 @@ namespace SHARMemory
 
         internal const uint MEM_COMMIT = 0x00001000;
         internal const uint MEM_RESERVE = 0x00002000;
+        internal const uint MEM_DECOMMIT = 0x00004000;
         internal const uint MEM_RELEASE = 0x00008000;
         internal const uint PAGE_READWRITE = 4;
 
@@ -44,6 +45,37 @@ namespace SHARMemory
             LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
             LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000
         }
+
+        /*[Flags]
+        internal enum AllocationType
+        {
+            Commit = 0x1000,
+            Reserve = 0x2000,
+            Decommit = 0x4000,
+            Release = 0x8000,
+            Reset = 0x80000,
+            Physical = 0x400000,
+            TopDown = 0x100000,
+            WriteWatch = 0x200000,
+            LargePages = 0x20000000
+        }
+
+        [Flags]
+        internal enum MemoryProtection
+        {
+            NoAccess = 0x01,
+            ReadOnly = 0x02,
+            ReadWrite = 0x04,
+            WriteCopy = 0x08,
+            Execute = 0x10,
+            ExecuteRead = 0x20,
+            ExecuteReadWrite = 0x40,
+            ExecuteWriteCopy = 0x80,
+            GuardModifierflag = 0x100,
+            NoCacheModifierflag = 0x200,
+            WriteCombineModifierflag = 0x400
+        }*/
+
 
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool VirtualProtectEx(IntPtr hProcess, UIntPtr lpAddress, int dwSize, int flNewProtect, [Out] int lpflOldProtect);
@@ -426,6 +458,31 @@ namespace SHARMemory
         public string ReadNullStringPointer(uint Address, Encoding Encoding) => ReadNullString(ReadUInt32(Address), Encoding);
 
         /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Type">
+        /// The type to read.
+        /// </param>
+        /// <param name="Address">
+        /// The address to read.
+        /// </param>
+        /// <returns>
+        /// The <paramref name="Type"/> at the given address.
+        /// </returns>
+        public object ReadStruct(Type Type, uint Address) => StructAttribute.Get(Type).Read(this, Address);
+
+        /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Address">
+        /// The address to read.
+        /// </param>
+        /// <returns>
+        /// The <c>T</c> at the given address.
+        /// </returns>
+        public T ReadStruct<T>(uint Address) => (T)ReadStruct(typeof(T), Address);
+
+        /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.
         /// </summary>
         /// <param name="Address">
@@ -614,6 +671,72 @@ namespace SHARMemory
 
             byte[] bytes = Encoding.GetBytes(Value2);
             Write(Address, bytes, out _);
+        }
+
+        /// <summary>
+        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Type">
+        /// The type to write.
+        /// </param>
+        /// <param name="Address">
+        /// The address to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <paramref name="Type"/> value to write.
+        /// </param>
+        public void WriteStruct(Type Type, uint Address, object Value) => StructAttribute.Get(Type).Write(this, Address, Value);
+
+        /// <summary>
+        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Address">
+        /// The address to write to.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>T</c> value to write.
+        /// </param>
+        public void WriteStruct<T>(uint Address, T Value) => WriteStruct(typeof(T), Address, Value);
+
+        /// <summary>
+        /// Create an instance of a <see cref="Class"/> at the given address.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The <see cref="Class"/> type to use.
+        /// </typeparam>
+        /// <param name="Address">
+        /// The base address of the class.
+        /// </param>
+        /// <returns>
+        /// A new instance of <see cref="Class"/> or <c>null</c>.
+        /// </returns>
+        public T CreateClass<T>(uint Address) where T : Class
+        {
+            if (Address == 0)
+                return null;
+
+            return (T)Activator.CreateInstance(typeof(T), this, Address);
+        }
+
+        public uint AllocateMemory()
+        {
+            IntPtr intPtr = OpenProcess(40, bInheritHandle: false, Process.Id);
+            if (intPtr == IntPtr.Zero)
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+            try
+            {
+                IntPtr allocMemAddress = VirtualAllocEx(intPtr, IntPtr.Zero, 4096, MEM_COMMIT, PAGE_READWRITE);
+                if (allocMemAddress == IntPtr.Zero)
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+
+                return (uint)allocMemAddress.ToInt32();
+            }
+            finally
+            {
+                CloseHandle(intPtr);
+            }
         }
 
         /// <summary>

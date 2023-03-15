@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Classes;
 using System.Text;
 
 namespace SHARMemory.SHAR.Structs
@@ -38,9 +39,9 @@ namespace SHARMemory.SHAR.Structs
 
     internal class CarDataStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new CarData(Memory.ReadString(Address, Encoding.UTF8, 64), Memory.ReadString(Address + 64, Encoding.UTF8, 32), Memory.ReadStruct<Vector3>(Address + 64 + 32), Memory.ReadSingle(Address + 64 + 32 + Vector3.Size), Memory.CreateClass<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float)), Memory.CreateClass<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint)), Memory.ReadBoolean(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint) + sizeof(uint)));
+        public object Read(ProcessMemory Memory, uint Address) => new CarData(Memory.ReadString(Address, Encoding.UTF8, 64), Memory.ReadString(Address + 64, Encoding.UTF8, 32), Memory.ReadStruct<Vector3>(Address + 64 + 32), Memory.ReadSingle(Address + 64 + 32 + Vector3.Size), Memory.CreateClass<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float)), Memory.CreateClass<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint)), Memory.ReadBoolean(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint) + sizeof(uint)));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not CarData Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(CarData)}'.", nameof(Value));

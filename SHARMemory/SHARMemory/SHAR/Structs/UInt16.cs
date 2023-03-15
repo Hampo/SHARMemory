@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Structs
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(UInt16Struct))]
     public struct UInt16
@@ -17,9 +19,9 @@
 
     internal class UInt16Struct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new UInt16(Memory.ReadUInt16(Address));
+        public object Read(ProcessMemory Memory, uint Address) => new UInt16(Memory.ReadUInt16(Address));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not UInt16 Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(UInt16)}'.", nameof(Value));

@@ -1,4 +1,4 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
 using System.Text;
 
 namespace SHARMemory.SHAR.Structs
@@ -26,9 +26,9 @@ namespace SHARMemory.SHAR.Structs
 
     internal class ChaseManagerStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new ChaseManager(Memory.CreateClass<Classes.ChaseManager>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 16), Memory.ReadString(Address + sizeof(uint) + 16, Encoding.UTF8, 64));
+        public object Read(ProcessMemory Memory, uint Address) => new ChaseManager(Memory.CreateClass<Classes.ChaseManager>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 16), Memory.ReadString(Address + sizeof(uint) + 16, Encoding.UTF8, 64));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not ChaseManager Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(ChaseManager)}'.", nameof(Value));

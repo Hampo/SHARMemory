@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Classes;
 
 namespace SHARMemory.SHAR.Pointers
 {
@@ -10,7 +11,7 @@ namespace SHARMemory.SHAR.Pointers
 
         public uint LanguageIndex => Memory.ReadUInt32(Memory.SelectAddress(0x65C7B0, 0x65C770, 0x65C770, 0x6C6F3C));
 
-        public PointerArray<FeLanguage> Languages => PointerArray<FeLanguage>.FromVector(Memory, this, 20);
+        public PointerArray<FeLanguage> Languages => PointerArrayExtensions.FromVector<FeLanguage>(Memory, this, 20);
 
         public FeLanguage CurrentLanguage => Memory.GameFlow.State == GameFlow.GameState.PreLicence || Memory.GameFlow.State == GameFlow.GameState.Licence ? null : Languages[LanguageIndex];
     }

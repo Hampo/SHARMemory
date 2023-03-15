@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using System.Drawing;
 
 namespace SHARMemory.SHAR.Classes
 {

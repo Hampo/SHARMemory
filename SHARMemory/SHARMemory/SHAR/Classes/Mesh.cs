@@ -1,5 +1,5 @@
-﻿using SHARMemory.SHAR.Structs;
-using System.Drawing;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes
 {
@@ -25,6 +25,6 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(56, value);
         }
 
-        public PointerArray<PrimGroup> PrimGroups => PointerArray<PrimGroup>.FromPtrArray(Memory, this, 60);
+        public PointerArray<PrimGroup> PrimGroups => PointerArrayExtensions.FromPtrArray<PrimGroup>(Memory, this, 60);
     }
 }

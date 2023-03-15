@@ -2,17 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SHARMemory.SHAR
+namespace SHARMemory.Memory
 {
     /// <summary>
-    /// Class <c>SHAR.StructArray</c> is class to handle an array of SHAR structs.
+    /// Class <c>Memory.StructArray</c> is class to handle an array of structs.
     /// </summary>
     /// <typeparam name="T">
     /// The <c>struct</c> this is an array of.
     /// </typeparam>
     public class StructArray<T> : IEnumerable<T> where T : struct
     {
-        private readonly Memory Memory;
+        private readonly ProcessMemory Memory;
         private readonly uint Address;
         private readonly uint Size;
         /// <summary>
@@ -53,10 +53,10 @@ namespace SHARMemory.SHAR
         }
 
         /// <summary>
-        /// The <c>SHAR.StructArray</c> constructor.
+        /// The <c>Memory.StructArray</c> constructor.
         /// </summary>
         /// <param name="memory">
-        /// The <see cref="SHAR.Memory"/> to use.
+        /// The <see cref="ProcessMemory"/> to use.
         /// </param>
         /// <param name="address">
         /// The base address for the first element in the array.
@@ -67,7 +67,7 @@ namespace SHARMemory.SHAR
         /// <param name="count">
         /// How many elements are in this array.
         /// </param>
-        public StructArray(Memory memory, uint address, uint size, uint count)
+        public StructArray(ProcessMemory memory, uint address, uint size, uint count)
         {
             Memory = memory;
             Address = address;

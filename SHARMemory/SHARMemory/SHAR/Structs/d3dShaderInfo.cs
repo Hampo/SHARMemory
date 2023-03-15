@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using System.Drawing;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -35,9 +36,9 @@ namespace SHARMemory.SHAR.Structs
     internal class d3dShaderInfoStruct : IStruct
 #pragma warning restore IDE1006 // Naming Styles
     {
-        public object Read(Memory Memory, uint Address) => new d3dShaderInfo(Memory.ReadStruct<pddiColour>(Address), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size + pddiColour.Size), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size), Memory.ReadSingle(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size + pddiColour.Size));
+        public object Read(ProcessMemory Memory, uint Address) => new d3dShaderInfo(Memory.ReadStruct<pddiColour>(Address), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size + pddiColour.Size), Memory.ReadStruct<pddiColour>(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size), Memory.ReadSingle(Address + pddiColour.Size + pddiColour.Size + pddiColour.Size + pddiColour.Size));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not d3dShaderInfo Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(d3dShaderInfo)}'.", nameof(Value));

@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Classes
 {
     public class MissionStage : Class
     {

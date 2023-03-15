@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using SHARMemory.Memory;
 using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Pointers;
 
@@ -154,26 +155,6 @@ namespace SHARMemory.SHAR
         /// A reference to SHAR's static <c>VehicleCentral</c>.
         /// </summary>
         public VehicleCentral VehicleCentral { get; }
-
-        /// <summary>
-        /// Create an instance of a <see cref="Class"/> at the given address.
-        /// </summary>
-        /// <typeparam name="T">
-        /// The <see cref="Class"/> type to use.
-        /// </typeparam>
-        /// <param name="Address">
-        /// The base address of the class.
-        /// </param>
-        /// <returns>
-        /// A new instance of <see cref="Class"/> or <c>null</c>.
-        /// </returns>
-        public T CreateClass<T>(uint Address) where T : Class
-        {
-            if (Address == 0)
-                return null;
-
-            return (T)Activator.CreateInstance(typeof(T), this, Address);
-        }
 
         /// <summary>
         /// Checks if <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded.
@@ -423,55 +404,5 @@ namespace SHARMemory.SHAR
             _ = GetWindowThreadProcessId(GameWindow, ref ProcessId);
             return Process.GetProcessById(ProcessId);
         }
-
-        /// <summary>
-        /// Reads <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Type">
-        /// The type to read.
-        /// </param>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <paramref name="Type"/> at the given address.
-        /// </returns>
-        public object ReadStruct(Type Type, uint Address) => StructAttribute.Get(Type).Read(this, Address);
-
-        /// <summary>
-        /// Reads <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to read.
-        /// </param>
-        /// <returns>
-        /// The <c>T</c> at the given address.
-        /// </returns>
-        public T ReadStruct<T>(uint Address) => (T)ReadStruct(typeof(T), Address);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Type">
-        /// The type to write.
-        /// </param>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <paramref name="Type"/> value to write.
-        /// </param>
-        public void WriteStruct(Type Type, uint Address, object Value) => StructAttribute.Get(Type).Write(this, Address, Value);
-
-        /// <summary>
-        /// Writes the given value to <see cref="Process"/>'s memory at the given address.
-        /// </summary>
-        /// <param name="Address">
-        /// The address to write to.
-        /// </param>
-        /// <param name="Value">
-        /// The <c>T</c> value to write.
-        /// </param>
-        public void WriteStruct<T>(uint Address, T Value) => WriteStruct(typeof(T), Address, Value);
     }
 }

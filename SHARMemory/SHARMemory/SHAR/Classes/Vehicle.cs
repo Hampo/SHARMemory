@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Structs;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Structs;
 using System.Drawing;
 using System.Text;
 

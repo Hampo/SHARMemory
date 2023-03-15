@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Classes;
 using System.Text;
 
 namespace SHARMemory.SHAR.Structs
@@ -29,9 +30,9 @@ namespace SHARMemory.SHAR.Structs
 
     internal class MissionCarDataStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new MissionCarData(Memory.CreateClass<Vehicle>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 32), Memory.CreateClass<Vehicle>(Address + sizeof(uint) + 32), Memory.ReadBoolean(Address + sizeof(uint) + 32 + sizeof(uint)));
+        public object Read(ProcessMemory Memory, uint Address) => new MissionCarData(Memory.CreateClass<Vehicle>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 32), Memory.CreateClass<Vehicle>(Address + sizeof(uint) + 32), Memory.ReadBoolean(Address + sizeof(uint) + 32 + sizeof(uint)));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not MissionCarData Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(MissionCarData)}'.", nameof(Value));

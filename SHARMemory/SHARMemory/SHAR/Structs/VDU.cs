@@ -1,4 +1,5 @@
-﻿using SHARMemory.SHAR.Classes;
+﻿using SHARMemory.Memory;
+using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Pointers;
 
 namespace SHARMemory.SHAR.Structs
@@ -23,7 +24,7 @@ namespace SHARMemory.SHAR.Structs
 
     internal class VDUStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address)
+        public object Read(ProcessMemory Memory, uint Address)
         {
             Vehicle[] Ratings = new Vehicle[GameplayManager.MAX_VDU_CARS];
             for (uint i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
@@ -33,7 +34,7 @@ namespace SHARMemory.SHAR.Structs
             return new VDU(Ratings, Counter);
         }
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not VDU Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));

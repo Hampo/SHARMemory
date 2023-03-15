@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.SHAR.Structs
+﻿using SHARMemory.Memory;
+
+namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(PlayerAndCarInfoStruct))]
     public struct PlayerAndCarInfo
@@ -23,9 +25,9 @@
 
     internal class PlayerAndCarInfoStruct : IStruct
     {
-        public object Read(Memory Memory, uint Address) => new PlayerAndCarInfo(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size), Memory.ReadBoolean(Address + Vector3.Size + Vector3.Size));
+        public object Read(ProcessMemory Memory, uint Address) => new PlayerAndCarInfo(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size), Memory.ReadBoolean(Address + Vector3.Size + Vector3.Size));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not PlayerAndCarInfo Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(PlayerAndCarInfo)}'.", nameof(Value));

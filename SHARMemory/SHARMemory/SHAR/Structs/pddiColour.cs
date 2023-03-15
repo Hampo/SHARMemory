@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using System.Drawing;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -27,9 +28,9 @@ namespace SHARMemory.SHAR.Structs
     internal class pddiColourStruct : IStruct
 #pragma warning restore IDE1006 // Naming Styles
     {
-        public object Read(Memory Memory, uint Address) => new pddiColour(Memory.ReadInt32(Address));
+        public object Read(ProcessMemory Memory, uint Address) => new pddiColour(Memory.ReadInt32(Address));
 
-        public void Write(Memory Memory, uint Address, object Value)
+        public void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not pddiColour Value2)
                 throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(pddiColour)}'.", nameof(Value));

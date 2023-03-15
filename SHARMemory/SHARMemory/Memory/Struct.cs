@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SHARMemory.SHAR
+namespace SHARMemory.Memory
 {
     /// <summary>
     /// Interface <c>SHAR.IStruct</c> is an interface to handle the reading/writing a SHAR struct.
@@ -19,7 +19,7 @@ namespace SHARMemory.SHAR
         /// <returns>
         /// The <c>object</c> at the given offset.
         /// </returns>
-        object Read(Memory Memory, uint Address);
+        object Read(ProcessMemory Memory, uint Address);
 
         /// <summary>
         /// Writes <paramref name="Value"/> to <paramref name="Memory"/> at <paramref name="Address"/>.
@@ -33,7 +33,7 @@ namespace SHARMemory.SHAR
         /// <param name="Value">
         /// The value to write.
         /// </param>
-        void Write(Memory Memory, uint Address, object Value);
+        void Write(ProcessMemory Memory, uint Address, object Value);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ namespace SHARMemory.SHAR
         {
             var StructAttributes = (StructAttribute[])Type.GetCustomAttributes(typeof(StructAttribute), false);
             if (StructAttributes.Length < 1)
-                throw new ArgumentException($"'{nameof(Type)}' must have attribute '{nameof(SHAR.StructAttribute)}'.", nameof(Type));
+                throw new ArgumentException($"'{nameof(Type)}' must have attribute '{nameof(Memory.StructAttribute)}'.", nameof(Type));
             var StructAttribute = StructAttributes[0];
 
             return StructAttribute.Struct;
