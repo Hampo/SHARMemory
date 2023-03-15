@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace SHARMemory.Memory
 {
@@ -183,7 +184,7 @@ namespace SHARMemory.Memory
         /// </exception>
         public void Write(uint Address, byte[] Buffer, out uint Written)
         {
-            IntPtr intPtr = OpenProcess(40, bInheritHandle: false, Process.Id);
+            IntPtr intPtr = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, bInheritHandle: false, Process.Id);
             if (intPtr == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -720,7 +721,7 @@ namespace SHARMemory.Memory
 
         public uint AllocateMemory()
         {
-            IntPtr intPtr = OpenProcess(40, bInheritHandle: false, Process.Id);
+            IntPtr intPtr = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, bInheritHandle: false, Process.Id);
             if (intPtr == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
