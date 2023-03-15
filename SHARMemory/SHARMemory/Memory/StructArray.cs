@@ -118,6 +118,6 @@ namespace SHARMemory.Memory
         /// <returns>
         /// The array information
         /// </returns>
-        public override string ToString() => $"{nameof(T)}[{Count}]";
+        public override string ToString() => $"{typeof(T)}[{Count}]";
     }
 }
