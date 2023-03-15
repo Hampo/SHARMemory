@@ -14,7 +14,7 @@
         {
             uint address = memory.AllocateMemory();
 
-            memory.WriteUInt32(address, 0x611288);
+            memory.WriteUInt32(address, memory.SelectAddress(0x611288, 0x611330, 0x6112F8, 0x611388));
             memory.WriteInt32(address + 4, (int)ConditionTypes.TimeOut);
             memory.WriteBoolean(address + 8, isViolated);
             memory.WriteBoolean(address + 9, leaveInterior);
