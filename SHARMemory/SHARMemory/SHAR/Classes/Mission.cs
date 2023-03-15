@@ -16,7 +16,7 @@ namespace SHARMemory.SHAR.Classes
 
         public Mission(Memory memory, uint address) : base(memory, address)
         {
-            if (memory.ModLauncherOrdinals.TryGetValue(3360, out uint MaxStagesAddress) && memory.ModLauncherOrdinals.TryGetValue(3364, out uint StagesOffsetAddress))
+            if (memory.ModLauncherOrdinals.TryGetValue(3947, out uint MaxStagesAddress) && memory.ModLauncherOrdinals.TryGetValue(3948, out uint StagesOffsetAddress))
             {
                 MaxStages = memory.ReadUInt32(MaxStagesAddress);
                 StagesOffset = memory.ReadUInt32(StagesOffsetAddress);
