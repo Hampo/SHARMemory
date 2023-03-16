@@ -6,8 +6,8 @@ namespace SHARMemory.SHAR
     {
         private readonly Memory Memory;
 
-        public GameplayManager GameplayManager => Memory.CreateClass<GameplayManager>(Memory.SelectAddress(0x6C8998, 0x6C8958, 0x6C8958, 0x6C8990));
-        public FeTextBible TextBible => Memory.CreateClass<FeTextBible>(Memory.SelectAddress(0x6C8944, 0x6C8904, 0x6C8904, 0x6C893C));
+        public GameplayManager GameplayManager => Memory.CreateClass<GameplayManager>(Memory.ReadUInt32(Memory.SelectAddress(0x6C8998, 0x6C8958, 0x6C8958, 0x6C8990)));
+        public FeTextBible TextBible => Memory.CreateClass<FeTextBible>(Memory.ReadUInt32(Memory.SelectAddress(0x6C8944, 0x6C8904, 0x6C8904, 0x6C893C)));
 
         /// <summary>
         /// A <c>byte</c> containing how many levels in the game. Usually 7, but can differ when using <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" />.
