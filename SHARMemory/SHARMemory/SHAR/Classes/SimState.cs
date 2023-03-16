@@ -1,7 +1,10 @@
-﻿using SHARMemory.SHAR.Structs;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVSimState@sim@@")]
     public class SimState : Class
     {
         public enum SimControlEnum
@@ -10,7 +13,7 @@ namespace SHARMemory.SHAR.Classes
             SimulationCtrl
         }
 
-        public SimState(Memory memory, uint address) : base(memory, address) { }
+        public SimState(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public int AIRefIndex
         {
@@ -42,9 +45,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(108, (uint)value);
         }
 
-        public SimulatedObject SimulatedObject => Memory.CreateClass<SimulatedObject>(ReadUInt32(112));
+        public SimulatedObject SimulatedObject => Memory.ClassFactory.Create<SimulatedObject>(ReadUInt32(112));
 
-        public PhysicsObject PhysicsObject => Memory.CreateClass<PhysicsObject>(ReadUInt32(112));
+        public PhysicsObject PhysicsObject => Memory.ClassFactory.Create<PhysicsObject>(ReadUInt32(112));
 
         // TODO: CollisionObject (116)
 

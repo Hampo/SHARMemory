@@ -1,8 +1,12 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVArticulatedPhysicsObject@sim@@")]
     public class ArticulatedPhysicsObject : PhysicsObject
     {
-        public ArticulatedPhysicsObject(Memory memory, uint address) : base(memory, address) { }
+        public ArticulatedPhysicsObject(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public float DissipationDeformationRate
         {

@@ -1,10 +1,11 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
     public class CharacterRenderable : Class
     {
-        public CharacterRenderable(Memory memory, uint address) : base(memory, address) { }
+        public CharacterRenderable(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public PointerArray<DrawablePose> DrawableList => new(Memory, Address, 3);
 
@@ -20,10 +21,10 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(16, value);
         }
 
-        public Texture SwatchTexture => Memory.CreateClass<Texture>(ReadUInt32(20));
+        public Texture SwatchTexture => Memory.ClassFactory.Create<Texture>(ReadUInt32(20));
 
         public PointerArray<Texture> SwatchTextures => new(Memory, Address + 24, 5);
 
-        public Shader SwatchShader => Memory.CreateClass<Shader>(ReadUInt32(44));
+        public Shader SwatchShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(44));
     }
 }

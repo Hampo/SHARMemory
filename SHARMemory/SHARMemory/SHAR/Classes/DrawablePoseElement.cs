@@ -1,12 +1,13 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVDrawablePoseElement@tCompositeDrawable@@")]
     public class DrawablePoseElement : DrawableElement
     {
+        public DrawablePoseElement(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public DrawablePoseElement(Memory memory, uint address) : base(memory, address) { }
-
-        public DrawablePose Skin => Memory.CreateClass<DrawablePose>(ReadUInt32(20));
+        public DrawablePose Skin => Memory.ClassFactory.Create<DrawablePose>(ReadUInt32(20));
     }
 }

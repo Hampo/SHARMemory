@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SHARMemory.Memory.RTTI;
+using System;
 using System.Text;
 
 namespace SHARMemory.Memory
 {
     /// <summary>
-    /// Class <c>SHAR.Class</c> is an abstract class representing a single instance of a SHAR class.
+    /// Class <c>Memory.Class</c> is an abstract class representing a single instance of a SHAR class.
     /// </summary>
     public abstract class Class
     {
@@ -16,21 +17,31 @@ namespace SHARMemory.Memory
         /// <summary>
         /// The base address of this class in memory.
         /// </summary>
-        public virtual uint Address { get; }
+        public uint Address { get; }
 
         /// <summary>
-        /// The <c>SHAR.Class</c> constructor.
+        /// The <see cref="CompleteObjectLocator"/> of this class.
+        /// This contains the RTTI information of the class.
+        /// </summary>
+        public readonly CompleteObjectLocator CompleteObjectLocator;
+
+        /// <summary>
+        /// The <c>Memory.Class</c> constructor.
         /// </summary>
         /// <param name="memory">
-        /// The <see cref="SHAR.Memory"/> manager this class is linked to.
+        /// The <see cref="ProcessMemory"/> manager this class is linked to.
         /// </param>
         /// <param name="address">
         /// The base address of this class in memory.
         /// </param>
-        public Class(ProcessMemory memory, uint address)
+        /// <param name="completeObjectLocator">
+        /// The <see cref="CompleteObjectLocator"/> of this class.
+        /// </param>
+        public Class(ProcessMemory memory, uint address, CompleteObjectLocator completeObjectLocator)
         {
             Memory = memory;
             Address = address;
+            CompleteObjectLocator = completeObjectLocator;
         }
 
         /// <summary>
@@ -396,6 +407,46 @@ namespace SHARMemory.Memory
         /// <returns>
         /// The hex value of <see cref="Address"/>
         /// </returns>
-        public override string ToString() => $"(0x{Address:X})";
+        public override string ToString() => $"{base.ToString()} | {CompleteObjectLocator?.ToString() ?? "No RTTI"}";
+
+        /// <summary>
+        /// Casts a non-polymorphic <see cref="Class"/> to <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Class"/> with type <typeparamref name="T"/>.
+        /// </returns>
+        /// <exception cref="InvalidCastException">
+        /// Throws when <c>this</c> <see cref="Class"/> is polymorphic.
+        /// </exception>
+        public T ReinterpretCast<T>() where T : Class
+        {
+            if (this is T Class)
+                return Class;
+
+            if (CompleteObjectLocator != null)
+                throw new InvalidCastException($"This class \"{GetType()}\" is polymorphic. Use \"DynamicCast\" instead.");
+
+            return Memory.ClassFactory.CreateNonpolymorphic<T>(Address);
+        }
+
+        /// <summary>
+        /// Casts a polymorphic <see cref="Class"/> to <typeparamref name="T"/>.
+        /// </summary>
+        /// <returns>
+        /// A new <see cref="Class"/> with type <typeparamref name="T"/>.
+        /// </returns>
+        /// <exception cref="InvalidCastException">
+        /// Throws when <c>this</c> <see cref="Class"/> is non-polymorphic.
+        /// </exception>
+        public T DynamicCast<T>() where T : Class
+        {
+            if (this is T Class)
+                return Class;
+
+            if (CompleteObjectLocator == null)
+                throw new InvalidCastException($"This class \"{GetType()}\" is non-polymorphic. Use \"ReinterpretCast\" instead.");
+
+            return Memory.ClassFactory.CreatePolymorphic<T>(Address);
+        }
     }
 }

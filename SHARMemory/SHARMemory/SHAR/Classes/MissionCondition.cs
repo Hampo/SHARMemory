@@ -1,5 +1,9 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVMissionCondition@@")]
     public class MissionCondition : Class
     {
         public enum ConditionTypes
@@ -22,7 +26,7 @@
             NumConditions
         }
 
-        public MissionCondition(Memory memory, uint address) : base(memory, address) { }
+        public MissionCondition(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public ConditionTypes Type
         {

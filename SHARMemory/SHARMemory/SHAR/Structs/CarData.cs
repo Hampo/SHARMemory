@@ -39,7 +39,7 @@ namespace SHARMemory.SHAR.Structs
 
     internal class CarDataStruct : IStruct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new CarData(Memory.ReadString(Address, Encoding.UTF8, 64), Memory.ReadString(Address + 64, Encoding.UTF8, 32), Memory.ReadStruct<Vector3>(Address + 64 + 32), Memory.ReadSingle(Address + 64 + 32 + Vector3.Size), Memory.CreateClass<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float)), Memory.CreateClass<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint)), Memory.ReadBoolean(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint) + sizeof(uint)));
+        public object Read(ProcessMemory Memory, uint Address) => new CarData(Memory.ReadString(Address, Encoding.UTF8, 64), Memory.ReadString(Address + 64, Encoding.UTF8, 32), Memory.ReadStruct<Vector3>(Address + 64 + 32), Memory.ReadSingle(Address + 64 + 32 + Vector3.Size), Memory.ClassFactory.Create<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float)), Memory.ClassFactory.Create<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint)), Memory.ReadBoolean(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint) + sizeof(uint)));
 
         public void Write(ProcessMemory Memory, uint Address, object Value)
         {

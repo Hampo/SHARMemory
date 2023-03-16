@@ -9,11 +9,11 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// A reference to SHAR's <see cref="Classes.GameplayManager"/> static global.
         /// </summary>
-        public GameplayManager GameplayManager => Memory.CreateClass<GameplayManager>(Memory.ReadUInt32(Memory.SelectAddress(0x6C8998, 0x6C8958, 0x6C8958, 0x6C8990)));
+        public GameplayManager GameplayManager => Memory.ClassFactory.Create<GameplayManager>(Memory.ReadUInt32(Memory.SelectAddress(0x6C8998, 0x6C8958, 0x6C8958, 0x6C8990)));
         /// <summary>
         /// A reference to SHAR's <see cref="Classes.FeTextBible"/> static global.
         /// </summary>
-        public FeTextBible TextBible => Memory.CreateClass<FeTextBible>(Memory.ReadUInt32(Memory.SelectAddress(0x6C8944, 0x6C8904, 0x6C8904, 0x6C893C)));
+        public FeTextBible TextBible => Memory.ClassFactory.Create<FeTextBible>(Memory.ReadUInt32(Memory.SelectAddress(0x6C8944, 0x6C8904, 0x6C8904, 0x6C893C)));
 
         /// <summary>
         /// A <c>byte</c> containing how many levels in the game. Usually 7, but can differ when using <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" />.

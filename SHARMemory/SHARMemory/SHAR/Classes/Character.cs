@@ -1,20 +1,19 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVCharacter@@")]
     public class Character : DynaPhysDSG
     {
-        public Character(Memory memory, uint address) : base(memory, address) { }
+        public Character(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public CharacterController Controller => Memory.CreateClass<CharacterController>(ReadUInt32(256));
+        public CharacterController Controller => Memory.ClassFactory.Create<CharacterController>(ReadUInt32(256));
 
-        public CharacterRenderable CharacterRenderable => Memory.CreateClass<CharacterRenderable>(ReadUInt32(260));
+        public CharacterRenderable CharacterRenderable => Memory.ClassFactory.Create<CharacterRenderable>(ReadUInt32(260));
 
         public float Rotation => ReadSingle(272);
 
-        public Vehicle Car
-        {
-            get => Memory.CreateClass<Vehicle>(ReadUInt32(348));
-            set => WriteUInt32(348, value == null ? 0 : value.Address);
-        }
-        
+        public Vehicle Car => Memory.ClassFactory.Create<Vehicle>(ReadUInt32(348));
     }
 }

@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 
 namespace SHARMemory.Memory
 {
@@ -20,6 +18,11 @@ namespace SHARMemory.Memory
         /// The <see cref="System.Diagnostics.Process"/> that is being managed.
         /// </summary>
         public Process Process { get; }
+
+        /// <summary>
+        /// The <see cref="ClassFactory"/> of this <see cref="ProcessMemory"/>.
+        /// </summary>
+        public readonly ClassFactory ClassFactory;
 
         /// <summary>
         /// A <c>readonly</c> instance of <see cref="Structs"/>. Used for <see cref="Structs.Known"/>.
@@ -134,7 +137,7 @@ namespace SHARMemory.Memory
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool CloseHandle(IntPtr handle);
 
-        internal readonly List<IntPtr> ASMFunctions = new List<IntPtr>();
+        //internal readonly List<IntPtr> ASMFunctions = new();
 
         /// <summary>
         /// The <c>ProcessMemory</c> constructor.
@@ -145,6 +148,8 @@ namespace SHARMemory.Memory
         public ProcessMemory(Process Process)
         {
             this.Process = Process;
+
+            ClassFactory = new(this);
         }
 
         /// <summary>
@@ -705,26 +710,6 @@ namespace SHARMemory.Memory
         public void WriteStruct<T>(uint Address, T Value) => WriteStruct(typeof(T), Address, Value);
 
         /// <summary>
-        /// Create an instance of a <see cref="Class"/> at the given address.
-        /// </summary>
-        /// <typeparam name="T">
-        /// The <see cref="Class"/> type to use.
-        /// </typeparam>
-        /// <param name="Address">
-        /// The base address of the class.
-        /// </param>
-        /// <returns>
-        /// A new instance of <see cref="Class"/> or <c>null</c>.
-        /// </returns>
-        public T CreateClass<T>(uint Address) where T : Class
-        {
-            if (Address == 0)
-                return null;
-
-            return (T)Activator.CreateInstance(typeof(T), this, Address);
-        }
-
-        /// <summary>
         /// Allocates <c>4096</c> bytes of memory in <see cref="Process"/>.
         /// </summary>
         /// <returns>
@@ -1083,20 +1068,20 @@ namespace SHARMemory.Memory
         /// </summary>
         public void Dispose()
         {
-            IntPtr procHandle = IntPtr.Zero;
-            try
-            {
-                procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
-                if (procHandle != IntPtr.Zero)
-                    foreach (IntPtr Address in ASMFunctions)
-                        if (Address != IntPtr.Zero)
-                            VirtualFreeEx(procHandle, Address, 0, MEM_RELEASE);
-            }
-            finally
-            {
-                if (procHandle != IntPtr.Zero)
-                    CloseHandle(procHandle);
-            }
+            //IntPtr procHandle = IntPtr.Zero;
+            //try
+            //{
+            //    procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
+            //    if (procHandle != IntPtr.Zero)
+            //        foreach (IntPtr Address in ASMFunctions)
+            //            if (Address != IntPtr.Zero)
+            //                VirtualFreeEx(procHandle, Address, 0, MEM_RELEASE);
+            //}
+            //finally
+            //{
+            //    if (procHandle != IntPtr.Zero)
+            //        CloseHandle(procHandle);
+            //}
             Process.Dispose();
         }
     }

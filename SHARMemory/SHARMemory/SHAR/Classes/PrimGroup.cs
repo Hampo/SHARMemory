@@ -1,11 +1,13 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVtPrimGroup@@")]
     public class PrimGroup : Class
     {
-        public PrimGroup(Memory memory, uint address) : base(memory, address) { }
+        public PrimGroup(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public Shader Shader => Memory.CreateClass<Shader>(ReadUInt32(8));
+        public Shader Shader => Memory.ClassFactory.Create<Shader>(ReadUInt32(8));
     }
 }

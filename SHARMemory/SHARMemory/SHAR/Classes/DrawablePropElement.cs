@@ -1,10 +1,13 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVDrawablePropElement@tCompositeDrawable@@")]
     public class DrawablePropElement : DrawableElement
     {
+        public DrawablePropElement(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public DrawablePropElement(Memory memory, uint address) : base(memory, address) { }
-
-        public Drawable Drawable => Memory.CreateClass<Drawable>(ReadUInt32(20));
+        public Drawable Drawable => Memory.ClassFactory.Create<Drawable>(ReadUInt32(20));
     }
 }

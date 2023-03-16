@@ -1,10 +1,13 @@
-﻿using SHARMemory.SHAR.Structs;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVDynaPhysDSG@@")]
     public class DynaPhysDSG : StaticPhysDSG
     {
-        public DynaPhysDSG(Memory memory, uint address) : base(memory, address) { }
+        public DynaPhysDSG(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public bool IsHit
         {

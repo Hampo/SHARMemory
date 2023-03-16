@@ -68,6 +68,8 @@ namespace SHARMemory.SHAR
             Unknown
         }
 
+        private static readonly Dictionary<string, Type> BuiltInClasses = ClassFactory.GetClasses(System.Reflection.Assembly.GetExecutingAssembly(), "SHARMemory.SHAR.Classes");
+
         /// <summary>
         /// The detected <see cref="GameVersions"/>
         /// </summary>
@@ -276,6 +278,8 @@ namespace SHARMemory.SHAR
         /// </param>
         public Memory(Process Process) : base(Process)
         {
+            ClassFactory.AddClasses(BuiltInClasses);
+
             GameSubVersions subVersion = GameSubVersions.English;
             GameVersion = DetectVersion(ref subVersion);
             GameSubVersion = subVersion;

@@ -1,8 +1,10 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 using System.Text;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVMission@@")]
     public class Mission : Class
     {
         public enum MissionStates
@@ -14,7 +16,7 @@ namespace SHARMemory.SHAR.Classes
             NumStates
         }
 
-        public Mission(Memory memory, uint address) : base(memory, address)
+        public Mission(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator)
         {
             if (memory.ModLauncherOrdinals.TryGetValue(3947, out uint MaxStagesAddress) && memory.ModLauncherOrdinals.TryGetValue(3948, out uint StagesOffsetAddress))
             {
@@ -100,15 +102,15 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(156, (int)value);
         }
 
-        public CarStartLocator VehicleRestart => new(Memory, ReadUInt32(160));
+        public CarStartLocator VehicleRestart => Memory.ClassFactory.Create<CarStartLocator>(ReadUInt32(160));
 
-        public Locator PlayerRestart => new(Memory, ReadUInt32(164));
+        public Locator PlayerRestart => Memory.ClassFactory.Create<Locator>(ReadUInt32(164));
 
-        public ZoneEventLocator DynaloadLoc => new(Memory, ReadUInt32(168));
+        public ZoneEventLocator DynaloadLoc => Memory.ClassFactory.Create<ZoneEventLocator>(ReadUInt32(168));
 
-        public ZoneEventLocator StreetRacePropsLoad => new(Memory, ReadUInt32(172));
+        public ZoneEventLocator StreetRacePropsLoad => Memory.ClassFactory.Create<ZoneEventLocator>(ReadUInt32(172));
 
-        public ZoneEventLocator StreetRacePropsUnload => new(Memory, ReadUInt32(176));
+        public ZoneEventLocator StreetRacePropsUnload => Memory.ClassFactory.Create<ZoneEventLocator>(ReadUInt32(176));
 
         public int ResetToStage
         {
@@ -228,7 +230,7 @@ namespace SHARMemory.SHAR.Classes
 
         public PointerArray<StatePropCollectible> StatePropCollectibles => new(Memory, Address + 220, (uint)NumStatePropCollectibles);
 
-        public AnimatedIcon DoorStars => new(Memory, ReadUInt32(224));
+        public AnimatedIcon DoorStars => Memory.ClassFactory.Create<AnimatedIcon>(ReadUInt32(224));
 
         public int InitPedGroupId
         {

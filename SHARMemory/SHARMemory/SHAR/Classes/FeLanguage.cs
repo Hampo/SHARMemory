@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +7,10 @@ using System.Text;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVFeLanguage@@")]
     public class FeLanguage : Class
     {
-        public FeLanguage(Memory memory, uint address) : base(memory, address) { }
+        public FeLanguage(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public char LanguageID => (char)ReadByte(16);
 

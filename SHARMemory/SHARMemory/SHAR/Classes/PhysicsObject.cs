@@ -1,10 +1,13 @@
-﻿using SHARMemory.SHAR.Structs;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVPhysicsObject@sim@@")]
     public class PhysicsObject : SimulatedObject
     {
-        public PhysicsObject(Memory memory, uint address) : base(memory, address) { }
+        public PhysicsObject(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public Vector3 AngularMomentum
         {

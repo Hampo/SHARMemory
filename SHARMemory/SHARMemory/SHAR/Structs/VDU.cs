@@ -27,7 +27,7 @@ namespace SHARMemory.SHAR.Structs
         {
             Vehicle[] Ratings = new Vehicle[GameplayManager.MAX_VDU_CARS];
             for (uint i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
-                Ratings[i] = Memory.CreateClass<Vehicle>(Address + sizeof(uint) * i);
+                Ratings[i] = Memory.ClassFactory.Create<Vehicle>(Address + sizeof(uint) * i);
             int Counter = Memory.ReadInt32(Address + sizeof(uint) * GameplayManager.MAX_VDU_CARS);
 
             return new VDU(Ratings, Counter);

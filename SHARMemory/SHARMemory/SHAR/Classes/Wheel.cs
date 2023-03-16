@@ -1,10 +1,12 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
     public class Wheel : Class
     {
-        public Wheel(Memory memory, uint address) : base(memory, address) { }
+        public Wheel(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public Vehicle Car => Memory.CreateClass<Vehicle>(ReadUInt32(0));
+        public Vehicle Car => Memory.ClassFactory.Create<Vehicle>(ReadUInt32(0));
 
         public bool IsSteerWheel
         {

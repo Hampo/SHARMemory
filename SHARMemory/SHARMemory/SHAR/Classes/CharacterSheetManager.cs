@@ -1,9 +1,13 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVCharacterSheetManager@@")]
     public class CharacterSheetManager : Class
     {
-        public CharacterSheetManager(Memory memory, uint address) : base(memory, address) { }
+        public CharacterSheetManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public CharacterSheet CharacterSheet => new(Memory, Address + 4);
+        public CharacterSheet CharacterSheet => Memory.ClassFactory.Create<CharacterSheet>(Address + 4);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR
 {
@@ -22,6 +23,9 @@ namespace SHARMemory.SHAR
         /// <param name="address">
         /// The base address of this class in memory.
         /// </param>
-        public Class(Memory memory, uint address) : base(memory, address) {}
+        /// <param name="completeObjectLocator">
+        /// The <see cref="CompleteObjectLocator"/> of this class.
+        /// </param>
+        public Class(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) {}
     }
 }

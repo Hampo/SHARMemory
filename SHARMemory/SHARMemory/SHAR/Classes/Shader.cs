@@ -1,9 +1,13 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVtShader@@")]
     public class Shader : Class
     {
-        public Shader(Memory memory, uint address) : base(memory, address) { }
+        public Shader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public d3dShader D3DShader => Memory.CreateClass<d3dShader>(ReadUInt32(20));
+        public d3dShader D3DShader => Memory.ClassFactory.Create<d3dShader>(ReadUInt32(20));
     }
 }

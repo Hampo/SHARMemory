@@ -26,7 +26,7 @@ namespace SHARMemory.SHAR.Structs
 
     internal class ChaseManagerStruct : IStruct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new ChaseManager(Memory.CreateClass<Classes.ChaseManager>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 16), Memory.ReadString(Address + sizeof(uint) + 16, Encoding.UTF8, 64));
+        public object Read(ProcessMemory Memory, uint Address) => new ChaseManager(Memory.ClassFactory.Create<Classes.ChaseManager>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 16), Memory.ReadString(Address + sizeof(uint) + 16, Encoding.UTF8, 64));
 
         public void Write(ProcessMemory Memory, uint Address, object Value)
         {

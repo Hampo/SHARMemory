@@ -1,10 +1,12 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVCharacterManager@@")]
     public class CharacterManager : Class
     {
-        public CharacterManager(Memory memory, uint address) : base(memory, address) { }
+        public CharacterManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public PointerArray<Character> Characters => new(Memory, Address + 192, 64);
 

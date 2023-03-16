@@ -30,7 +30,7 @@ namespace SHARMemory.SHAR.Structs
 
     internal class MissionCarDataStruct : IStruct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new MissionCarData(Memory.CreateClass<Vehicle>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 32), Memory.CreateClass<Vehicle>(Address + sizeof(uint) + 32), Memory.ReadBoolean(Address + sizeof(uint) + 32 + sizeof(uint)));
+        public object Read(ProcessMemory Memory, uint Address) => new MissionCarData(Memory.ClassFactory.Create<Vehicle>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 32), Memory.ClassFactory.Create<Vehicle>(Address + sizeof(uint) + 32), Memory.ReadBoolean(Address + sizeof(uint) + 32 + sizeof(uint)));
 
         public void Write(ProcessMemory Memory, uint Address, object Value)
         {

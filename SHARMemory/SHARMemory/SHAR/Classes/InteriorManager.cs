@@ -1,5 +1,9 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVInteriorManager@@")]
     public class InteriorManager : Class
     {
         public enum InteriorStates : uint
@@ -10,7 +14,7 @@
             Inside
         }
 
-        public InteriorManager(Memory memory, uint address) : base(memory, address) { }
+        public InteriorManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public InteriorStates InteriorState => (InteriorStates)ReadUInt32(4);
     }

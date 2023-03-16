@@ -1,8 +1,12 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVHitnRunManager@@")]
     public class HitNRunManager : Class
     {
-        public HitNRunManager(Memory memory, uint address) : base(memory, address) { }
+        public HitNRunManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public float HitAndRun
         {

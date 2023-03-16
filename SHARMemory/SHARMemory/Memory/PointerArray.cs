@@ -40,7 +40,7 @@ namespace SHARMemory.Memory
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}.");
 
-                return Memory.CreateClass<T>(Memory.ReadUInt32(Address + index * 4));
+                return Memory.ClassFactory.Create<T>(Memory.ReadUInt32(Address + index * 4));
             }
             set
             {

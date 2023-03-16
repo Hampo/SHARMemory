@@ -1,10 +1,13 @@
-﻿using SHARMemory.SHAR.Structs;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVStaticPhysDSG@@")]
     public class StaticPhysDSG : CollisionEntityDSG
     {
-        public StaticPhysDSG(Memory memory, uint address) : base(memory, address) { }
+        public StaticPhysDSG(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public Box3D BBox
         {
@@ -24,7 +27,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteStruct(100, value);
         }
 
-        public SimState SimState => Memory.CreateClass<SimState>(ReadUInt32(112));
+        public SimState SimState => Memory.ClassFactory.Create<SimState>(ReadUInt32(112));
 
         // TODO: Drawable Shadow (116)
 

@@ -1,8 +1,12 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVTimeOutCondition@@")]
     public class TimeOutCondition : MissionCondition
     {
-        public TimeOutCondition(Memory memory, uint address) : base(memory, address) { }
+        public TimeOutCondition(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public bool Done
         {
@@ -20,7 +24,7 @@
             memory.WriteBoolean(address + 9, leaveInterior);
             memory.WriteBoolean(address + 10, done);
 
-            return memory.CreateClass<TimeOutCondition>(address);
+            return memory.ClassFactory.Create<TimeOutCondition>(address);
         }
     }
 }

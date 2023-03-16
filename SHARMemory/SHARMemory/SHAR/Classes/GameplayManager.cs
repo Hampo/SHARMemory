@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 using SHARMemory.SHAR.Structs;
 using System.Text;
 
@@ -33,7 +34,7 @@ namespace SHARMemory.SHAR.Classes
             Num_Ratins
         }
 
-        public GameplayManager(Memory memory, uint address) : base(memory, address) { }
+        public GameplayManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public bool IsDemo
         {
@@ -225,7 +226,7 @@ namespace SHARMemory.SHAR.Classes
             }
         }
 
-        public Vehicle CurrentVehicle => Memory.CreateClass<Vehicle>(ReadUInt32(1188));
+        public Vehicle CurrentVehicle => Memory.ClassFactory.Create<Vehicle>(ReadUInt32(1188));
 
         public VDU VDU
         {
@@ -283,7 +284,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(6052, (int)value);
         }
 
-        public RespawnManager RespawnManager => Memory.CreateClass<RespawnManager>(ReadUInt32(6056));
+        public RespawnManager RespawnManager => Memory.ClassFactory.Create<RespawnManager>(ReadUInt32(6056));
 
         public float IrisSpeed
         {

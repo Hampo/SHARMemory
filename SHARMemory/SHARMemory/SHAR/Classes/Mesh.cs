@@ -1,11 +1,13 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVtGeometry@@")]
     public class Mesh : Drawable
     {
-        public Mesh(Memory memory, uint address) : base(memory, address) { }
+        public Mesh(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public Box3D Box
         {

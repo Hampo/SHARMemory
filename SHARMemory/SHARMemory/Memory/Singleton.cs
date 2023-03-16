@@ -44,7 +44,7 @@
             if (Address == 0)
                 return null;
 
-            Instance = Memory.CreateClass<T>(Address);
+            Instance = Memory.ClassFactory.Create<T>(Address);
             return Instance;
         }
     }

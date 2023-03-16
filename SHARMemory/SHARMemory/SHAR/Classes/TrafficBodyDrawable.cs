@@ -1,10 +1,13 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+using System.Drawing;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVTrafficBodyDrawable@@")]
     public class TrafficBodyDrawable : Drawable
     {
-        public TrafficBodyDrawable(Memory memory, uint address) : base(memory, address) { }
+        public TrafficBodyDrawable(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public int FadeAlpha
         {
@@ -18,9 +21,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(20, value);
         }
 
-        public Drawable BodyPropDrawable => Memory.CreateClass<Drawable>(ReadUInt32(24));
+        public Drawable BodyPropDrawable => Memory.ClassFactory.Create<Drawable>(ReadUInt32(24));
 
-        public Shader BodyShader => Memory.CreateClass<Shader>(ReadUInt32(28));
+        public Shader BodyShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(28));
 
         public Color DesiredColour
         {

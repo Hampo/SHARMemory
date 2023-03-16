@@ -1,12 +1,12 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVFeTextBible@@")]
     public class FeTextBible : Class
     {
-        public override uint Address => base.Address - 0x34;
-
-        public FeTextBible(Memory memory, uint address) : base(memory, address) { }
+        public FeTextBible(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public PointerArray<FeLanguage> Languages => PointerArrayExtensions.FromVector<FeLanguage>(Memory, this, 20);
 

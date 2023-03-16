@@ -1,7 +1,9 @@
-﻿using System.Drawing;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVDrawableElement@tCompositeDrawable@@")]
     public class DrawableElement : Class
     {
         public enum Types
@@ -12,10 +14,8 @@ namespace SHARMemory.SHAR.Classes
             Effect
         }
 
-        public DrawableElement(Memory memory, uint address) : base(memory, address) { }
+        public DrawableElement(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public Types Type => (Types)ReadInt32(4);
-
-        public T ReinterpretCast<T>() where T : DrawableElement => Memory.CreateClass<T>(Address);
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVCollisionEntityDSG@@")]
     public class CollisionEntityDSG : IEntityDSG
     {
-        public CollisionEntityDSG(Memory memory, uint address) : base(memory, address) { }
+        public CollisionEntityDSG(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public short PersistentObjectID
         {
@@ -16,7 +20,7 @@
             set => WriteUInt32(44, value);
         }
 
-        public CollisionAttributes CollisionAttributes => Memory.CreateClass<CollisionAttributes>(ReadUInt32(48));
+        public CollisionAttributes CollisionAttributes => Memory.ClassFactory.Create<CollisionAttributes>(ReadUInt32(48));
 
         public bool WasParticleEffectTriggered
         {

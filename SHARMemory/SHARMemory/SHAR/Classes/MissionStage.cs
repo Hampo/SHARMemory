@@ -1,7 +1,9 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVMissionStage@@")]
     public class MissionStage : Class
     {
         public enum MissionStageStates
@@ -15,7 +17,7 @@ namespace SHARMemory.SHAR.Classes
             NumStates
         }
 
-        public MissionStage(Memory memory, uint address) : base(memory, address) { }
+        public MissionStage(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public bool StayBlackForStage
         {
@@ -35,7 +37,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(100, (int)value);
         }
 
-        public MissionObjective Objective => Memory.CreateClass<MissionObjective>(ReadUInt32(104));
+        public MissionObjective Objective => Memory.ClassFactory.Create<MissionObjective>(ReadUInt32(104));
 
         public int NumConditions
         {

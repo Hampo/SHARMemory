@@ -1,8 +1,12 @@
-﻿namespace SHARMemory.SHAR.Classes
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVIEntityDSG@@")]
     public class IEntityDSG : Drawable
     {
-        public IEntityDSG(Memory memory, uint address) : base(memory, address) { }
+        public IEntityDSG(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public float Rank
         {

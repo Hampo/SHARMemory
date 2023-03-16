@@ -1,10 +1,12 @@
 ﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 using SHARMemory.SHAR.Structs;
 using System.Drawing;
 using System.Text;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVVehicle@@")]
     public class Vehicle : DynaPhysDSG
     {
         public enum DamageTypes
@@ -36,7 +38,7 @@ namespace SHARMemory.SHAR.Classes
             Traffic
         }
 
-        public Vehicle(Memory memory, uint address) : base(memory, address) { }
+        public Vehicle(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public bool AlreadyCalledAutoResetOnSpot
         {
@@ -68,7 +70,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(176, value);
         }
 
-        public GeometryVehicle GeometryVehicle => Memory.CreateClass<GeometryVehicle>(ReadUInt32(180));
+        public GeometryVehicle GeometryVehicle => Memory.ClassFactory.Create<GeometryVehicle>(ReadUInt32(180));
 
         public Matrix4x4 Transform => ReadStruct<Matrix4x4>(184);
 
@@ -92,7 +94,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(268, value);
         }
 
-        public VehicleEventListener VehicleEventListener => Memory.CreateClass<VehicleEventListener>(ReadUInt32(272));
+        public VehicleEventListener VehicleEventListener => Memory.ClassFactory.Create<VehicleEventListener>(ReadUInt32(272));
 
         public bool DoingJumpBoost
         {
@@ -184,7 +186,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(380, (uint)value);
         }
 
-        public VehicleLocomotion VehicleLocomotion => Memory.CreateClass<VehicleLocomotion>(ReadUInt32(384));
+        public VehicleLocomotion VehicleLocomotion => Memory.ClassFactory.Create<VehicleLocomotion>(ReadUInt32(384));
 
         public VehicleLocomotionTypes VehicleLocomotionType
         {
@@ -192,11 +194,11 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(388, (uint)value);
         }
 
-        public PhysicsLocomotion PhysicsLocomotion => Memory.CreateClass<PhysicsLocomotion>(ReadUInt32(392));
+        public PhysicsLocomotion PhysicsLocomotion => Memory.ClassFactory.Create<PhysicsLocomotion>(ReadUInt32(392));
 
-        public TrafficVehicle TrafficVehicle => Memory.CreateClass<TrafficVehicle>(ReadUInt32(396));
+        public TrafficVehicle TrafficVehicle => Memory.ClassFactory.Create<TrafficVehicle>(ReadUInt32(396));
 
-        public TrafficLocomotion TrafficLocomotion => Memory.CreateClass<TrafficLocomotion>(ReadUInt32(400));
+        public TrafficLocomotion TrafficLocomotion => Memory.ClassFactory.Create<TrafficLocomotion>(ReadUInt32(400));
 
         public bool LocoSwitchedToPhysicsThisFrame
         {
@@ -402,7 +404,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteString(506, value, Encoding.UTF8, 32);
         }
 
-        public Character Driver => Memory.CreateClass<Character>(ReadUInt32(540));
+        public Character Driver => Memory.ClassFactory.Create<Character>(ReadUInt32(540));
 
         public bool PhantomDriver
         {
@@ -760,15 +762,15 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(1189, value);
         }
 
-        public SimStateArticulated SimStateArticulated => Memory.CreateClass<SimStateArticulated>(ReadUInt32(1192));
+        public SimStateArticulated SimStateArticulated => Memory.ClassFactory.Create<SimStateArticulated>(ReadUInt32(1192));
 
-        public ArticulatedPhysicsObject ArticulatedPhysicsObject => Memory.CreateClass<ArticulatedPhysicsObject>(ReadUInt32(1196));
+        public ArticulatedPhysicsObject ArticulatedPhysicsObject => Memory.ClassFactory.Create<ArticulatedPhysicsObject>(ReadUInt32(1196));
 
-        public PhysicsProperties PhysicsProperties => Memory.CreateClass<PhysicsProperties>(ReadUInt32(1200));
+        public PhysicsProperties PhysicsProperties => Memory.ClassFactory.Create<PhysicsProperties>(ReadUInt32(1200));
 
-        public SimStateArticulated SimStateArticulatedOutOfCar => Memory.CreateClass<SimStateArticulated>(ReadUInt32(1204));
+        public SimStateArticulated SimStateArticulatedOutOfCar => Memory.ClassFactory.Create<SimStateArticulated>(ReadUInt32(1204));
 
-        public SimStateArticulated SimStateArticulatedInCar => Memory.CreateClass<SimStateArticulated>(ReadUInt32(1208));
+        public SimStateArticulated SimStateArticulatedInCar => Memory.ClassFactory.Create<SimStateArticulated>(ReadUInt32(1208));
 
         public bool UsingInCarPhysics
         {
