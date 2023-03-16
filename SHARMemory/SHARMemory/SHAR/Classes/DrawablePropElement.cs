@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace SHARMemory.SHAR.Classes
+﻿namespace SHARMemory.SHAR.Classes
 {
     public class DrawablePropElement : DrawableElement
     {

@@ -7,7 +7,6 @@ namespace SHARMemory.SHAR
     /// </summary>
     public abstract class Class : SHARMemory.Memory.Class
     {
-
         /// <summary>
         /// The <see cref="ProcessMemory"/> manager this pointer is linked to.
         /// </summary>

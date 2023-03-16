@@ -7,6 +7,7 @@
             BillboardQuadGroup,
             Mesh,
             TrafficBodyDrawable,
+            PolySkin,
             Unknown
         }
 
@@ -23,6 +24,8 @@
                     return Types.BillboardQuadGroup;
                 if (VFTableAddress == Memory.SelectAddress(0x60849C, 0x60848C, 0x60847C, 0x6084C4))
                     return Types.TrafficBodyDrawable;
+                if (VFTableAddress == Memory.SelectAddress(0x5F96DC, 0, 0, 0))
+                    return Types.PolySkin;
 
                 return Types.Unknown;
             }
