@@ -14,6 +14,7 @@ namespace SHARMemory.SHAR.Classes
             AI,
             Traffic
         }
+
         public enum VehicleTypes
         {
             User,
@@ -165,9 +166,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteStruct(360, value);
         }
 
-        public Pointers.IntersectManager.TerrainType TerrainType
+        public IntersectManager.TerrainType TerrainType
         {
-            get => (Pointers.IntersectManager.TerrainType)ReadUInt32(372);
+            get => (IntersectManager.TerrainType)ReadUInt32(372);
             set => WriteUInt32(372, (uint)value);
         }
 

@@ -1,6 +1,6 @@
-﻿namespace SHARMemory.SHAR.Pointers
+﻿namespace SHARMemory.SHAR.Classes
 {
-    public class IntersectManager : Pointer
+    public class IntersectManager : Class
     {
         public enum TerrainType : uint
         {
@@ -15,6 +15,6 @@
             NumTerrainTypes
         }
 
-        public IntersectManager(Memory memory) : base(memory, memory.SelectAddress(0x6C87A4, 0x6C8764, 0x6C8764, 0x6C879C)) { }
+        public IntersectManager(Memory memory, uint address) : base(memory, address) { }
     }
 }

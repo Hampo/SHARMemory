@@ -1,6 +1,5 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.SHAR.Classes;
-using SHARMemory.SHAR.Pointers;
 
 namespace SHARMemory.SHAR.Structs
 {

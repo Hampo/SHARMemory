@@ -1,11 +1,10 @@
 ﻿using SHARMemory.Memory;
-using SHARMemory.SHAR.Classes;
 
-namespace SHARMemory.SHAR.Pointers
+namespace SHARMemory.SHAR.Classes
 {
-    public class VehicleCentral : Pointer
+    public class VehicleCentral : Class
     {
-        public VehicleCentral(Memory memory) : base(memory, memory.SelectAddress(0x6C84D8, 0x6C8498, 0x6C8498, 0x6C84D0))
+        public VehicleCentral(Memory memory, uint address) : base(memory, address)
         {
             if (memory.ModLauncherOrdinals.TryGetValue(3360, out uint MaxVehiclesAddress) && memory.ModLauncherOrdinals.TryGetValue(3364, out uint ActiveVehiclesOffsetAddress))
             {
@@ -21,6 +20,6 @@ namespace SHARMemory.SHAR.Pointers
 
         private readonly uint MaxVehicles;
         private readonly uint ActiveVehiclesOffset;
-        public PointerArray<Vehicle> ActiveVehicles => new(Memory, Value + ActiveVehiclesOffset, MaxVehicles);
+        public PointerArray<Vehicle> ActiveVehicles => new(Memory, Address + ActiveVehiclesOffset, MaxVehicles);
     }
 }

@@ -5,8 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using SHARMemory.Memory;
-using SHARMemory.SHAR.Classes;
-using SHARMemory.SHAR.Pointers;
 
 namespace SHARMemory.SHAR
 {
@@ -75,86 +73,18 @@ namespace SHARMemory.SHAR
         /// </summary>
         public GameVersions GameVersion { get; }
         /// <summary>
-        /// The detected <see cref="GameVersions"/>
+        /// The detected <see cref="GameSubVersions"/>
         /// </summary>
         public GameSubVersions GameSubVersion { get; }
 
         /// <summary>
-        /// A <c>byte</c> containing how many levels in the game. Usually 7, but can differ when using the mod laucher.
+        /// References to SHAR's static globals.
         /// </summary>
-        public byte LevelCount => ReadByte(SelectAddress(0x4798A8, 0x479748, 0x479618, 0x4793D8) + 3);
-
-
+        public readonly Globals Globals;
         /// <summary>
-        /// A class to manage SHAR's cheats.
+        /// References to SHAR's singletons.
         /// </summary>
-        public Cheats Cheats { get; }
-
-
-        /// <summary>
-        /// A reference to SHAR's static <c>CharacterManager</c>.
-        /// </summary>
-        public CharacterManager CharacterManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>CharacterSheetManager</c>.
-        /// </summary>
-        public CharacterSheetManager CharacterSheetManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>CharacterTune</c>.
-        /// </summary>
-        public CharacterTune CharacterTune { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>FeTextBible</c>.
-        /// </summary>
-        public FeTextBible FeTextBible { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>GameFlow</c>.
-        /// </summary>
-        public GameFlow GameFlow { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>GameplayManager</c>.
-        /// </summary>
-        public GameplayManager GameplayManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>HitNRunManager</c>.
-        /// </summary>
-        public HitNRunManager HitNRunManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>InteriorManager</c>.
-        /// </summary>
-        public InteriorManager InteriorManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>IntersectManager</c>.
-        /// </summary>
-        public IntersectManager IntersectManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>LoadingManager</c>.
-        /// </summary>
-        public LoadingManager LoadingManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>MissionManager</c>.
-        /// </summary>
-        public MissionManager MissionManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>TrafficManager</c>.
-        /// </summary>
-        public TrafficManager TrafficManager { get; }
-
-        /// <summary>
-        /// A reference to SHAR's static <c>VehicleCentral</c>.
-        /// </summary>
-        public VehicleCentral VehicleCentral { get; }
+        public readonly Singletons Singletons;
 
         /// <summary>
         /// Checks if <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded.
@@ -174,7 +104,7 @@ namespace SHARMemory.SHAR
         /// <summary>
         /// A <c>Dictionary</c> containing a list of ordinals used by <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> and their addresses.
         /// </summary>
-        public Dictionary<uint, uint> ModLauncherOrdinals { get; } = new Dictionary<uint, uint>(ModLauncherOrdinalKeys.Length);
+        internal Dictionary<uint, uint> ModLauncherOrdinals { get; } = new Dictionary<uint, uint>(ModLauncherOrdinalKeys.Length);
         private void LoadModLauncherOrdinals(ProcessModule hacksModule)
         {
             IntPtr dll = LoadLibraryEx(hacksModule.FileName, IntPtr.Zero, LoadLibraryFlags.DONT_RESOLVE_DLL_REFERENCES);
@@ -326,7 +256,7 @@ namespace SHARMemory.SHAR
         /// <exception cref="Exception">
         /// Throws an error in the detected game version is unknown.
         /// </exception>
-        internal uint SelectAddress(uint ReleaseEnglishAddress, uint DemoAddress, uint ReleaseInternationalAddress, uint BestSellerSeriesAddress)
+        public uint SelectAddress(uint ReleaseEnglishAddress, uint DemoAddress, uint ReleaseInternationalAddress, uint BestSellerSeriesAddress)
         {
             return GameVersion switch
             {
@@ -363,21 +293,8 @@ namespace SHARMemory.SHAR
                 }
             }
 
-            Cheats = new Cheats(this);
-
-            CharacterManager = new(this);
-            CharacterSheetManager = new(this);
-            CharacterTune = new(this);
-            FeTextBible = new(this);
-            GameFlow = new(this);
-            GameplayManager = new(this);
-            HitNRunManager = new(this);
-            InteriorManager = new(this);
-            IntersectManager = new(this);
-            LoadingManager = new(this);
-            MissionManager = new(this);
-            TrafficManager = new(this);
-            VehicleCentral = new(this);
+            Globals = new(this);
+            Singletons = new(this);
         }
 
         [DllImport("user32.dll")]

@@ -1,6 +1,6 @@
-﻿namespace SHARMemory.SHAR.Pointers
+﻿namespace SHARMemory.SHAR.Classes
 {
-    public class InteriorManager : Pointer
+    public class InteriorManager : Class
     {
         public enum InteriorStates : uint
         {
@@ -10,7 +10,7 @@
             Inside
         }
 
-        public InteriorManager(Memory memory) : base(memory, memory.SelectAddress(0x6C8FF8, 0x6C8FB8, 0x6C8FB8, 0x6C8FF0)) { }
+        public InteriorManager(Memory memory, uint address) : base(memory, address) { }
 
         public InteriorStates InteriorState => (InteriorStates)ReadUInt32(4);
     }

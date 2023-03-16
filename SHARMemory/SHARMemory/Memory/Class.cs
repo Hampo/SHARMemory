@@ -16,7 +16,7 @@ namespace SHARMemory.Memory
         /// <summary>
         /// The base address of this class in memory.
         /// </summary>
-        public uint Address { get; }
+        public virtual uint Address { get; }
 
         /// <summary>
         /// The <c>SHAR.Class</c> constructor.

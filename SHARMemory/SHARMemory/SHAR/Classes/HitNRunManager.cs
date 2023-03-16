@@ -1,8 +1,8 @@
-﻿namespace SHARMemory.SHAR.Pointers
+﻿namespace SHARMemory.SHAR.Classes
 {
-    public class HitNRunManager : Pointer
+    public class HitNRunManager : Class
     {
-        public HitNRunManager(Memory memory) : base(memory, memory.SelectAddress(0x6C84E0, 0x6C84A0, 0x6C84A0, 0x6C84D8)) { }
+        public HitNRunManager(Memory memory, uint address) : base(memory, address) { }
 
         public float HitAndRun
         {
@@ -142,7 +142,7 @@
             set => WriteUInt32(92, value);
         }
 
-        // 96 = PrevHits[16]
+        // TODO: 96 = PrevHits[16]
 
         public int LeastRecentlyHit
         {

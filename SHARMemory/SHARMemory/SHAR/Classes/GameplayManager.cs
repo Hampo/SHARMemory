@@ -1,12 +1,10 @@
 ﻿using SHARMemory.Memory;
-using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Structs;
-using System.Runtime.InteropServices;
 using System.Text;
 
-namespace SHARMemory.SHAR.Pointers
+namespace SHARMemory.SHAR.Classes
 {
-    public class GameplayManager : Pointer
+    public class GameplayManager : Class
     {
         public const int MAX_MISSIONS = 20;
         public const int MAX_BONUS_MISSIONS = 10;
@@ -35,7 +33,7 @@ namespace SHARMemory.SHAR.Pointers
             Num_Ratins
         }
 
-        public GameplayManager(Memory memory) : base(memory, memory.SelectAddress(0x6C8998, 0x6C8958, 0x6C8958, 0x6C8990)) { }
+        public GameplayManager(Memory memory, uint address) : base(memory, address) { }
 
         public bool IsDemo
         {
@@ -181,7 +179,7 @@ namespace SHARMemory.SHAR.Pointers
             set => WriteInt32(1056, value);
         }
 
-        public PointerArray<Mission> Missions => new(Memory, Value + 1060, MAX_MISSIONS + MAX_BONUS_MISSIONS);
+        public PointerArray<Mission> Missions => new(Memory, Address + 1060, MAX_MISSIONS + MAX_BONUS_MISSIONS);
 
         // GameMemoryAllocator CurrentMissionHeap (1080)
 
@@ -319,9 +317,6 @@ namespace SHARMemory.SHAR.Pointers
 
         public Mission GetCurrentMission()
         {
-            if (!IsPointerValid)
-                return null;
-
             if (IsInBonusMission)
             {
                 int currBonusMission = CurrentBonusMission;

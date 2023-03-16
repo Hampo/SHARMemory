@@ -1,6 +1,6 @@
-﻿namespace SHARMemory.SHAR.Pointers
+﻿namespace SHARMemory.SHAR.Classes
 {
-    public class GameFlow : Pointer
+    public class GameFlow : Class
     {
         public enum GameState
         {
@@ -18,8 +18,8 @@
             Exit
         }
 
-        public GameFlow(Memory memory) : base(memory, memory.SelectAddress(0x6C9014, 0x6C8FD4, 0x6C8FD4, 0x6C900C)) { }
+        public GameFlow(Memory memory, uint address) : base(memory, address) { }
 
-        public GameState State => IsPointerValid ? (GameState)ReadUInt32(12) : GameState.PreLicence;
+        public GameState State => (GameState)ReadUInt32(12);
     }
 }

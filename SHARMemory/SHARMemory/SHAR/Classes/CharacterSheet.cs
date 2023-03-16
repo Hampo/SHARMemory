@@ -41,20 +41,20 @@ namespace SHARMemory.SHAR.Classes
 
         public uint GagsCount(uint Level) => ReadUInt32(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4 + 4 + 4 + 4 + 16);
 
-        public RenderEnums.LevelEnum CurrentLevel => (RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.LevelCount));
+        public RenderEnums.LevelEnum CurrentLevel => (RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount));
 
-        public int CurrentMission => ReadInt32((uint)(16 + 620 * Memory.LevelCount + 4));
+        public int CurrentMission => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 4));
 
-        public RenderEnums.LevelEnum HighestLevel => (RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.LevelCount + 8));
+        public RenderEnums.LevelEnum HighestLevel => (RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 8));
 
-        public int HighestMission => ReadInt32((uint)(16 + 620 * Memory.LevelCount + 12));
+        public int HighestMission => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 12));
 
-        public bool IsNavSystemEnabled => ReadBoolean((uint)(16 + 620 * Memory.LevelCount + 16));
+        public bool IsNavSystemEnabled => ReadBoolean((uint)(16 + 620 * Memory.Globals.LevelCount + 16));
 
         public int Coins
         {
-            get => ReadInt32((uint)(16 + 620 * Memory.LevelCount + 20));
-            set => WriteInt32((uint)(16 + 620 * Memory.LevelCount + 20), value);
+            get => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 20));
+            set => WriteInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 20), value);
         }
     }
 }
