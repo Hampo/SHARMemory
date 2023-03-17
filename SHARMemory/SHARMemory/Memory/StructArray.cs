@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace SHARMemory.Memory
 {
@@ -76,6 +77,44 @@ namespace SHARMemory.Memory
             Address = address;
             Size = size;
             Count = count;
+        }
+
+        /// <summary>
+        /// Reads the whole array at once into a <see cref="Action{T}"/>.
+        /// </summary>
+        /// <returns>
+        /// The entire array.
+        /// </returns>
+        public T[] ToArray()
+        {
+            byte[] bytes = Memory.ReadBytes(Address, Size * Count);
+
+            T[] result = new T[Count];
+            for (int i = 0; i < Count; i++)
+                result[i] = Memory.StructFromBytes<T>(bytes, i * (int)Size);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Writes the whole array at once into a <see cref="Action{T}"/>.
+        /// </summary>
+        /// <param name="array">
+        /// The array to write.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="array"/> length doesn't match <see cref="Count"/>.
+        /// </exception>
+        public void FromArray(T[] array)
+        {
+            if (array.Length != Count)
+                throw new ArgumentException($"{nameof(array)} must have a length of {Count}", nameof(array));
+
+            byte[] bytes = new byte[Size * Count];
+            for (int i = 0; i < Count; i++)
+                Memory.BytesFromStruct<T>(array[i], bytes, i * (int)Size);
+
+            Memory.WriteBytes(Address, bytes);
         }
 
         private class StructEnumerator : IEnumerator<T>

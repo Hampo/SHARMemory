@@ -10,6 +10,6 @@ namespace SHARMemory.SHAR.Classes
 
         public PointerArray<FeLanguage> Languages => PointerArrayExtensions.FromVector<FeLanguage>(Memory, this, 20);
 
-        public FeLanguage CurrentLanguage => Memory.Singletons.GameFlow.State is GameFlow.GameState.PreLicence or GameFlow.GameState.Licence ? null : Languages[Memory.Globals.FeTextBible.LanguageIndex];
+        public FeLanguage CurrentLanguage => Memory.Singletons.GameFlow.State is GameFlow.GameState.PreLicence or GameFlow.GameState.Licence || Languages.Count < 1 ? null : Languages[Memory.Globals.FeTextBible.LanguageIndex];
     }
 }

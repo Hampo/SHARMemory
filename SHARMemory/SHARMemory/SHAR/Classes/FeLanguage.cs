@@ -38,7 +38,7 @@ namespace SHARMemory.SHAR.Classes
             }
         }
 
-        private uint? GetOffsetIndex(uint hash)
+        public uint? GetIndex(uint hash)
         {
             for (uint i = 0; i < NumStrings; i++)
                 if (Hashes[i] == hash)
@@ -47,15 +47,17 @@ namespace SHARMemory.SHAR.Classes
             return null;
         }
 
+        public uint? GetIndex(string name) => GetIndex(GetHash(name));
+
         public string GetString(uint hash)
         {
-            uint? offsetIndex = GetOffsetIndex(hash);
-            if (!offsetIndex.HasValue)
+            uint? index = GetIndex(hash);
+            if (!index.HasValue)
                 return null;
 
             byte[] buffer = Buffer;
 
-            int startPos = (int)Offsets[offsetIndex.Value];
+            int startPos = (int)Offsets[index.Value];
             int endPos = startPos;
             var a = (char)buffer[startPos];
             while (endPos < buffer.Length && buffer[endPos] != 0)
@@ -68,18 +70,23 @@ namespace SHARMemory.SHAR.Classes
 
         public bool SetString(uint hash, string value)
         {
-            uint? offsetIndex = GetOffsetIndex(hash);
-            if (!offsetIndex.HasValue)
+            uint? index = GetIndex(hash);
+            if (!index.HasValue)
                 return false;
 
             byte[] buffer = Buffer;
 
-            int startPos = (int)Offsets[offsetIndex.Value];
+            int startPos = (int)Offsets[index.Value];
             int endPos = startPos;
             bool foundNull = false;
             while (endPos < buffer.Length)
             {
                 endPos += 2;
+                if (endPos >= buffer.Length)
+                {
+                    endPos = buffer.Length;
+                    break;
+                }
                 if (buffer[endPos] == 0)
                     foundNull = true;
                 else if (foundNull)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace SHARMemory.Memory
 {
@@ -40,7 +41,7 @@ namespace SHARMemory.Memory
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}.");
 
-                return Memory.ClassFactory.Create<T>(Memory.ReadUInt32(Address + index * 4));
+                return Memory.ClassFactory.Create<T>(Memory.ReadUInt32(Address + index * sizeof(uint)));
             }
             set
             {
@@ -49,7 +50,7 @@ namespace SHARMemory.Memory
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}.");
 
-                Memory.WriteUInt32(Address + index * 4, value?.Address ?? 0);
+                Memory.WriteUInt32(Address + index * sizeof(uint), value?.Address ?? 0);
             }
         }
 
@@ -70,6 +71,44 @@ namespace SHARMemory.Memory
             Memory = memory;
             Address = address;
             Count = count;
+        }
+
+        /// <summary>
+        /// Reads the whole array at once into a <see cref="Action{T}"/>.
+        /// </summary>
+        /// <returns>
+        /// The entire array.
+        /// </returns>
+        public T[] ToArray()
+        {
+            byte[] bytes = Memory.ReadBytes(Address, sizeof(uint) * Count);
+
+            T[] result = new T[Count];
+            for (int i = 0; i < Count; i++)
+                result[i] = Memory.ClassFactory.Create<T>(BitConverter.ToUInt32(bytes, i * sizeof(uint)));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Writes the whole array at once into a <see cref="Action{T}"/>.
+        /// </summary>
+        /// <param name="array">
+        /// The array to write.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="array"/> length doesn't match <see cref="Count"/>.
+        /// </exception>
+        public void FromArray(T[] array)
+        {
+            if (array.Length != Count)
+                throw new ArgumentException($"{nameof(array)} must have a length of {Count}", nameof(array));
+
+            byte[] bytes = new byte[sizeof(uint) * Count];
+            for (int i = 0; i < Count; i++)
+                BitConverter.GetBytes(array[i]?.Address ?? 0).CopyTo(bytes, i * sizeof(uint));
+
+            Memory.WriteBytes(Address, bytes);
         }
 
         private class PointerEnumerator : IEnumerator<T>

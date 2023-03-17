@@ -153,6 +153,21 @@ namespace SHARMemory.Memory
         }
 
         /// <summary>
+        /// Get if <see cref="Process"/> is still running.
+        /// </summary>
+        public bool IsRunning
+        {
+            get
+            {
+                try
+                {
+                    return !Process.HasExited;
+                }
+                catch { return false; }
+            }
+        }
+
+        /// <summary>
         /// Reads the memory of <see cref="Process"/>.
         /// </summary>
         /// <param name="Address">
