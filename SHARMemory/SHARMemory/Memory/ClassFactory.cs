@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Xml.Schema;
 
 namespace SHARMemory.Memory
 {
@@ -69,10 +68,7 @@ namespace SHARMemory.Memory
             /// <param name="completeObjectLocator">
             /// The <see cref="CompleteObjectLocator"/> of this class.
             /// </param>
-            public UnknownClass(ProcessMemory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator)
-            {
-
-            }
+            public UnknownClass(ProcessMemory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
         }
 
         /// <summary>
