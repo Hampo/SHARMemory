@@ -402,7 +402,16 @@ namespace SHARMemory.Memory
             return BitConverter.ToUInt64(array, 0);
         }
 
-        private static string NullTerminate(string String)
+        /// <summary>
+        /// Returns <paramref name="String"/> null terminated.
+        /// </summary>
+        /// <param name="String">
+        /// The <c>string</c> to null terminate
+        /// </param>
+        /// <returns>
+        /// <paramref name="String"/> up to the first <c>null</c> character.
+        /// </returns>
+        public static string NullTerminate(string String)
         {
             int num = String.IndexOf('\0');
             if (num == -1)

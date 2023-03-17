@@ -2,7 +2,9 @@
 using SHARMemory.Memory.RTTI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SHARMemory.SHAR.Classes
@@ -24,70 +26,77 @@ namespace SHARMemory.SHAR.Classes
 
         public StructArray<uint> Offsets => new(Memory, ReadUInt32(36), sizeof(uint), NumStrings);
 
-        public StructArray<ushort> Buffer => new(Memory, ReadUInt32(40), sizeof(ushort), BufferSize / 2);
+        public byte[] Buffer
+        {
+            get => Memory.ReadBytes(ReadUInt32(40), BufferSize);
+            set
+            {
+                if (value.Length != BufferSize)
+                    throw new ArgumentException($"{nameof(value)} must be of equal length to \"BufferSize\" ({BufferSize}).", nameof(value));
 
-        private uint? GetOffset(uint hash)
+                Memory.WriteBytes(ReadUInt32(40), value);
+            }
+        }
+
+        private uint? GetOffsetIndex(uint hash)
         {
             for (uint i = 0; i < NumStrings; i++)
                 if (Hashes[i] == hash)
-                    return Offsets[i] / 2;
+                    return i;
 
             return null;
         }
 
         public string GetString(uint hash)
         {
-            uint? offset = GetOffset(hash);
-            if (!offset.HasValue)
+            uint? offsetIndex = GetOffsetIndex(hash);
+            if (!offsetIndex.HasValue)
                 return null;
 
-            List<ushort> data = new();
-            while (true)
-            {
-                ushort c = Buffer[offset.Value];
-                if (c == 0) break;
+            byte[] buffer = Buffer;
 
-                data.Add(c);
-                offset++;
-            }
+            int startPos = (int)Offsets[offsetIndex.Value];
+            int endPos = startPos;
+            var a = (char)buffer[startPos];
+            while (endPos < buffer.Length && buffer[endPos] != 0)
+                endPos += 2;
 
-            byte[] asBytes = new byte[data.Count * sizeof(ushort)];
-            System.Buffer.BlockCopy(data.ToArray(), 0, asBytes, 0, asBytes.Length);
-            return Encoding.Unicode.GetString(asBytes);
+            return ProcessMemory.NullTerminate(Encoding.Unicode.GetString(Buffer, startPos, endPos - startPos));
         }
 
         public string GetString(string name) => GetString(GetHash(name));
 
         public bool SetString(uint hash, string value)
         {
-            uint? offset = GetOffset(hash);
-            if (!offset.HasValue)
+            uint? offsetIndex = GetOffsetIndex(hash);
+            if (!offsetIndex.HasValue)
                 return false;
 
-            uint maxLength = 0;
+            byte[] buffer = Buffer;
+
+            int startPos = (int)Offsets[offsetIndex.Value];
+            int endPos = startPos;
             bool foundNull = false;
-            while (offset.Value + maxLength < Buffer.Count)
+            while (endPos < buffer.Length)
             {
-                ushort c = Buffer[offset.Value + maxLength];
-                if (c == 0)
+                endPos += 2;
+                if (buffer[endPos] == 0)
                     foundNull = true;
                 else if (foundNull)
-                {
-                    maxLength--;
                     break;
-                }
-                maxLength++;
             }
 
-            if (value.Length > maxLength)
-                throw new ArgumentException($"{nameof(value)} cannot be of a higher length than {maxLength}'", nameof(value));
+            int maxLength = endPos - startPos;
 
-            ushort[] chars = value.Select(c => (ushort)c).ToArray();
+            byte[] bytes = Encoding.Unicode.GetBytes(value);
+            if (bytes.Length > maxLength)
+                throw new ArgumentException($"{nameof(value)} has a byte count of {bytes.Length}. Must be less than {maxLength}.", nameof(value));
 
-            for (int i = 0; i < maxLength; i++)
-            {
-                Buffer[(uint)(offset.Value + i)] = (ushort)(i < chars.Length ? chars[i] : 0);
-            }
+            byte[] paddedBytes = new byte[maxLength];
+            bytes.CopyTo(paddedBytes, 0);
+
+            Memory.WriteBytes(ReadUInt32(40) + (uint)startPos, paddedBytes);
+
             return true;
         }
 
