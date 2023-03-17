@@ -56,6 +56,18 @@ namespace SHARMemory.SHAR
         /// </summary>
         public MissionManager MissionManager => MissionManagerSingleton.Get();
 
+        private readonly Singleton<RenderFlow> RenderFlowSingleton;
+        /// <summary>
+        /// A reference to SHAR's <see cref="Classes.TrafficManager"/> singleton.
+        /// </summary>
+        public RenderFlow RenderFlow => RenderFlowSingleton.Get();
+
+        private readonly Singleton<RenderManager> RenderManagerSingleton;
+        /// <summary>
+        /// A reference to SHAR's <see cref="Classes.TrafficManager"/> singleton.
+        /// </summary>
+        public RenderManager RenderManager => RenderManagerSingleton.Get();
+
         private readonly Singleton<TrafficManager> TrafficManagerSingleton;
         /// <summary>
         /// A reference to SHAR's <see cref="Classes.TrafficManager"/> singleton.
@@ -78,6 +90,8 @@ namespace SHARMemory.SHAR
             IntersectManagerSingleton = new(memory, memory.SelectAddress(0x6C87A4, 0x6C8764, 0x6C8764, 0x6C879C));
             LoadingManagerSingleton = new(memory, memory.SelectAddress(0x6C8FF4, 0x6C8FB4, 0x6C8FB4, 0x6C8FEC));
             MissionManagerSingleton = new(memory, memory.SelectAddress(0x6C8994, 0x6C8954, 0x6C8954, 0x6C898C));
+            RenderFlowSingleton = new(memory, memory.SelectAddress(0x6C87D8, 0x6C8798, 0x6C8798, 0x6C87D0));
+            RenderManagerSingleton = new(memory, memory.SelectAddress(0x6C87B4, 0x6C8774, 0x6C8774, 0x6C87AC));
             TrafficManagerSingleton = new(memory, memory.SelectAddress(0x6C8468, 0x6C8428, 0x6C8428, 0x6C8460));
             VehicleCentralSingleton = new(memory, memory.SelectAddress(0x6C84D8, 0x6C8498, 0x6C8498, 0x6C84D0));
         }
