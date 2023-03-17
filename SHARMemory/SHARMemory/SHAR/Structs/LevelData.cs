@@ -7,9 +7,9 @@ namespace SHARMemory.SHAR.Structs
     [Struct(typeof(LevelDataStruct))]
     public struct LevelData
     {
-        public const int Size = sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS + sizeof(int) + sizeof(int) + sizeof(RenderEnums.MissionEnum);
+        public const int Size = sizeof(Globals.RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS + sizeof(int) + sizeof(int) + sizeof(Globals.RenderEnums.MissionEnum);
 
-        public RenderEnums.LevelEnum Level;
+        public Globals.RenderEnums.LevelEnum Level;
 
         public int NumMissions;
 
@@ -19,9 +19,9 @@ namespace SHARMemory.SHAR.Structs
 
         public int NumBonusCollected;
 
-        public RenderEnums.MissionEnum Mission;
+        public Globals.RenderEnums.MissionEnum Mission;
 
-        public LevelData(RenderEnums.LevelEnum level, int numMissions, GameplayManager.Ratings[] ratings, int numBonusCollectibles, int numBonusCollected, RenderEnums.MissionEnum mission)
+        public LevelData(Globals.RenderEnums.LevelEnum level, int numMissions, GameplayManager.Ratings[] ratings, int numBonusCollectibles, int numBonusCollected, Globals.RenderEnums.MissionEnum mission)
         {
             Level = level;
             NumMissions = numMissions;
@@ -40,8 +40,8 @@ namespace SHARMemory.SHAR.Structs
 
         public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
         {
-            RenderEnums.LevelEnum Level = (RenderEnums.LevelEnum)BitConverter.ToInt32(Bytes, Offset);
-            Offset += sizeof(RenderEnums.LevelEnum);
+            Globals.RenderEnums.LevelEnum Level = (Globals.RenderEnums.LevelEnum)BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(Globals.RenderEnums.LevelEnum);
             int NumMissions = BitConverter.ToInt32(Bytes, Offset);
             Offset += sizeof(int);
             GameplayManager.Ratings[] Ratings = new GameplayManager.Ratings[GameplayManager.MAX_MISSIONS];
@@ -54,7 +54,7 @@ namespace SHARMemory.SHAR.Structs
             Offset += sizeof(int);
             int NumBonusCollected = BitConverter.ToInt32(Bytes, Offset);
             Offset += sizeof(int);
-            RenderEnums.MissionEnum Mission = (RenderEnums.MissionEnum)BitConverter.ToInt32(Bytes, Offset);
+            Globals.RenderEnums.MissionEnum Mission = (Globals.RenderEnums.MissionEnum)BitConverter.ToInt32(Bytes, Offset);
             return new LevelData(Level, NumMissions, Ratings, NumBonusCollectibles, NumBonusCollected, Mission);
         }
 

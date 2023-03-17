@@ -17,22 +17,25 @@ namespace SHARMemory.SHAR.Classes
 
         public Light(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
+        private const uint ColourOffset = 16;
         public Color Colour
         {
-            get => ReadStruct<Color>(16);
+            get => ReadStruct<Color>(ColourOffset);
             set => WriteStruct(16, value);
         }
 
+        private const uint PositionOffset = ColourOffset + sizeof(int);
         public Vector3 Position
         {
-            get => ReadStruct<Vector3>(20);
-            set => WriteStruct(20, value);
+            get => ReadStruct<Vector3>(PositionOffset);
+            set => WriteStruct(PositionOffset, value);
         }
 
+        private const uint SlotOffset = PositionOffset + Vector3.Size;
         public uint Slot
         {
-            get => ReadUInt32(32);
-            set => WriteUInt32(32, value);
+            get => ReadUInt32(SlotOffset);
+            set => WriteUInt32(SlotOffset, value);
         }
 
         public bool Active

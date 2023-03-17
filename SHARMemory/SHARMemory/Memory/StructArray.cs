@@ -13,6 +13,9 @@ namespace SHARMemory.Memory
     public class StructArray<T> : IEnumerable<T> where T : struct
     {
         private readonly ProcessMemory Memory;
+        /// <summary>
+        /// The base address of this array
+        /// </summary>
         public readonly uint Address;
         private readonly uint Size;
         /// <summary>

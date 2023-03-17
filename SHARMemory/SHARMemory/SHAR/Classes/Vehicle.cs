@@ -212,9 +212,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(408, value);
         }
 
-        public RenderEnums.LayerEnum RenderLayerEnum
+        public Globals.RenderEnums.LayerEnum RenderLayerEnum
         {
-            get => (RenderEnums.LayerEnum)ReadInt32(412);
+            get => (Globals.RenderEnums.LayerEnum)ReadInt32(412);
             set => WriteInt32(412, (int)value);
         }
 

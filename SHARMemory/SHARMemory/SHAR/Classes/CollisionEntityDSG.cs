@@ -28,9 +28,9 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(52, value);
         }
 
-        public RenderEnums.LayerEnum RenderLayer
+        public Globals.RenderEnums.LayerEnum RenderLayer
         {
-            get => (RenderEnums.LayerEnum)ReadUInt32(56);
+            get => (Globals.RenderEnums.LayerEnum)ReadUInt32(56);
             set => WriteUInt32(56, (uint)value);
         }
     }

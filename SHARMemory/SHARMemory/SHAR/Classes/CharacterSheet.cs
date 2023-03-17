@@ -42,11 +42,11 @@ namespace SHARMemory.SHAR.Classes
 
         public uint GagsCount(uint Level) => ReadUInt32(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4 + 4 + 4 + 4 + 16);
 
-        public RenderEnums.LevelEnum CurrentLevel => (RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount));
+        public Globals.RenderEnums.LevelEnum CurrentLevel => (Globals.RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount));
 
         public int CurrentMission => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 4));
 
-        public RenderEnums.LevelEnum HighestLevel => (RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 8));
+        public Globals.RenderEnums.LevelEnum HighestLevel => (Globals.RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 8));
 
         public int HighestMission => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 12));
 
