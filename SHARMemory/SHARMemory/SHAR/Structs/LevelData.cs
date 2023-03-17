@@ -1,5 +1,6 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.SHAR.Classes;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -33,34 +34,49 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{Level} | {NumMissions} | {Ratings} | {NumBonusCollectibles} | {NumBonusCollected} | {Mission}";
     }
 
-    internal class LevelDataStruct : IStruct
+    internal class LevelDataStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address)
-        {
-            RenderEnums.LevelEnum Level = (RenderEnums.LevelEnum)Memory.ReadInt32(Address);
-            int NumMissions = Memory.ReadInt32(Address + sizeof(RenderEnums.LevelEnum));
-            GameplayManager.Ratings[] Ratings = new GameplayManager.Ratings[GameplayManager.MAX_MISSIONS];
-            for (uint i = 0; i < GameplayManager.MAX_MISSIONS; i++)
-                Ratings[i] = (GameplayManager.Ratings)Memory.ReadInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * i);
-            int NumBonusCollectibles = Memory.ReadInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS);
-            int NumBonusCollected = Memory.ReadInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS + sizeof(int));
-            RenderEnums.MissionEnum Mission = (RenderEnums.MissionEnum)Memory.ReadInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS + sizeof(int) + sizeof(int));
+        public override int Size => LevelData.Size;
 
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            RenderEnums.LevelEnum Level = (RenderEnums.LevelEnum)BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(RenderEnums.LevelEnum);
+            int NumMissions = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            GameplayManager.Ratings[] Ratings = new GameplayManager.Ratings[GameplayManager.MAX_MISSIONS];
+            for (int i = 0; i < GameplayManager.MAX_MISSIONS; i++)
+            {
+                Ratings[i] = (GameplayManager.Ratings)BitConverter.ToInt32(Bytes, Offset);
+                Offset += sizeof(GameplayManager.Ratings);
+            }
+            int NumBonusCollectibles = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            int NumBonusCollected = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            RenderEnums.MissionEnum Mission = (RenderEnums.MissionEnum)BitConverter.ToInt32(Bytes, Offset);
             return new LevelData(Level, NumMissions, Ratings, NumBonusCollectibles, NumBonusCollected, Mission);
         }
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not LevelData Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));
 
-            Memory.WriteInt32(Address, (int)Value2.Level);
-            Memory.WriteInt32(Address + sizeof(int), Value2.NumMissions);
-            for (uint i = 0; i < GameplayManager.MAX_MISSIONS; i++)
-                Memory.WriteInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * i, (int)Value2.Ratings[i]);
-            Memory.WriteInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS, Value2.NumBonusCollectibles);
-            Memory.WriteInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS + sizeof(int), Value2.NumBonusCollected);
-            Memory.WriteInt32(Address + sizeof(RenderEnums.LevelEnum) + sizeof(int) + sizeof(GameplayManager.Ratings) * GameplayManager.MAX_MISSIONS + sizeof(int) + sizeof(int), (int)Value2.Mission);
+            BitConverter.GetBytes((int)Value2.Level).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.NumMissions).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            for (int i = 0; i < GameplayManager.MAX_MISSIONS; i++)
+            {
+                BitConverter.GetBytes((int)Value2.Ratings[i]).CopyTo(Buffer, Offset);
+                Offset += sizeof(int);
+            }
+            BitConverter.GetBytes(Value2.NumBonusCollectibles).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.NumBonusCollected).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes((int)Value2.Mission).CopyTo(Buffer, Offset);
         }
     }
 }

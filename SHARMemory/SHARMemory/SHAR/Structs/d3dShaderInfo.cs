@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 using System.Drawing;
 
 namespace SHARMemory.SHAR.Structs
@@ -33,21 +34,39 @@ namespace SHARMemory.SHAR.Structs
     }
 
 #pragma warning disable IDE1006 // Naming Styles
-    internal class d3dShaderInfoStruct : IStruct
+    internal class d3dShaderInfoStruct : Struct
 #pragma warning restore IDE1006 // Naming Styles
     {
-        public object Read(ProcessMemory Memory, uint Address) => new d3dShaderInfo(Memory.ReadStruct<Color>(Address), Memory.ReadStruct<Color>(Address + sizeof(int)), Memory.ReadStruct<Color>(Address + sizeof(int) + sizeof(int)), Memory.ReadStruct<Color>(Address + sizeof(int) + sizeof(int) + sizeof(int)), Memory.ReadSingle(Address + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int)));
+        public override int Size => d3dShaderInfo.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Color Diffuse = Memory.StructFromBytes<Color>(Bytes, Offset);
+            Offset += sizeof(int);
+            Color Specular = Memory.StructFromBytes<Color>(Bytes, Offset);
+            Offset += sizeof(int);
+            Color Ambient = Memory.StructFromBytes<Color>(Bytes, Offset);
+            Offset += sizeof(int);
+            Color Emissive = Memory.StructFromBytes<Color>(Bytes, Offset);
+            Offset += sizeof(int);
+            float Shininess = BitConverter.ToSingle(Bytes, Offset);
+            return new d3dShaderInfo(Diffuse, Specular, Ambient, Emissive, Shininess);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not d3dShaderInfo Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(d3dShaderInfo)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(d3dShaderInfo)}'.", nameof(Value));
 
-            Memory.WriteStruct(Address, Value2.Diffuse);
-            Memory.WriteStruct(Address + sizeof(int), Value2.Specular);
-            Memory.WriteStruct(Address + sizeof(int) + sizeof(int), Value2.Ambient);
-            Memory.WriteStruct(Address + sizeof(int) + sizeof(int) + sizeof(int), Value2.Emissive);
-            Memory.WriteSingle(Address + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int), Value2.Shininess);
+            Memory.BytesFromStruct(Value2.Diffuse, Buffer, Offset);
+            Offset += sizeof(int);
+            Memory.BytesFromStruct(Value2.Specular, Buffer, Offset);
+            Offset += sizeof(int);
+            Memory.BytesFromStruct(Value2.Ambient, Buffer, Offset);
+            Offset += sizeof(int);
+            Memory.BytesFromStruct(Value2.Emissive, Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.Shininess).CopyTo(Buffer, Offset);
         }
     }
 }

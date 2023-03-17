@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -30,17 +31,26 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{Low} | {High}";
     }
 
-    internal class Box3DStruct : IStruct
+    internal class Box3DStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new Box3D(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size));
+        public override int Size => Box3D.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Vector3 Low = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            Offset += Vector3.Size;
+            Vector3 High = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            return new Box3D(Low, High);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not Box3D Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Box3D)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Box3D)}'.", nameof(Value));
 
-            Memory.WriteStruct(Address, Value2.Low);
-            Memory.WriteStruct(Address + Vector3.Size, Value2.High);
+            Memory.BytesFromStruct(Value2.Low, Buffer, Offset);
+            Offset += Vector3.Size;
+            Memory.BytesFromStruct(Value2.High, Buffer, Offset);
         }
     }
 }

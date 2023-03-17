@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -31,21 +32,42 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{{ {{M11:{M11} M12:{M12}}} {{M21:{M21} M22:{M22}}} {{M31:{M31} M32:{M32}}} }}";
     }
 
-    internal class Matrix3x2Struct : IStruct
+    internal class Matrix3x2Struct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new Matrix3x2(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5));
+        public override int Size => Matrix3x2.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            float M11 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M12 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M21 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M22 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M31 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M32 = BitConverter.ToSingle(Bytes, Offset);
+            return new Matrix3x2(M11, M12, M21, M22, M31, M32);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not Matrix3x2 Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Matrix3x2)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Matrix3x2)}'.", nameof(Value));
 
-            Memory.WriteSingle(Address, Value2.M11);
-            Memory.WriteSingle(Address + sizeof(float), Value2.M12);
-            Memory.WriteSingle(Address + sizeof(float) * 2, Value2.M21);
-            Memory.WriteSingle(Address + sizeof(float) * 3, Value2.M22);
-            Memory.WriteSingle(Address + sizeof(float) * 4, Value2.M31);
-            Memory.WriteSingle(Address + sizeof(float) * 5, Value2.M32);
+            BitConverter.GetBytes(Value2.M11).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M12).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M21).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M22).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M31).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M32).CopyTo(Buffer, Offset);
         }
     }
 }

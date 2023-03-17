@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 using System.Text;
 
 namespace SHARMemory.SHAR.Structs
@@ -24,18 +25,30 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{ChaseManagerPtr} | {HostVehicle} | {HostVehicleFilename}";
     }
 
-    internal class ChaseManagerStruct : IStruct
+    internal class ChaseManagerStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new ChaseManager(Memory.ClassFactory.Create<Classes.ChaseManager>(Address), Memory.ReadString(Address + sizeof(uint), Encoding.UTF8, 16), Memory.ReadString(Address + sizeof(uint) + 16, Encoding.UTF8, 64));
+        public override int Size => ChaseManager.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Classes.ChaseManager ChaseManagerPtr = Memory.ClassFactory.Create<Classes.ChaseManager>(BitConverter.ToUInt32(Bytes, Offset));
+            Offset += sizeof(uint);
+            string HostVehicle = Encoding.UTF8.GetString(Bytes, Offset, 16);
+            Offset += 16;
+            string HostVehicleFilename = Encoding.UTF8.GetString(Bytes, Offset, 64);
+            return new ChaseManager(ChaseManagerPtr, HostVehicle, HostVehicleFilename);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not ChaseManager Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(ChaseManager)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(ChaseManager)}'.", nameof(Value));
 
-            Memory.WriteUInt32(Address, Value2.ChaseManagerPtr.Address);
-            Memory.WriteString(Address + sizeof(uint), Value2.HostVehicle, Encoding.UTF8, 16);
-            Memory.WriteString(Address + sizeof(uint) + 16, Value2.HostVehicleFilename, Encoding.UTF8, 64);
+            BitConverter.GetBytes(Value2.ChaseManagerPtr.Address).CopyTo(Buffer, Offset);
+            Offset += sizeof(uint);
+            Memory.GetStringBytes(Value2.HostVehicle, Encoding.UTF8, 16).CopyTo(Buffer, Offset);
+            Offset += 16;
+            Memory.GetStringBytes(Value2.HostVehicleFilename, Encoding.UTF8, 64).CopyTo(Buffer, Offset);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -23,18 +24,30 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{PlayerPosition} | {ForceLocation} | {DirtyFlag}";
     }
 
-    internal class PlayerAndCarInfoStruct : IStruct
+    internal class PlayerAndCarInfoStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new PlayerAndCarInfo(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size), Memory.ReadBoolean(Address + Vector3.Size + Vector3.Size));
+        public override int Size => PlayerAndCarInfo.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Vector3 PlayerPosition = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            Offset += Vector3.Size;
+            Vector3 ForceLocation = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            Offset += Vector3.Size;
+            bool DirtyFlag = BitConverter.ToBoolean(Bytes, Offset);
+            return new PlayerAndCarInfo(PlayerPosition, ForceLocation, DirtyFlag);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not PlayerAndCarInfo Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(PlayerAndCarInfo)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(PlayerAndCarInfo)}'.", nameof(Value));
 
-            Memory.WriteStruct(Address, Value2.PlayerPosition);
-            Memory.WriteStruct(Address + Vector3.Size, Value2.ForceLocation);
-            Memory.WriteBoolean(Address + Vector3.Size + Vector3.Size, Value2.DirtyFlag);
+            Memory.BytesFromStruct(Value2.PlayerPosition, Buffer, Offset);
+            Offset += Vector3.Size;
+            Memory.BytesFromStruct(Value2.ForceLocation, Buffer, Offset);
+            Offset += Vector3.Size;
+            BitConverter.GetBytes(Value2.DirtyFlag).CopyTo(Buffer, Offset);
         }
     }
 }

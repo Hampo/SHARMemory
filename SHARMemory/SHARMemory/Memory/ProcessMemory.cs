@@ -494,6 +494,37 @@ namespace SHARMemory.Memory
         public T ReadStruct<T>(uint Address) => (T)ReadStruct(typeof(T), Address);
 
         /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Type">
+        /// The type to read.
+        /// </param>
+        /// <param name="Bytes">
+        /// The byte array.
+        /// </param>
+        /// <param name="Offset">
+        /// The start offset in the <paramref name="Bytes"/>. Defaults to <c>0</c>.
+        /// </param>
+        /// <returns>
+        /// The <paramref name="Type"/> at the given address.
+        /// </returns>
+        public object StructFromBytes(Type Type, byte[] Bytes, int Offset = 0) => StructAttribute.Get(this, Type).FromBytes(this, Bytes, Offset);
+
+        /// <summary>
+        /// Reads <see cref="Process"/>'s memory at the given address.
+        /// </summary>
+        /// <param name="Bytes">
+        /// The byte array.
+        /// </param>
+        /// <param name="Offset">
+        /// The start offset in the <paramref name="Bytes"/>. Defaults to <c>0</c>.
+        /// </param>
+        /// <returns>
+        /// The <c>T</c> at the given address.
+        /// </returns>
+        public T StructFromBytes<T>(byte[] Bytes, int Offset = 0) => (T)StructFromBytes(typeof(T), Bytes, Offset);
+
+        /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.
         /// </summary>
         /// <param name="Address">
@@ -656,6 +687,27 @@ namespace SHARMemory.Memory
         }
 
         /// <summary>
+        /// Gets a byte array of <paramref name="Length"/> that is the <paramref name="Encoding"/> bytes of <paramref name="Value"/>.
+        /// </summary>
+        /// <param name="Value">
+        /// The <c>string</c> value to encode.
+        /// </param>
+        /// <param name="Encoding">
+        /// The character encoding to use.
+        /// </param>
+        /// <param name="Length">
+        /// The number of bytes required.
+        /// </param>
+        public byte[] GetStringBytes(string Value, Encoding Encoding, int Length)
+        {
+            byte[] Bytes = Encoding.GetBytes(Value);
+            Array.Resize(ref Bytes, Length);
+            Bytes[Length - 1] = 0;
+
+            return Bytes;
+        }
+
+        /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.
         /// </summary>
         /// <param name="Address">
@@ -670,19 +722,7 @@ namespace SHARMemory.Memory
         /// <param name="Length">
         /// The number of bytes to write.
         /// </param>
-        public void WriteString(uint Address, string Value, Encoding Encoding, int Length)
-        {
-            string Value2;
-            if (Value.Length > Length)
-                Value2 = Value.Substring(0, Length);
-            else if (Value.Length < Length)
-                Value2 = Value.PadRight(Length, '\0');
-            else
-                Value2 = Value;
-
-            byte[] bytes = Encoding.GetBytes(Value2);
-            Write(Address, bytes, out _);
-        }
+        public void WriteString(uint Address, string Value, Encoding Encoding, int Length) => Write(Address, GetStringBytes(Value, Encoding, Length), out _);
 
         /// <summary>
         /// Writes the given value to <see cref="Process"/>'s memory at the given address.
@@ -708,6 +748,37 @@ namespace SHARMemory.Memory
         /// The <c>T</c> value to write.
         /// </param>
         public void WriteStruct<T>(uint Address, T Value) => WriteStruct(typeof(T), Address, Value);
+
+        /// <summary>
+        /// Converts <paramref name="Value"/> to a byte array, and inserts it into <paramref name="Bytes"/> at <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Type">
+        /// The type to read.
+        /// </param>
+        /// <param name="Bytes">
+        /// The byte array.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>T</c> value to convert.
+        /// </param>
+        /// <param name="Offset">
+        /// The start offset in the <paramref name="Bytes"/>. Defaults to <c>0</c>.
+        /// </param>
+        public void BytesFromStruct(Type Type, object Value, byte[] Bytes, int Offset = 0) => StructAttribute.Get(this, Type).ToBytes(this, Value, Bytes, Offset);
+
+        /// <summary>
+        /// Converts <paramref name="Value"/> to a byte array, and inserts it into <paramref name="Bytes"/> at <paramref name="Offset"/>.
+        /// </summary>
+        /// <param name="Bytes">
+        /// The byte array.
+        /// </param>
+        /// <param name="Value">
+        /// The <c>T</c> value to convert.
+        /// </param>
+        /// <param name="Offset">
+        /// The start offset in the <paramref name="Bytes"/>. Defaults to <c>0</c>.
+        /// </param>
+        public void BytesFromStruct<T>(T Value, byte[] Bytes, int Offset = 0) => BytesFromStruct(typeof(T), Value, Bytes, Offset);
 
         /// <summary>
         /// Allocates <c>4096</c> bytes of memory in <see cref="Process"/>.

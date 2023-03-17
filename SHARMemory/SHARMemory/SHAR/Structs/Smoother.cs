@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -20,17 +21,26 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{RollingAverage} | {Factor}";
     }
 
-    internal class SmootherStruct : IStruct
+    internal class SmootherStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new Smoother(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)));
+        public override int Size => Smoother.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            float RollingAverage = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float Factor = BitConverter.ToSingle(Bytes, Offset);
+            return new Smoother(RollingAverage, Factor);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not Smoother Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Smoother)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Smoother)}'.", nameof(Value));
 
-            Memory.WriteSingle(Address, Value2.RollingAverage);
-            Memory.WriteSingle(Address + sizeof(float), Value2.Factor);
+            BitConverter.GetBytes(Value2.RollingAverage).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Factor).CopyTo(Buffer, Offset);
         }
     }
 }

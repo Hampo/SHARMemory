@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -53,31 +54,82 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{{ {{M11:{M11} M12:{M12} M13:{M13} M14:{M14}}} {{M21:{M21} M22:{M22} M23:{M23} M24:{M24}}} {{M31:{M31} M32:{M32} M33:{M33} M34:{M34}}} {{M41:{M41} M42:{M42} M43:{M43} M44:{M44}}} }}";
     }
 
-    internal class Matrix4x4Struct : IStruct
+    internal class Matrix4x4Struct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new Matrix4x4(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5), Memory.ReadSingle(Address + sizeof(float) * 6), Memory.ReadSingle(Address + sizeof(float) * 7), Memory.ReadSingle(Address + sizeof(float) * 8), Memory.ReadSingle(Address + sizeof(float) * 9), Memory.ReadSingle(Address + sizeof(float) * 10), Memory.ReadSingle(Address + sizeof(float) * 11), Memory.ReadSingle(Address + sizeof(float) * 12), Memory.ReadSingle(Address + sizeof(float) * 13), Memory.ReadSingle(Address + sizeof(float) * 14), Memory.ReadSingle(Address + sizeof(float) * 15));
+        public override int Size => Matrix4x4.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            float M11 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M12 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M13 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M14 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M21 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M22 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M23 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M24 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M31 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M32 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M33 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M34 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M41 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M42 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M43 = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float M44 = BitConverter.ToSingle(Bytes, Offset);
+            return new Matrix4x4(M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not Matrix4x4 Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Matrix4x4)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Matrix4x4)}'.", nameof(Value));
 
-            Memory.WriteSingle(Address, Value2.M11);
-            Memory.WriteSingle(Address + sizeof(float), Value2.M12);
-            Memory.WriteSingle(Address + sizeof(float) * 2, Value2.M13);
-            Memory.WriteSingle(Address + sizeof(float) * 3, Value2.M14);
-            Memory.WriteSingle(Address + sizeof(float) * 4, Value2.M21);
-            Memory.WriteSingle(Address + sizeof(float) * 5, Value2.M22);
-            Memory.WriteSingle(Address + sizeof(float) * 6, Value2.M23);
-            Memory.WriteSingle(Address + sizeof(float) * 7, Value2.M24);
-            Memory.WriteSingle(Address + sizeof(float) * 8, Value2.M31);
-            Memory.WriteSingle(Address + sizeof(float) * 9, Value2.M32);
-            Memory.WriteSingle(Address + sizeof(float) * 10, Value2.M33);
-            Memory.WriteSingle(Address + sizeof(float) * 11, Value2.M34);
-            Memory.WriteSingle(Address + sizeof(float) * 12, Value2.M41);
-            Memory.WriteSingle(Address + sizeof(float) * 13, Value2.M42);
-            Memory.WriteSingle(Address + sizeof(float) * 14, Value2.M43);
-            Memory.WriteSingle(Address + sizeof(float) * 15, Value2.M44);
+            BitConverter.GetBytes(Value2.M11).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M12).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M13).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M14).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M21).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M22).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M23).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M24).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M31).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M32).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M33).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M34).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M41).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M42).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M43).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.M44).CopyTo(Buffer, Offset);
         }
     }
 }

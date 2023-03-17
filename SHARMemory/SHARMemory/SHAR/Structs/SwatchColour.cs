@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 using System.Drawing;
 
 namespace SHARMemory.SHAR.Structs
@@ -40,18 +41,30 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => Colour.ToString();
     }
 
-    internal class SwatchColourStruct : IStruct
+    internal class SwatchColourStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new SwatchColour(Memory.ReadInt32(Address), Memory.ReadInt32(Address + sizeof(int)), Memory.ReadInt32(Address + sizeof(int) + sizeof(int)));
+        public override int Size => SwatchColour.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            int R = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            int G = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            int B = BitConverter.ToInt32(Bytes, Offset);
+            return new SwatchColour(R, G, B);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not SwatchColour Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(SwatchColour)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(SwatchColour)}'.", nameof(Value));
 
-            Memory.WriteInt32(Address, Value2.R);
-            Memory.WriteInt32(Address + sizeof(int), Value2.G);
-            Memory.WriteInt32(Address + sizeof(int) + sizeof(int), Value2.B);
+            BitConverter.GetBytes(Value2.R).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.G).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.B).CopyTo(Buffer, Offset);
         }
     }
 }

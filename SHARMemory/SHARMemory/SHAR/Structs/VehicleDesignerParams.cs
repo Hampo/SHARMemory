@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -101,44 +102,134 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{GasScale} | {SlipGasScale} | {HighSpeedGasScale} | {GasScaleSpeedThreshold} | {BrakeScale} | {TopSpeedKmh} | {Mass} | {MaxWheelTurnAngle} | {HighSpeedSteeringDrop} | {TireLateralStaticGrip} | {TireLateralResistanceNormal} | {TireLateralResistanceSlip} | {TireLateralResistanceSlipNoEBrake} | {SlipEffectNoEBrake} | {EBrakeEffect} | {SuspensionLimit} | {Springk} | {Damperc} | {SuspensionYOffset} | {HitPoints} | {BurnoutRange} | {WheelieRange} | {WheelieYOffset} | {WheelieZOffset} | {MaxSpeedBurstTime} | {DonutTorque} | {WeebleOffset} | {GamblingOdds} | {CMOffset}";
     }
 
-    internal class VehicleDesignerParamsStruct : IStruct
+    internal class VehicleDesignerParamsStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new VehicleDesignerParams(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) * 2), Memory.ReadSingle(Address + sizeof(float) * 3), Memory.ReadSingle(Address + sizeof(float) * 4), Memory.ReadSingle(Address + sizeof(float) * 5), Memory.ReadSingle(Address + sizeof(float) * 6), Memory.ReadSingle(Address + sizeof(float) * 7), Memory.ReadSingle(Address + sizeof(float) * 8), Memory.ReadSingle(Address + sizeof(float) * 9), Memory.ReadSingle(Address + sizeof(float) * 10), Memory.ReadSingle(Address + sizeof(float) * 11), Memory.ReadSingle(Address + sizeof(float) * 12), Memory.ReadSingle(Address + sizeof(float) * 13), Memory.ReadSingle(Address + sizeof(float) * 14), Memory.ReadSingle(Address + sizeof(float) * 15), Memory.ReadSingle(Address + sizeof(float) * 16), Memory.ReadSingle(Address + sizeof(float) * 17), Memory.ReadSingle(Address + sizeof(float) * 18), Memory.ReadSingle(Address + sizeof(float) * 19), Memory.ReadSingle(Address + sizeof(float) * 20), Memory.ReadSingle(Address + sizeof(float) * 21), Memory.ReadSingle(Address + sizeof(float) * 22), Memory.ReadSingle(Address + sizeof(float) * 23), Memory.ReadSingle(Address + sizeof(float) * 24), Memory.ReadSingle(Address + sizeof(float) * 25), Memory.ReadSingle(Address + sizeof(float) * 26), Memory.ReadSingle(Address + sizeof(float) * 27), Memory.ReadStruct<Vector3>(Address + sizeof(float) * 28));
+        public override int Size => VehicleDesignerParams.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            float GasScale = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float SlipGasScale = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float HighSpeedGasScale = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float GasScaleSpeedThreshold = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float BrakeScale = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float TopSpeedKmh = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float Mass = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float MaxWheelTurnAngle = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float HighSpeedSteeringDrop = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float TireLateralStaticGrip = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float TireLateralResistanceNormal = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float TireLateralResistanceSlip = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float TireLateralResistanceSlipNoEBrake = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float SlipEffectNoEBrake = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float EBrakeEffect = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float SuspensionLimit = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float Springk = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float Damperc = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float SuspensionYOffset = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float HitPoints = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float BurnoutRange = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float WheelieRange = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float WheelieYOffset = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float WheelieZOffset = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float MaxSpeedBurstTime = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float DonutTorque = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float WeebleOffset = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float GamblingOdds = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            Vector3 CMOffset = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            return new VehicleDesignerParams(GasScale, SlipGasScale, HighSpeedGasScale, GasScaleSpeedThreshold, BrakeScale, TopSpeedKmh, Mass, MaxWheelTurnAngle, HighSpeedSteeringDrop, TireLateralStaticGrip, TireLateralResistanceNormal, TireLateralResistanceSlip, TireLateralResistanceSlipNoEBrake, SlipEffectNoEBrake, EBrakeEffect, SuspensionLimit, Springk, Damperc, SuspensionYOffset, HitPoints, BurnoutRange, WheelieRange, WheelieYOffset, WheelieZOffset, MaxSpeedBurstTime, DonutTorque, WeebleOffset, GamblingOdds, CMOffset);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not VehicleDesignerParams Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(VehicleDesignerParams)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(VehicleDesignerParams)}'.", nameof(Value));
 
-            Memory.WriteSingle(Address, Value2.GasScale);
-            Memory.WriteSingle(Address + sizeof(float), Value2.SlipGasScale);
-            Memory.WriteSingle(Address + sizeof(float) * 2, Value2.HighSpeedGasScale);
-            Memory.WriteSingle(Address + sizeof(float) * 3, Value2.GasScaleSpeedThreshold);
-            Memory.WriteSingle(Address + sizeof(float) * 4, Value2.BrakeScale);
-            Memory.WriteSingle(Address + sizeof(float) * 5, Value2.TopSpeedKmh);
-            Memory.WriteSingle(Address + sizeof(float) * 6, Value2.Mass);
-            Memory.WriteSingle(Address + sizeof(float) * 7, Value2.MaxWheelTurnAngle);
-            Memory.WriteSingle(Address + sizeof(float) * 8, Value2.HighSpeedSteeringDrop);
-            Memory.WriteSingle(Address + sizeof(float) * 9, Value2.TireLateralStaticGrip);
-            Memory.WriteSingle(Address + sizeof(float) * 10, Value2.TireLateralResistanceNormal);
-            Memory.WriteSingle(Address + sizeof(float) * 11, Value2.TireLateralResistanceSlip);
-            Memory.WriteSingle(Address + sizeof(float) * 12, Value2.TireLateralResistanceSlipNoEBrake);
-            Memory.WriteSingle(Address + sizeof(float) * 13, Value2.SlipEffectNoEBrake);
-            Memory.WriteSingle(Address + sizeof(float) * 14, Value2.EBrakeEffect);
-            Memory.WriteSingle(Address + sizeof(float) * 15, Value2.SuspensionLimit);
-            Memory.WriteSingle(Address + sizeof(float) * 16, Value2.Springk);
-            Memory.WriteSingle(Address + sizeof(float) * 17, Value2.Damperc);
-            Memory.WriteSingle(Address + sizeof(float) * 18, Value2.SuspensionYOffset);
-            Memory.WriteSingle(Address + sizeof(float) * 19, Value2.HitPoints);
-            Memory.WriteSingle(Address + sizeof(float) * 20, Value2.BurnoutRange);
-            Memory.WriteSingle(Address + sizeof(float) * 21, Value2.WheelieRange);
-            Memory.WriteSingle(Address + sizeof(float) * 22, Value2.WheelieYOffset);
-            Memory.WriteSingle(Address + sizeof(float) * 23, Value2.WheelieZOffset);
-            Memory.WriteSingle(Address + sizeof(float) * 24, Value2.MaxSpeedBurstTime);
-            Memory.WriteSingle(Address + sizeof(float) * 25, Value2.DonutTorque);
-            Memory.WriteSingle(Address + sizeof(float) * 26, Value2.WeebleOffset);
-            Memory.WriteSingle(Address + sizeof(float) * 27, Value2.GamblingOdds);
-            Memory.WriteStruct(Address + sizeof(float) * 28, Value2.CMOffset);
+            BitConverter.GetBytes(Value2.GasScale).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.SlipGasScale).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.HighSpeedGasScale).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.GasScaleSpeedThreshold).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.BrakeScale).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.TopSpeedKmh).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Mass).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.MaxWheelTurnAngle).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.HighSpeedSteeringDrop).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.TireLateralStaticGrip).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.TireLateralResistanceNormal).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.TireLateralResistanceSlip).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.TireLateralResistanceSlipNoEBrake).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.SlipEffectNoEBrake).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.EBrakeEffect).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.SuspensionLimit).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Springk).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Damperc).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.SuspensionYOffset).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.HitPoints).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.BurnoutRange).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.WheelieRange).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.WheelieYOffset).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.WheelieZOffset).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.MaxSpeedBurstTime).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.DonutTorque).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.WeebleOffset).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.GamblingOdds).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            Memory.BytesFromStruct(Value2.CMOffset, Buffer, Offset);
         }
     }
 }

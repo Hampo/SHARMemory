@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -20,17 +21,26 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{Linear} | {Angular}";
     }
 
-    internal class SimVelocityStateStruct : IStruct
+    internal class SimVelocityStateStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new SimVelocityState(Memory.ReadStruct<Vector3>(Address), Memory.ReadStruct<Vector3>(Address + Vector3.Size));
+        public override int Size => SimVelocityState.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Vector3 Linear = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            Offset += Vector3.Size;
+            Vector3 Angular = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            return new SimVelocityState(Linear, Angular);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not SimVelocityState Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(SimVelocityState)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(SimVelocityState)}'.", nameof(Value));
 
-            Memory.WriteStruct(Address, Value2.Linear);
-            Memory.WriteStruct(Address + Vector3.Size, Value2.Angular);
+            Memory.BytesFromStruct(Value2.Linear, Buffer, Offset);
+            Offset += Vector3.Size;
+            Memory.BytesFromStruct(Value2.Angular, Buffer, Offset);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.SHAR.Classes;
+using System;
 using System.Text;
 
 namespace SHARMemory.SHAR.Structs
@@ -37,22 +38,46 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{Filename} | {Name} | {Position} | {Heading} | {Vehicle} | {HuskVehicle} | {UsingHusk}";
     }
 
-    internal class CarDataStruct : IStruct
+    internal class CarDataStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new CarData(Memory.ReadString(Address, Encoding.UTF8, 64), Memory.ReadString(Address + 64, Encoding.UTF8, 32), Memory.ReadStruct<Vector3>(Address + 64 + 32), Memory.ReadSingle(Address + 64 + 32 + Vector3.Size), Memory.ClassFactory.Create<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float)), Memory.ClassFactory.Create<Vehicle>(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint)), Memory.ReadBoolean(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint) + sizeof(uint)));
+        public override int Size => CarData.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            string Filename = Encoding.UTF8.GetString(Bytes, Offset, 64);
+            Offset += 64;
+            string Name = Encoding.UTF8.GetString(Bytes, Offset, 32);
+            Offset += 32;
+            Vector3 Position = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            Offset += Vector3.Size;
+            float Heading = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            Vehicle Vehicle = Memory.ClassFactory.Create<Vehicle>(BitConverter.ToUInt32(Bytes, Offset));
+            Offset += sizeof(uint);
+            Vehicle HuskVehicle = Memory.ClassFactory.Create<Vehicle>(BitConverter.ToUInt32(Bytes, Offset));
+            Offset += sizeof(uint);
+            bool UsingHusk = BitConverter.ToBoolean(Bytes, Offset);
+            return new CarData(Filename, Name, Position, Heading, Vehicle, HuskVehicle, UsingHusk);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not CarData Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(CarData)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(CarData)}'.", nameof(Value));
 
-            Memory.WriteString(Address, Value2.Filename, Encoding.UTF8, 64);
-            Memory.WriteString(Address + 64, Value2.Name, Encoding.UTF8, 32);
-            Memory.WriteStruct(Address + 64 + 32, Value2.Position);
-            Memory.WriteSingle(Address + 64 + 32 + Vector3.Size, Value2.Heading);
-            Memory.WriteUInt32(Address + 64 + 32 + Vector3.Size + sizeof(float), Value2.Vehicle.Address);
-            Memory.WriteUInt32(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint), Value2.Vehicle.Address);
-            Memory.WriteBoolean(Address + 64 + 32 + Vector3.Size + sizeof(float) + sizeof(uint) + sizeof(uint), Value2.UsingHusk);
+            Memory.GetStringBytes(Value2.Filename, Encoding.UTF8, 64).CopyTo(Buffer, Offset);
+            Offset += 64;
+            Memory.GetStringBytes(Value2.Name, Encoding.UTF8, 32).CopyTo(Buffer, Offset);
+            Offset += 32;
+            Memory.BytesFromStruct(Value2.Position, Buffer, Offset);
+            Offset += Vector3.Size;
+            BitConverter.GetBytes(Value2.Heading).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Vehicle.Address).CopyTo(Buffer, Offset);
+            Offset += sizeof(uint);
+            BitConverter.GetBytes(Value2.HuskVehicle.Address).CopyTo(Buffer, Offset);
+            Offset += sizeof(uint);
+            BitConverter.GetBytes(Value2.UsingHusk).CopyTo(Buffer, Offset);
         }
     }
 }

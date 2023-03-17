@@ -1,5 +1,6 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.SHAR.Classes;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -21,26 +22,33 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{Vehicles} | {Counter}";
     }
 
-    internal class VDUStruct : IStruct
+    internal class VDUStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address)
-        {
-            Vehicle[] Ratings = new Vehicle[GameplayManager.MAX_VDU_CARS];
-            for (uint i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
-                Ratings[i] = Memory.ClassFactory.Create<Vehicle>(Address + sizeof(uint) * i);
-            int Counter = Memory.ReadInt32(Address + sizeof(uint) * GameplayManager.MAX_VDU_CARS);
+        public override int Size => VDU.Size;
 
-            return new VDU(Ratings, Counter);
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Vehicle[] Vehicles = new Vehicle[GameplayManager.MAX_VDU_CARS];
+            for (int i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
+            {
+                Vehicles[i] = Memory.ClassFactory.Create<Vehicle>(BitConverter.ToUInt32(Bytes, Offset));
+                Offset += sizeof(uint);
+            }
+            int Counter = BitConverter.ToInt32(Bytes, Offset);
+            return new VDU(Vehicles, Counter);
         }
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not VDU Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));
 
             for (uint i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
-                Memory.WriteUInt32(Address + sizeof(uint) * i, Value2.Vehicles[i].Address);
-            Memory.WriteInt32(Address + sizeof(uint) * GameplayManager.MAX_VDU_CARS, Value2.Counter);
+            {
+                BitConverter.GetBytes(Value2.Vehicles[i].Address).CopyTo(Buffer, Offset);
+                Offset += sizeof(uint);
+            }
+            BitConverter.GetBytes(Value2.Counter).CopyTo(Buffer, Offset);
         }
     }
 }

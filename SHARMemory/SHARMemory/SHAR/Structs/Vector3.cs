@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -32,18 +33,30 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"<{X:0.00000}, {Y:0.00000}, {Z:0.00000}>";
     }
 
-    internal class Vector3Struct : IStruct
+    internal class Vector3Struct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new Vector3(Memory.ReadSingle(Address), Memory.ReadSingle(Address + sizeof(float)), Memory.ReadSingle(Address + sizeof(float) + sizeof(float)));
+        public override int Size => Vector3.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            float X = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float Y = BitConverter.ToSingle(Bytes, Offset);
+            Offset += sizeof(float);
+            float Z = BitConverter.ToSingle(Bytes, Offset);
+            return new Vector3(X, Y, Z);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not Vector3 Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Vector3)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Vector3)}'.", nameof(Value));
 
-            Memory.WriteSingle(Address, Value2.X);
-            Memory.WriteSingle(Address + sizeof(float), Value2.Y);
-            Memory.WriteSingle(Address + sizeof(float) + sizeof(float), Value2.Z);
+            BitConverter.GetBytes(Value2.X).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Y).CopyTo(Buffer, Offset);
+            Offset += sizeof(float);
+            BitConverter.GetBytes(Value2.Z).CopyTo(Buffer, Offset);
         }
     }
 }

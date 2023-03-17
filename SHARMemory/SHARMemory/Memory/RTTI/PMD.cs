@@ -56,18 +56,30 @@ namespace SHARMemory.Memory.RTTI
         public static bool operator !=(PMD PMD1, PMD PMD2) => !PMD1.Equals(PMD2);
     }
 
-    internal class PMDStruct : IStruct
+    internal class PMDStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new PMD(Memory.ReadInt32(Address), Memory.ReadInt32(Address + sizeof(int)), Memory.ReadInt32(Address + sizeof(int) + sizeof(int)));
+        public override int Size => PMD.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            int MDisp = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            int PDisp = BitConverter.ToInt32(Bytes, Offset);
+            Offset += sizeof(int);
+            int VDisp = BitConverter.ToInt32(Bytes, Offset);
+            return new PMD(MDisp, PDisp, VDisp);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not PMD Value2)
                 throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(PMD)}'.", nameof(Value));
 
-            Memory.WriteInt32(Address, Value2.MDisp);
-            Memory.WriteInt32(Address, Value2.PDisp);
-            Memory.WriteInt32(Address, Value2.VDisp);
+            BitConverter.GetBytes(Value2.MDisp).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.PDisp).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.VDisp).CopyTo(Buffer, Offset);
         }
     }
 }

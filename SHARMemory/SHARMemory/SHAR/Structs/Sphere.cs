@@ -1,4 +1,5 @@
 ﻿using SHARMemory.Memory;
+using System;
 
 namespace SHARMemory.SHAR.Structs
 {
@@ -20,17 +21,26 @@ namespace SHARMemory.SHAR.Structs
         public override string ToString() => $"{Centre} | {Radius}";
     }
 
-    internal class SphereStruct : IStruct
+    internal class SphereStruct : Struct
     {
-        public object Read(ProcessMemory Memory, uint Address) => new Sphere(Memory.ReadStruct<Vector3>(Address), Memory.ReadSingle(Address + Vector3.Size));
+        public override int Size => Sphere.Size;
 
-        public void Write(ProcessMemory Memory, uint Address, object Value)
+        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
+        {
+            Vector3 Centre = Memory.StructFromBytes<Vector3>(Bytes, Offset);
+            Offset += Vector3.Size;
+            float Radius = BitConverter.ToSingle(Bytes, Offset);
+            return new Sphere(Centre, Radius);
+        }
+
+        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
         {
             if (Value is not Sphere Value2)
-                throw new System.ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Sphere)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Sphere)}'.", nameof(Value));
 
-            Memory.WriteStruct(Address, Value2.Centre);
-            Memory.WriteSingle(Address + Vector3.Size, Value2.Radius);
+            Memory.BytesFromStruct(Value2.Centre, Buffer, Offset);
+            Offset += Vector3.Size;
+            BitConverter.GetBytes(Value2.Radius).CopyTo(Buffer, Offset);
         }
     }
 }
