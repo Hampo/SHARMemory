@@ -1,4 +1,6 @@
-﻿namespace SHARMemory.Memory.RTTI
+﻿using System.Linq;
+
+namespace SHARMemory.Memory.RTTI
 {
     public class ClassHierarchyDescriptor : Class
     {
@@ -9,11 +11,18 @@
             VirtualInheritance = 2,
         }
 
-        public uint Signature => ReadUInt32(0);
-        public Attributes2 Attributes => (Attributes2)ReadUInt32(4);
-        public uint NumBaseClasses => ReadUInt32(8);
-        public PointerArray<BaseClassDescriptor> BaseClassArray => new(Memory, ReadUInt32(12), NumBaseClasses);
+        public readonly uint Signature;
+        public readonly Attributes2 Attributes;
+        public readonly uint NumBaseClasses;
+        public readonly BaseClassDescriptor[] BaseClassArray;
 
-        public ClassHierarchyDescriptor(ProcessMemory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+        public ClassHierarchyDescriptor(ProcessMemory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator)
+        {
+
+            Signature = ReadUInt32(0);
+            Attributes = (Attributes2)ReadUInt32(4);
+            NumBaseClasses = ReadUInt32(8);
+            BaseClassArray = new PointerArray<BaseClassDescriptor>(Memory, ReadUInt32(12), NumBaseClasses).ToArray();
+        }
     }
 }

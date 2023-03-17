@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Xml.Schema;
 
 namespace SHARMemory.Memory
 {
@@ -185,10 +186,17 @@ namespace SHARMemory.Memory
             return Result;
         }
 
+        private readonly Dictionary<uint, CompleteObjectLocator> CompleteObjectLocatorCache = new();
         private Class CreatePolymorphicInternal(uint Address, string TypeInfoName = null)
         {
             var FuncTable = Memory.ReadUInt32(Address);
-            var CompleteObjectLocator = Create<CompleteObjectLocator>(Memory.ReadUInt32((uint)(FuncTable + 0x4 * -1)));
+            var CompleteObjectLocatorAddress = (uint)(FuncTable + 0x4 * -1);
+            if (!CompleteObjectLocatorCache.TryGetValue(CompleteObjectLocatorAddress, out CompleteObjectLocator CompleteObjectLocator))
+            {
+                CompleteObjectLocator = Create<CompleteObjectLocator>(Memory.ReadUInt32(CompleteObjectLocatorAddress));
+                CompleteObjectLocatorCache.Add(CompleteObjectLocatorAddress, CompleteObjectLocator);
+            }
+
             if (CompleteObjectLocator.Signature != 0)
                 throw new InvalidCastException();
 
