@@ -59,7 +59,7 @@ namespace SHARMemory.SHAR.Classes
         public bool Animated
         {
             get => ReadBoolean(39);
-            set => WriteBoolean(3391, value);
+            set => WriteBoolean(39, value);
         }
 
         public DecayRange DecayRange
