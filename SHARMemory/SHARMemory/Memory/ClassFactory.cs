@@ -140,6 +140,24 @@ namespace SHARMemory.Memory
                 this.Classes[Class.Key] = Class.Value;
         }
 
+        /// <summary>
+        /// A <see cref="Dictionary{TKey, TValue}"/> where the <c>Key</c> is the <c>TypeInfoName</c> in the process, and the <c>Value</c> is the <c>TypeInfoName</c> to map to.
+        /// </summary>
+        public readonly Dictionary<string, string> TypeInfoNames = new();
+
+        /// <summary>
+        /// Adds a list of classes to <see cref="Classes"/>.
+        /// To be used with <seealso cref="GetClasses(Assembly, string)"/>.
+        /// </summary>
+        /// <param name="TypeInfoNames">
+        /// An <see cref="IEnumerable{T}"/> of <see cref="KeyValuePair{TKey, TValue}"/> where the <c>Key</c> is the <c>TypeInfoName</c> in the process, and the <c>Value</c> is the <c>TypeInfoName</c> to map to.
+        /// </param>
+        public void AddTypeInfoNames(IEnumerable<KeyValuePair<string, string>> TypeInfoNames)
+        {
+            foreach (var TypeInfoName in TypeInfoNames)
+                this.TypeInfoNames[TypeInfoName.Key] = TypeInfoName.Value;
+        }
+
         private Class Create(Type Type, uint Address, CompleteObjectLocator CompleteObjectLocator) => (Class)Activator.CreateInstance(Type, Memory, Address, CompleteObjectLocator);
 
         private Class CreateNonpolymorphicInternal(Type Type, uint Address) => Create(Type, Address, null);

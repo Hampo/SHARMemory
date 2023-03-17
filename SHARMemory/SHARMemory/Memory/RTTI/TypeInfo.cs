@@ -12,6 +12,9 @@
             //VFTable = ReadUInt32(0);
             Spare = ReadUInt32(4);
             ClassName = ReadNullString(8, System.Text.Encoding.ASCII);
+
+            if (memory.ClassFactory.TypeInfoNames.TryGetValue(ClassName, out string mappedName))
+                ClassName = mappedName;
         }
 
         public override string ToString() => ClassName;

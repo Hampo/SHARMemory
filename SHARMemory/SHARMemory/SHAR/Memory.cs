@@ -68,6 +68,18 @@ namespace SHARMemory.SHAR
             Unknown
         }
 
+        /// <summary>
+        /// Maps <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> <c>TypeInfoName</c>s to the SHAR <c>TypeInfoName</c>s.
+        /// </summary>
+        private static readonly Dictionary<string, string> TypeInfoNames = new()
+        {
+            { ".?AVCD3DShader@@", ".?AVd3dShader@@" },
+            { ".?AVCPDDIBaseShader@@", ".?AVpddiBaseShader@@" },
+            { ".?AVCPDDIShader@@", ".?AVpddiShader@@" },
+            { ".?AVCPDDIObject@@", ".?AVpddiObject@@" },
+            // TODO: Add other TypeInfoNames
+        };
+
         private static readonly Dictionary<string, Type> BuiltInClasses = ClassFactory.GetClasses(System.Reflection.Assembly.GetExecutingAssembly(), "SHARMemory.SHAR.Classes");
 
         /// <summary>
@@ -278,6 +290,7 @@ namespace SHARMemory.SHAR
         /// </param>
         public Memory(Process Process) : base(Process)
         {
+            ClassFactory.AddTypeInfoNames(TypeInfoNames);
             ClassFactory.AddClasses(BuiltInClasses);
 
             GameSubVersions subVersion = GameSubVersions.English;
