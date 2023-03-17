@@ -13,7 +13,7 @@ namespace SHARMemory.Memory
     public class StructArray<T> : IEnumerable<T> where T : struct
     {
         private readonly ProcessMemory Memory;
-        private readonly uint Address;
+        public readonly uint Address;
         private readonly uint Size;
         /// <summary>
         /// How many elements are in this array
