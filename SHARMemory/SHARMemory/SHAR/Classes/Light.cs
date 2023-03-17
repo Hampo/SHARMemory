@@ -31,44 +31,44 @@ namespace SHARMemory.SHAR.Classes
 
         public uint Slot
         {
-            get => ReadUInt32(24);
-            set => WriteUInt32(24, value);
+            get => ReadUInt32(32);
+            set => WriteUInt32(32, value);
         }
 
         public bool Active
         {
-            get => ReadBoolean(28);
-            set => WriteBoolean(28, value);
+            get => ReadBoolean(36);
+            set => WriteBoolean(36, value);
         }
 
         public bool Enabled
         {
-            get => ReadBoolean(29);
-            set => WriteBoolean(29, value);
+            get => ReadBoolean(37);
+            set => WriteBoolean(37, value);
         }
 
         public bool IsShadowCaster
         {
-            get => ReadBoolean(30);
-            set => WriteBoolean(30, value);
+            get => ReadBoolean(38);
+            set => WriteBoolean(38, value);
         }
 
         public bool Animated
         {
-            get => ReadBoolean(31);
-            set => WriteBoolean(31, value);
+            get => ReadBoolean(39);
+            set => WriteBoolean(3391, value);
         }
 
         public DecayRange DecayRange
         {
-            get => ReadStruct<DecayRange>(32);
-            set => WriteStruct(32, value);
+            get => ReadStruct<DecayRange>(40);
+            set => WriteStruct(40, value);
         }
 
         public IlluminationTypes IlluminationType
         {
-            get => (IlluminationTypes)ReadInt32(68);
-            set => WriteInt32(68, (int)value);
+            get => (IlluminationTypes)ReadInt32(76);
+            set => WriteInt32(76, (int)value);
         }
     }
 }
