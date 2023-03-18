@@ -37,14 +37,7 @@
         /// </returns>
         public T Get()
         {
-            if (Instance != null)
-                return Instance;
-
-            uint Address = Memory.ReadUInt32(PointerAddress);
-            if (Address == 0)
-                return null;
-
-            Instance = Memory.ClassFactory.Create<T>(Address);
+            Instance ??= Memory.ClassFactory.Create<T>(Memory.ReadUInt32(PointerAddress));
             return Instance;
         }
     }

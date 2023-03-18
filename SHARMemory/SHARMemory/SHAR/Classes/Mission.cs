@@ -44,7 +44,7 @@ namespace SHARMemory.SHAR.Classes
 
         private readonly uint MaxStages;
         private readonly uint StagesOffset;
-        public PointerArray<MissionStage> MissionStages => new(Memory, Address + StagesOffset, MaxStages);
+        public PointerArray<MissionStage> MissionStages => new(Memory, Address + StagesOffset, (int)MaxStages);
 
         public int CurrentStage
         {
@@ -228,7 +228,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(216, value);
         }
 
-        public PointerArray<StatePropCollectible> StatePropCollectibles => new(Memory, Address + 220, (uint)NumStatePropCollectibles);
+        public PointerArray<StatePropCollectible> StatePropCollectibles => new(Memory, Address + 220, NumStatePropCollectibles);
 
         public AnimatedIcon DoorStars => Memory.ClassFactory.Create<AnimatedIcon>(ReadUInt32(224));
 
@@ -254,7 +254,7 @@ namespace SHARMemory.SHAR.Classes
         {
             int currStage = CurrentStage;
             if (currStage >= 0 && currStage < NumMissionStages)
-                return MissionStages[(uint)currStage];
+                return MissionStages[currStage];
             return null;
         }
     }

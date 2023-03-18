@@ -1,10 +1,6 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace SHARMemory.SHAR.Classes
@@ -22,9 +18,9 @@ namespace SHARMemory.SHAR.Classes
 
         public uint NumStrings => ReadUInt32(28);
 
-        public StructArray<uint> Hashes => new(Memory, ReadUInt32(32), sizeof(uint), NumStrings);
+        public StructArray<uint> Hashes => new(Memory, ReadUInt32(32), sizeof(uint), (int)NumStrings);
 
-        public StructArray<uint> Offsets => new(Memory, ReadUInt32(36), sizeof(uint), NumStrings);
+        public StructArray<uint> Offsets => new(Memory, ReadUInt32(36), sizeof(uint), (int)NumStrings);
 
         public byte[] Buffer
         {
@@ -38,20 +34,20 @@ namespace SHARMemory.SHAR.Classes
             }
         }
 
-        public uint? GetIndex(uint hash)
+        public int? GetIndex(uint hash)
         {
-            for (uint i = 0; i < NumStrings; i++)
+            for (int i = 0; i < NumStrings; i++)
                 if (Hashes[i] == hash)
                     return i;
 
             return null;
         }
 
-        public uint? GetIndex(string name) => GetIndex(GetHash(name));
+        public int? GetIndex(string name) => GetIndex(GetHash(name));
 
         public string GetString(uint hash)
         {
-            uint? index = GetIndex(hash);
+            int? index = GetIndex(hash);
             if (!index.HasValue)
                 return null;
 
@@ -59,7 +55,6 @@ namespace SHARMemory.SHAR.Classes
 
             int startPos = (int)Offsets[index.Value];
             int endPos = startPos;
-            var a = (char)buffer[startPos];
             while (endPos < buffer.Length && buffer[endPos] != 0)
                 endPos += 2;
 
@@ -70,7 +65,7 @@ namespace SHARMemory.SHAR.Classes
 
         public bool SetString(uint hash, string value)
         {
-            uint? index = GetIndex(hash);
+            int? index = GetIndex(hash);
             if (!index.HasValue)
                 return false;
 

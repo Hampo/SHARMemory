@@ -22,7 +22,7 @@ namespace SHARMemory.SHAR
         /// <returns>
         /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
         /// </returns>
-        public static PointerArray<T> FromPtrArray<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 8), @class.ReadUInt32(offset + 4));
+        public static PointerArray<T> FromPtrArray<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 8), (int)@class.ReadUInt32(offset + 4));
 
         /// <summary>
         /// Creates a <see cref="PointerArray{T}"/> from an <c>rVector</c> in SHAR.
@@ -39,6 +39,6 @@ namespace SHARMemory.SHAR
         /// <returns>
         /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
         /// </returns>
-        public static PointerArray<T> FromVector<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 4), @class.ReadUInt32(offset + 8));
+        public static PointerArray<T> FromVector<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 4), (int)@class.ReadUInt32(offset + 8));
     }
 }

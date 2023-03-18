@@ -459,7 +459,7 @@ namespace SHARMemory.Memory
         /// <returns>
         /// A <c>bool</c> if the two <see cref="Address"/>es match.
         /// </returns>
-        public bool Equals(Class other) => Address == other.Address;
+        public bool Equals(Class other) => other?.Address == Address;
 
         /// <summary>
         /// Checks if <paramref name="obj"/> is a <see cref="Class"/>, and if it points to the same address as this <see cref="Class"/>.
@@ -496,12 +496,39 @@ namespace SHARMemory.Memory
         }
 
         /// <summary>
-        /// 
+        /// Checks if <paramref name="Class1"/> is equal to <paramref name="Class2"/>.
         /// </summary>
-        /// <param name="Class1"></param>
-        /// <param name="Class2"></param>
-        /// <returns></returns>
-        public static bool operator ==(Class Class1, Class Class2) => Class1.Equals(Class2);
-        public static bool operator !=(Class Class1, Class Class2) => !Class1.Equals(Class2);
+        /// <param name="Class1">
+        /// The first <see cref="Class"/> to check.
+        /// </param>
+        /// <param name="Class2">
+        /// The second <see cref="Class"/> to check.</param>
+        /// <returns>
+        /// A <c>bool</c> if the two <see cref="Address"/>es match.
+        /// </returns>
+        public static bool operator ==(Class Class1, Class Class2)
+        {
+            if (Class1 is null)
+                return Class2 is null;
+            return Class1.Equals(Class2);
+        }
+
+        /// <summary>
+        /// Checks if <paramref name="Class1"/> is not equal to <paramref name="Class2"/>.
+        /// </summary>
+        /// <param name="Class1">
+        /// The first <see cref="Class"/> to check.
+        /// </param>
+        /// <param name="Class2">
+        /// The second <see cref="Class"/> to check.</param>
+        /// <returns>
+        /// A <c>bool</c> if the two <see cref="Address"/>es don't match.
+        /// </returns>
+        public static bool operator !=(Class Class1, Class Class2)
+        {
+            if (Class1 is null)
+                return Class2 is not null;
+            return !Class1.Equals(Class2);
+        }
     }
 }

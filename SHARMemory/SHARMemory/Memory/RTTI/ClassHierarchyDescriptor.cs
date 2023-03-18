@@ -22,7 +22,7 @@ namespace SHARMemory.Memory.RTTI
             Signature = ReadUInt32(0);
             Attributes = (Attributes2)ReadUInt32(4);
             NumBaseClasses = ReadUInt32(8);
-            BaseClassArray = new PointerArray<BaseClassDescriptor>(Memory, ReadUInt32(12), NumBaseClasses).ToArray();
+            BaseClassArray = new PointerArray<BaseClassDescriptor>(Memory, ReadUInt32(12), (int)NumBaseClasses).ToArray();
         }
     }
 }

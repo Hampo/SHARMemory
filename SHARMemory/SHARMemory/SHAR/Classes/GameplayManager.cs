@@ -322,13 +322,13 @@ namespace SHARMemory.SHAR.Classes
             {
                 int currBonusMission = CurrentBonusMission;
                 if (currBonusMission >= MAX_MISSIONS && currBonusMission < MAX_MISSIONS + MAX_BONUS_MISSIONS)
-                    return Missions[(uint)currBonusMission];
+                    return Missions[currBonusMission];
             }
             else
             {
                 int currMission = CurrentMission;
                 if (currMission >= 0 && currMission < NumMissions)
-                    return Missions[(uint)currMission];
+                    return Missions[currMission];
             }
 
             return null;

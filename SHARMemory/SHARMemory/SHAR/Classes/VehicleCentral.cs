@@ -22,6 +22,6 @@ namespace SHARMemory.SHAR.Classes
 
         private readonly uint MaxVehicles;
         private readonly uint ActiveVehiclesOffset;
-        public PointerArray<Vehicle> ActiveVehicles => new(Memory, Address + ActiveVehiclesOffset, MaxVehicles);
+        public PointerArray<Vehicle> ActiveVehicles => new(Memory, Address + ActiveVehiclesOffset, (int)MaxVehicles);
     }
 }
