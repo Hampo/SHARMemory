@@ -22,7 +22,7 @@ namespace SHARMemory.Memory
         /// <summary>
         /// How many elements are in this array
         /// </summary>
-        public readonly uint Count;
+        public readonly int Count;
 
         /// <summary>
         /// Get an element of this array.
@@ -36,7 +36,7 @@ namespace SHARMemory.Memory
         /// <exception cref="IndexOutOfRangeException">
         /// Thrown if index is out of viable range.
         /// </exception>
-        public T this[uint index]
+        public T this[int index]
         {
             get
             {
@@ -45,14 +45,14 @@ namespace SHARMemory.Memory
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}");
 
-                return Memory.ReadStruct<T>(Address + Size * index);
+                return Memory.ReadStruct<T>(Address + Size * (uint)index);
             }
             set
             {
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}");
 
-                Memory.WriteStruct(Address + Size * index, value);
+                Memory.WriteStruct(Address + Size * (uint)index, value);
             }
         }
 
@@ -71,7 +71,7 @@ namespace SHARMemory.Memory
         /// <param name="count">
         /// How many elements are in this array.
         /// </param>
-        public StructArray(ProcessMemory memory, uint address, uint size, uint count)
+        public StructArray(ProcessMemory memory, uint address, uint size, int count)
         {
             Memory = memory;
             Address = address;
@@ -87,7 +87,7 @@ namespace SHARMemory.Memory
         /// </returns>
         public T[] ToArray()
         {
-            byte[] bytes = Memory.ReadBytes(Address, Size * Count);
+            byte[] bytes = Memory.ReadBytes(Address, Size * (uint)Count);
 
             T[] result = new T[Count];
             for (int i = 0; i < Count; i++)
@@ -119,21 +119,21 @@ namespace SHARMemory.Memory
 
         private class StructEnumerator : IEnumerator<T>
         {
-            private readonly StructArray<T> array;
+            private readonly T[] array;
             private int position = -1;
 
-            public T Current => array[(uint)position];
+            public T Current => array[position];
             object IEnumerator.Current => Current;
 
             public StructEnumerator(StructArray<T> array)
             {
-                this.array = array;
+                this.array = array.ToArray();
             }
 
             public bool MoveNext()
             {
                 position++;
-                return position < array.Count;
+                return position < array.Length;
             }
 
             public void Reset()

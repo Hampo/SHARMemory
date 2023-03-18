@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace SHARMemory.Memory
 {
@@ -18,7 +19,7 @@ namespace SHARMemory.Memory
         /// <summary>
         /// How many elements are in this array
         /// </summary>
-        public readonly uint Count;
+        public readonly int Count;
 
         /// <summary>
         /// Get an element of this array.
@@ -32,7 +33,7 @@ namespace SHARMemory.Memory
         /// <exception cref="IndexOutOfRangeException">
         /// Thrown if index is out of viable range.
         /// </exception>
-        public T this[uint index]
+        public T this[int index]
         {
             get
             {
@@ -41,7 +42,7 @@ namespace SHARMemory.Memory
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}.");
 
-                return Memory.ClassFactory.Create<T>(Memory.ReadUInt32(Address + index * sizeof(uint)));
+                return Memory.ClassFactory.Create<T>(Memory.ReadUInt32(Address + (uint)index * sizeof(uint)));
             }
             set
             {
@@ -50,7 +51,7 @@ namespace SHARMemory.Memory
                 if (index >= Count)
                     throw new IndexOutOfRangeException($"Index {index} is outside range {Count}.");
 
-                Memory.WriteUInt32(Address + index * sizeof(uint), value?.Address ?? 0);
+                Memory.WriteUInt32(Address + (uint)index * sizeof(uint), value?.Address ?? 0);
             }
         }
 
@@ -66,7 +67,7 @@ namespace SHARMemory.Memory
         /// <param name="count">
         /// How many elements are in this array.
         /// </param>
-        public PointerArray(ProcessMemory memory, uint address, uint count)
+        public PointerArray(ProcessMemory memory, uint address, int count)
         {
             Memory = memory;
             Address = address;
@@ -81,7 +82,7 @@ namespace SHARMemory.Memory
         /// </returns>
         public T[] ToArray()
         {
-            byte[] bytes = Memory.ReadBytes(Address, sizeof(uint) * Count);
+            byte[] bytes = Memory.ReadBytes(Address, sizeof(uint) * (uint)Count);
 
             T[] result = new T[Count];
             for (int i = 0; i < Count; i++)
@@ -113,27 +114,21 @@ namespace SHARMemory.Memory
 
         private class PointerEnumerator : IEnumerator<T>
         {
-            private readonly PointerArray<T> array;
+            private readonly T[] array;
             private int position = -1;
 
-            public T Current => array[(uint)position];
+            public T Current => array[position];
             object IEnumerator.Current => Current;
 
             public PointerEnumerator(PointerArray<T> array)
             {
-                this.array = array;
+                this.array = array.ToArray();
             }
 
             public bool MoveNext()
             {
-                do
-                {
-                    position++;
-                    if (position >= array.Count)
-                        return false;
-                }
-                while (Current == null);
-                return true;
+                position++;
+                return position < array.Length;
             }
 
             public void Reset()
