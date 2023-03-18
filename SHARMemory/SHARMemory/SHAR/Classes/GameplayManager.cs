@@ -5,6 +5,7 @@ using System.Text;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVGameplayManager@@")]
     public class GameplayManager : Class
     {
         public const int MAX_MISSIONS = 20;

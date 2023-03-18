@@ -1,7 +1,9 @@
-﻿using SHARMemory.Memory.RTTI;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
 
 namespace SHARMemory.SHAR.Classes
 {
+    [ClassFactory.TypeInfoName(".?AVGameFlow@@")]
     public class GameFlow : Class
     {
         public enum GameState
