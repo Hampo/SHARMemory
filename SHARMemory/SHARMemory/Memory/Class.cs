@@ -1,5 +1,6 @@
 ﻿using SHARMemory.Memory.RTTI;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace SHARMemory.Memory
@@ -7,7 +8,7 @@ namespace SHARMemory.Memory
     /// <summary>
     /// Class <c>Memory.Class</c> is an abstract class representing a single instance of a SHAR class.
     /// </summary>
-    public abstract class Class
+    public abstract class Class : IEquatable<Class>
     {
         /// <summary>
         /// The <see cref="SHAR.Memory"/> manager this class is linked to.
@@ -448,5 +449,59 @@ namespace SHARMemory.Memory
 
             return Memory.ClassFactory.CreatePolymorphic<T>(Address);
         }
+
+        /// <summary>
+        /// Checks if this <see cref="Class"/> and <paramref name="other"/> point to the same address.
+        /// </summary>
+        /// <param name="other">
+        /// The <see cref="Class"/> to compare to.
+        /// </param>
+        /// <returns>
+        /// A <c>bool</c> if the two <see cref="Address"/>es match.
+        /// </returns>
+        public bool Equals(Class other) => Address == other.Address;
+
+        /// <summary>
+        /// Checks if <paramref name="obj"/> is a <see cref="Class"/>, and if it points to the same address as this <see cref="Class"/>.
+        /// </summary>
+        /// <param name="obj">
+        /// The <see cref="Class"/> to compare to.
+        /// </param>
+        /// <returns>
+        /// A <c>bool</c> if <paramref name="obj"/> is a <see cref="Class"/> that points to the same <see cref="Address"/>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            if (obj is not Class Class)
+                return false;
+
+            return Equals(Class);
+        }
+
+        /// <summary>
+        /// Auto-generated <c>GetHashCode</c>.
+        /// </summary>
+        /// <returns>
+        /// The <c>HashCode</c>.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            int hashCode = 1739081969;
+            hashCode = hashCode * -1521134295 + EqualityComparer<ProcessMemory>.Default.GetHashCode(Memory);
+            hashCode = hashCode * -1521134295 + Address.GetHashCode();
+            return hashCode;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Class1"></param>
+        /// <param name="Class2"></param>
+        /// <returns></returns>
+        public static bool operator ==(Class Class1, Class Class2) => Class1.Equals(Class2);
+        public static bool operator !=(Class Class1, Class Class2) => !Class1.Equals(Class2);
     }
 }
