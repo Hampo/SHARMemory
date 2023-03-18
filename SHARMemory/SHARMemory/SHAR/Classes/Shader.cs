@@ -8,6 +8,6 @@ namespace SHARMemory.SHAR.Classes
     {
         public Shader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public d3dShader D3DShader => Memory.ClassFactory.Create<d3dShader>(ReadUInt32(20));
+        public pddiShader PDDIShader => Memory.ClassFactory.Create<pddiShader>(ReadUInt32(20));
     }
 }
