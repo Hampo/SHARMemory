@@ -127,8 +127,14 @@ namespace SHARMemory.Memory
 
             public bool MoveNext()
             {
-                position++;
-                return position < array.Length;
+                do
+                {
+                    position++;
+                    if (position >= array.Length)
+                        return false;
+                }
+                while (Current == null);
+                return true;
             }
 
             public void Reset()
