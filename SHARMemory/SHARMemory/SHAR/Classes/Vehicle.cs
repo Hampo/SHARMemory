@@ -1029,7 +1029,7 @@ namespace SHARMemory.SHAR.Classes
 
             articulatedPhyicsObject.TimeComputeInertiaMatrix = float.NaN;
 
-            SymMatrix initialInertiaMatrix = articulatedPhyicsObject.InertiaMatrix;
+            SymMatrix initialInertiaMatrix = articulatedPhyicsObject.InitialInertiaMatrix;
             if (initialInertiaMatrix == null)
                 return;
 
