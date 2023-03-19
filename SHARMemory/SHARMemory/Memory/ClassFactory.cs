@@ -1,6 +1,7 @@
 ﻿using SHARMemory.Memory.RTTI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace SHARMemory.Memory
@@ -212,7 +213,7 @@ namespace SHARMemory.Memory
             }
 
             if (CompleteObjectLocator.Signature != 0)
-                throw new InvalidCastException();
+                throw new InvalidCastException($"{nameof(CompleteObjectLocator)} at 0x{Address:X} has invalid signature");
 
             Address -= CompleteObjectLocator.Offset;
             if (CompleteObjectLocator.ConstructorDisplacementOffset != 0)
@@ -230,7 +231,7 @@ namespace SHARMemory.Memory
                     }
                 }
                 if (Where == null)
-                    throw new InvalidCastException();
+                    throw new InvalidCastException($"Given TypeInfoName \"{TypeInfoName}\" is not valid type.\nValid types: {string.Join("; ", CompleteObjectLocator.ClassDescriptor.BaseClassArray.Select(x => x.TypeInfo.ClassName))}");
             }
 
             foreach (var BaseClassDescriptor in CompleteObjectLocator.ClassDescriptor.BaseClassArray)
@@ -245,7 +246,7 @@ namespace SHARMemory.Memory
             }
 
             if (TypeInfoName != null)
-                throw new InvalidCastException();
+                throw new InvalidCastException($"Given TypeInfoName \"{TypeInfoName}\" is not valid type.\nValid types: {string.Join("; ", CompleteObjectLocator.ClassDescriptor.BaseClassArray.Select(x => x.TypeInfo.ClassName))}");
 
             return new UnknownClass(Memory, Address, CompleteObjectLocator);
         }
