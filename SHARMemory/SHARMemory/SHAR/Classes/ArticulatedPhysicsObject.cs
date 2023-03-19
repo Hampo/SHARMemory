@@ -26,7 +26,7 @@ namespace SHARMemory.SHAR.Classes
 
         public Pose Pose => Memory.ClassFactory.Create<Pose>(ReadUInt32(480));
 
-        public float TimeSinceComputeIntertiaMatrix
+        public float TimeSinceComputeInertiaMatrix
         {
             get => ReadSingle(484);
             set => WriteSingle(484, value);
