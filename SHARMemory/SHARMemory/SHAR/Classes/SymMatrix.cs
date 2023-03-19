@@ -59,5 +59,47 @@ namespace SHARMemory.SHAR.Classes
                 valueBytes.CopyTo(bytes, i * sizeof(float));
             WriteBytes(4, bytes);
         }
+
+        public void Scale(float scale)
+        {
+            byte[] bytes = ReadBytes(4, sizeof(float) * 6);
+            float[] values = new float[6];
+
+            for (int i = 0; i < 6; i++)
+                values[i] = BitConverter.ToSingle(bytes, i * sizeof(float));
+
+            for (int i = 0; i < 6; i++)
+                values[i] *= scale;
+
+            for (int i = 0; i < 6; i++)
+                BitConverter.GetBytes(values[i]).CopyTo(bytes, i * sizeof(float));
+
+            WriteBytes(4, bytes);
+        }
+
+        public void Identity()
+        {
+            byte[] bytes = new byte[sizeof(float) * 6];
+            byte[] zeroBytes = BitConverter.GetBytes(0f);
+            byte[] oneBytes = BitConverter.GetBytes(1f);
+
+            oneBytes.CopyTo(bytes, 0);
+            zeroBytes.CopyTo(bytes, sizeof(float));
+            zeroBytes.CopyTo(bytes, sizeof(float) * 2);
+            oneBytes.CopyTo(bytes, sizeof(float) * 3);
+            zeroBytes.CopyTo(bytes, sizeof(float) * 4);
+            oneBytes.CopyTo(bytes, sizeof(float) * 5);
+
+            WriteBytes(4, bytes);
+        }
+
+        public void Zero()
+        {
+            byte[] bytes = new byte[sizeof(float) * 6];
+            byte[] valueBytes = BitConverter.GetBytes(0f);
+            for (int i = 0; i < 6; i++)
+                valueBytes.CopyTo(bytes, i * sizeof(float));
+            WriteBytes(4, bytes);
+        }
     }
 }
