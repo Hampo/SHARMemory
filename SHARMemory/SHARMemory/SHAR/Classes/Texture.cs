@@ -8,6 +8,6 @@ namespace SHARMemory.SHAR.Classes
     {
         public Texture(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        // TODO
+        public pddiTexture PDDITexture => Memory.ClassFactory.Create<pddiTexture>(ReadUInt32(16));
     }
 }

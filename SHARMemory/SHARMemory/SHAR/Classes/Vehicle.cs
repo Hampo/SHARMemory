@@ -2,7 +2,9 @@
 using SHARMemory.Memory.RTTI;
 using SHARMemory.SHAR.Structs;
 using System.Drawing;
+using System.Linq;
 using System.Text;
+using static SHARMemory.SHAR.Globals;
 
 namespace SHARMemory.SHAR.Classes
 {
@@ -17,12 +19,23 @@ namespace SHARMemory.SHAR.Classes
             Traffic
         }
 
-        public enum VehicleTypes
+        public enum Door
         {
-            User,
-            AI,
-            Traffic,
-            Last
+            Driver,
+            Passenger
+        };
+
+        public enum DoorAction
+        {
+            None,
+            Open,
+            Close
+        };
+
+        public enum VehicleLocomotionTypes
+        {
+            Physics,
+            Traffic
         }
 
         public enum VehicleStates
@@ -32,10 +45,12 @@ namespace SHARMemory.SHAR.Classes
             EBrake_Slip
         }
 
-        public enum VehicleLocomotionTypes
+        public enum VehicleTypes
         {
-            Physics,
-            Traffic
+            User,
+            AI,
+            Traffic,
+            Last
         }
 
         public Vehicle(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
@@ -556,7 +571,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(660, value);
         }
 
-        // TODO: float* GearRatios = float[NumGears] (664)
+        public StructArray<float> GearRatios => new(Memory, ReadUInt32(664), sizeof(float), NumGears);
 
         public float FinalDriveRatio
         {
@@ -582,7 +597,7 @@ namespace SHARMemory.SHAR.Classes
 
         public StructArray<int> WheelToJointIndexMapping => new(Memory, Address + 808, sizeof(int), 4);
 
-        // TODO StructArray<int> JointIndexToWheelMapping = new(Memory, ReadUInt32(824), sizeof(int), GeometryVehicle.P3DPose.NumJoints);
+        StructArray<int> JointIndexToWheelMapping => new(Memory, ReadUInt32(824), sizeof(int), GeometryVehicle.CompositeDrawable?.Pose?.NumJoints ?? 0);
 
         public StructArray<Vector3> SuspensionRestPointsFromFile => new(Memory, Address + 840, Vector3.Size, 4);
 
@@ -620,7 +635,7 @@ namespace SHARMemory.SHAR.Classes
 
         public PointerArray<PhysicsJointInertialEffector> InertialJointDrivers => new(Memory, Address + 1064, 4);
 
-        // TODO StructArray<int> JointIndexToInertialJointDriverMapping = new(Memory, ReadUInt32(1080), sizeof(int), GeometryVehicle.P3DPose.NumJoints);
+        public StructArray<int> JointIndexToInertialJointDriverMapping => new(Memory, ReadUInt32(1080), sizeof(int), GeometryVehicle.CompositeDrawable?.Pose?.NumJoints ?? 0);
 
         public PointerArray<PhysicsJointMatrixModifier> PhysicsJointMatrixModifiers => new(Memory, Address + 1084, 4);
 
@@ -778,6 +793,254 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(1212, value);
         }
 
+        public ManualSimState GroundPlaneSimState => Memory.ClassFactory.Create<ManualSimState>(ReadUInt32(1216));
+
+        public WallVolume GroundPlaneWallVolume => Memory.ClassFactory.Create<WallVolume>(ReadUInt32(1220));
+
+        public PhysicsProperties GroundPlanePhysicsProperties => Memory.ClassFactory.Create<PhysicsProperties>(ReadUInt32(1224));
+
+        public bool AtRestAsFarAsTriggersAreConcerned
+        {
+            get => ReadBoolean(1228);
+            set => WriteBoolean(1228, value);
+        }
+
+        public bool CreatedByParkedCarManager
+        {
+            get => ReadBoolean(1229);
+            set => WriteBoolean(1229, value);
+        }
+
+        public PoseEngine PoseEngine => Memory.ClassFactory.Create<PoseEngine>(ReadUInt32(1232));
+
+        public RootMatrixDriver RootMatrixDriver => Memory.ClassFactory.Create<RootMatrixDriver>(ReadUInt32(1236));
+
+        public float DragCoeff
+        {
+            get => ReadSingle(1240);
+            set => WriteSingle(1240, value);
+        }
+
+        public float RollingFrictionForce
+        {
+            get => ReadSingle(1244);
+            set => WriteSingle(1244, value);
+        }
+
+        public float TireLateralResistance
+        {
+            get => ReadSingle(1248);
+            set => WriteSingle(1248, value);
+        }
+
+        public float SlipGasModifier
+        {
+            get => ReadSingle(1252);
+            set => WriteSingle(1252, value);
+        }
+
+        public float CollisionLateralResistanceDropFactor
+        {
+            get => ReadSingle(1256);
+            set => WriteSingle(1256, value);
+        }
+
+        public bool BottomedOutThisFrame
+        {
+            get => ReadBoolean(1260);
+            set => WriteBoolean(1260, value);
+        }
+
+        public bool WasAirborn
+        {
+            get => ReadBoolean(1261);
+            set => WriteBoolean(1261, value);
+        }
+
+        public float WasAirbornTimer
+        {
+            get => ReadSingle(1264);
+            set => WriteSingle(1264, value);
+        }
+
+        public float BottomOutSpeedMaintenance
+        {
+            get => ReadSingle(1268);
+            set => WriteSingle(1268, value);
+        }
+
+        public float StuckOnSideTimer
+        {
+            get => ReadSingle(1272);
+            set => WriteSingle(1272, value);
+        }
+
+        public bool DrawWireFrame
+        {
+            get => ReadBoolean(1276);
+            set => WriteBoolean(1276, value);
+        }
+
+        public bool LosingTractionDueToAccel
+        {
+            get => ReadBoolean(1277);
+            set => WriteBoolean(1277, value);
+        }
+
+        public RectTriggerVolume TriggerVolume => Memory.ClassFactory.Create<RectTriggerVolume>(ReadUInt32(1280));
+
+        public EventLocator EventLocator => Memory.ClassFactory.Create<EventLocator>(ReadUInt32(1284));
+
+        public bool TriggerActive
+        {
+            get => ReadBoolean(1288);
+            set => WriteBoolean(1288, value);
+        }
+
+        public int DriverInit
+        {
+            get => ReadInt32(1292);
+            set => WriteInt32(1292, value);
+        }
+
+        public bool HijackedByUser
+        {
+            get => ReadBoolean(1296);
+            set => WriteBoolean(1296, value);
+        }
+
+        public float ForceToDetachCollectible
+        {
+            get => ReadSingle(1300);
+            set => WriteSingle(1300, value);
+        }
+
+        public int CharacterSheetCarIndex
+        {
+            get => ReadInt32(1304);
+            set => WriteInt32(1304, value);
+        }
+
+        private byte Bitfield_0x51C
+        {
+            get => ReadByte(1308);
+            set => WriteByte(1308, value);
+        }
+
+        public bool HasDoors
+        {
+            get => (Bitfield_0x51C & 0b00000001) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0x51C |= 0b00000001;
+                else
+                    Bitfield_0x51C &= 0b11111110;
+            }
+        }
+
+        public bool VisibleCharacters
+        {
+            get => (Bitfield_0x51C & 0b00000010) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0x51C |= 0b00000010;
+                else
+                    Bitfield_0x51C &= 0b11111101;
+            }
+        }
+
+        public bool IrisTransition
+        {
+            get => (Bitfield_0x51C & 0b00000100) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0x51C |= 0b00000100;
+                else
+                    Bitfield_0x51C &= 0b11111011;
+            }
+        }
+
+        public bool AllowSlide
+        {
+            get => (Bitfield_0x51C & 0b00001000) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0x51C |= 0b00001000;
+                else
+                    Bitfield_0x51C &= 0b11110111;
+            }
+        }
+
+        public bool HighRoof
+        {
+            get => (Bitfield_0x51C & 0b00010000) != 0;
+            set
+            {
+                if (value)
+                    Bitfield_0x51C |= 0b00010000;
+                else
+                    Bitfield_0x51C &= 0b11101111;
+            }
+        }
+
+        public float CharacterScale
+        {
+            get => ReadSingle(1312);
+            set => WriteSingle(1312, value);
+        }
+
+        public StructArray<float> DesiredDoorPosition => new(Memory, Address + 1316, sizeof(float), 2);
+
+        public StructArray<int> DesiredDoorAction => new(Memory, Address + 1324, sizeof(int), 2);
+
+        public Vector3 PassengerLocation
+        {
+            get => ReadStruct<Vector3>(1332);
+            set => WriteStruct(1332, value);
+        }
+
+        public Vector3 DriverLocation
+        {
+            get => ReadStruct<Vector3>(1344);
+            set => WriteStruct(1344, value);
+        }
+
+        public Vector3 Extents
+        {
+            get => ReadStruct<Vector3>(1356);
+            set => WriteStruct(1356, value);
+        }
+
+        public bool IsSimpleShadow
+        {
+            get => ReadBoolean(1368);
+            set => WriteBoolean(1368, value);
+        }
+
+        public void EnableWonkyDriving()
+        {
+            ArticulatedPhysicsObject articulatedPhyicsObject = ArticulatedPhysicsObject;
+            if (articulatedPhyicsObject == null)
+                return;
+
+            articulatedPhyicsObject.TimeComputeInertiaMatrix = float.NaN;
+
+            articulatedPhyicsObject.InitialInertiaMatrix.YY = DesignerParams.Mass;
+        }
+
+        public void FixWonkyDrivingAndTilt()
+        {
+            ArticulatedPhysicsObject articulatedPhyicsObject = ArticulatedPhysicsObject;
+            if (articulatedPhyicsObject == null)
+                return;
+
+            articulatedPhyicsObject.TimeComputeInertiaMatrix = 0.1f;
+        }
+
         /// <summary>
         /// Stops all vehicle momentum.
         /// </summary>
@@ -823,5 +1086,171 @@ namespace SHARMemory.SHAR.Classes
         /// The colour to set.
         /// </param>
         public void SetTrafficBodyColour(Color Colour) => GeometryVehicle?.SetTrafficBodyColour(Colour);
+
+        public void ResetFlagsOnly(bool resetDamage)
+        {
+            OkToDrawSelf = true;
+
+            DoingBurnout = false;
+
+            DoingRockford = false;
+
+            SpeedBurstTimer = 0f;
+            EBrakeTimer = 0f;
+            BuildingUpSpeedBurst = false;
+            DoSpeedBurst = false;
+            DoingJumpBoost = false;
+            BrakeLightsOn = false;
+            ReverseLightsOn = false;
+            CMOffsetSetToOriginal = false;
+            StuckOnSideTimer = 0f;
+
+            if (resetDamage)
+            {
+                VehicleDestroyed = false;
+                ResetDamageState();
+                AlreadyPlayedExplosion = false;
+            }
+
+            DesiredDoorPosition.FromArray(new[] { 0f, 0f });
+            DesiredDoorAction.FromArray(new[] { (int)DoorAction.None, (int)DoorAction.None });
+
+            DrawWireFrame = false;
+
+            WasAirborn = false;
+            WasAirbornTimer = 0f;
+
+            BottomOutSpeedMaintenance = 0f;
+
+            if (VehicleType == VehicleTypes.AI && VehicleCentralIndex != -1)
+            {
+                // TODO: Reset AI controller
+            }
+        }
+
+        public void ResetDamageState()
+        {
+            GeometryVehicle geometryVehicle = GeometryVehicle;
+            VehicleDestroyed = false;
+            DontShowBrakeLights = false;
+            if (geometryVehicle != null)
+                geometryVehicle.LightsOffDueToDamage = false;
+            DamageOutResetTimer = 0f;
+            HitPoints = DesignerParams.HitPoints;
+
+            DesiredDoorPosition.FromArray(new[] { 0f, 0f });
+            DesiredDoorAction.FromArray(new[] { (int)DoorAction.None, (int)DoorAction.None });
+
+            //ActivateTriggers(true)
+
+            if (PlayerCar)
+            {
+                //Memory.Singletons.CharacterSheetManager->UpdateCarHealth(CharacterSheetCarIndex, 1f);
+            }
+
+            switch (DamageType)
+            {
+                case DamageTypes.User:
+                    ArticulatedPhysicsObject articulatedPhysicsObject = ArticulatedPhysicsObject;
+                    if (articulatedPhysicsObject != null)
+                    {
+                        int[] JointIndexToInertialJointDriverMapping = this.JointIndexToInertialJointDriverMapping.ToArray();
+                        if (HoodJoint != -1)
+                        {
+                            int index = JointIndexToInertialJointDriverMapping[HoodJoint];
+                            if (index != -1)
+                            {
+                                PhysicsJoint physicsJoint = articulatedPhysicsObject.Joints[HoodJoint];
+                                if (physicsJoint != null)
+                                {
+                                    if (physicsJoint.NumDOF > 0)
+                                        physicsJoint.InverseStiffness = 0f;
+                                    physicsJoint.ResetDeformation();
+                                }
+                                PhysicsJointInertialEffector physicsJointInertialEffector = InertialJointDrivers[index];
+                                if (physicsJointInertialEffector != null)
+                                    physicsJointInertialEffector.Enabled = false;
+                            }
+                        }
+
+                        if (TrunkJoint != -1)
+                        {
+                            int index = JointIndexToInertialJointDriverMapping[TrunkJoint];
+                            if (index != -1)
+                            {
+                                PhysicsJoint physicsJoint = articulatedPhysicsObject.Joints[TrunkJoint];
+                                if (physicsJoint != null)
+                                {
+                                    if (physicsJoint.NumDOF > 0)
+                                        physicsJoint.InverseStiffness = 0f;
+                                    physicsJoint.ResetDeformation();
+                                }
+                                PhysicsJointInertialEffector physicsJointInertialEffector = InertialJointDrivers[index];
+                                if (physicsJointInertialEffector != null)
+                                    physicsJointInertialEffector.Enabled = false;
+                            }
+                        }
+
+                        if (DoorDJoint != -1)
+                        {
+                            int index = JointIndexToInertialJointDriverMapping[DoorDJoint];
+                            if (index != -1)
+                            {
+                                PhysicsJoint physicsJoint = articulatedPhysicsObject.Joints[DoorDJoint];
+                                if (physicsJoint != null)
+                                {
+                                    if (physicsJoint.NumDOF > 0)
+                                        physicsJoint.InverseStiffness = 0f;
+                                    physicsJoint.ResetDeformation();
+                                }
+                                PhysicsJointInertialEffector physicsJointInertialEffector = InertialJointDrivers[index];
+                                if (physicsJointInertialEffector != null)
+                                    physicsJointInertialEffector.Enabled = false;
+                            }
+                        }
+
+                        if (DoorPJoint != -1)
+                        {
+                            int index = JointIndexToInertialJointDriverMapping[DoorPJoint];
+                            if (index != -1)
+                            {
+                                PhysicsJoint physicsJoint = articulatedPhysicsObject.Joints[DoorPJoint];
+                                if (physicsJoint != null)
+                                {
+                                    if (physicsJoint.NumDOF > 0)
+                                        physicsJoint.InverseStiffness = 0f;
+                                    physicsJoint.ResetDeformation();
+                                }
+                                PhysicsJointInertialEffector physicsJointInertialEffector = InertialJointDrivers[index];
+                                if (physicsJointInertialEffector != null)
+                                    physicsJointInertialEffector.Enabled = false;
+                            }
+                        }
+                    }
+
+                    if (geometryVehicle != null)
+                    {
+                        //geometryVehicle->DamageTextureHood(false);
+                        //geometryVehicle->DamageTextureTrunk(false);
+                        //geometryVehicle->DamageTextureDoorD(false);
+                        //geometryVehicle->DamageTextureDoorP(false);
+                        geometryVehicle.SetEngineSmoke(ParticleEnums.ParticleID.Null);
+                    }
+                    break;
+                case DamageTypes.AI:
+                    if (geometryVehicle != null)
+                    {
+                        //geometryVehicle->DamageTextureHood(false);
+                        //geometryVehicle->DamageTextureTrunk(false);
+                        //geometryVehicle->DamageTextureDoorD(false);
+                        //geometryVehicle->DamageTextureDoorP(false);
+                        geometryVehicle.SetEngineSmoke(ParticleEnums.ParticleID.Null);
+                    }
+                    break;
+                case DamageTypes.Traffic:
+                    geometryVehicle?.SetEngineSmoke(ParticleEnums.ParticleID.Null);
+                    break;
+            }
+        }
     }
 }

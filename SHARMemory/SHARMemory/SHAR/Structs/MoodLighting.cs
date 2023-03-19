@@ -47,7 +47,7 @@ namespace SHARMemory.SHAR.Structs
             Offset += sizeof(int);
             Color DstModulus = Memory.StructFromBytes<Color>(Bytes, Offset);
             Offset += sizeof(int);
-            StructArray<Color> Originals = new(Memory, BitConverter.ToUInt32(Bytes, Offset), sizeof(int), SunGroup.NumLights);
+            StructArray<Color> Originals = new(Memory, BitConverter.ToUInt32(Bytes, Offset), sizeof(int), SunGroup?.NumLights ?? 0);
             Offset += sizeof(uint);
             float Transition = BitConverter.ToSingle(Bytes, Offset);
             Offset += sizeof(float);

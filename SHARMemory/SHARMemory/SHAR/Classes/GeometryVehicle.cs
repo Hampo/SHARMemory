@@ -1,6 +1,8 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Structs;
 using System.Drawing;
+using static SHARMemory.SHAR.Globals;
 
 namespace SHARMemory.SHAR.Classes
 {
@@ -12,7 +14,9 @@ namespace SHARMemory.SHAR.Classes
 
         public CompositeDrawable CompositeDrawable => Memory.ClassFactory.Create<CompositeDrawable>(ReadUInt32(4));
 
-        public PointerArray<Shader> RefractionShaders => new(Memory, Address + 72, 16);
+        public Mesh ChassisGeometry => Memory.ClassFactory.Create<Mesh>(ReadUInt32(8));
+
+        public PointerArray<Shader> RefractionShaders => new(Memory, Address + 12, 16);
 
         public Shader HoodShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(76));
 
@@ -22,13 +26,203 @@ namespace SHARMemory.SHAR.Classes
 
         public Shader DoorDShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(88));
 
+        public Texture HoodTextureDam => Memory.ClassFactory.Create<Texture>(ReadUInt32(92));
+
+        public Texture TrunkTextureDam => Memory.ClassFactory.Create<Texture>(ReadUInt32(96));
+
+        public Texture DoorPTextureDam => Memory.ClassFactory.Create<Texture>(ReadUInt32(100));
+
+        public Texture DoorDTextureDam => Memory.ClassFactory.Create<Texture>(ReadUInt32(104));
+
+        public Texture HoodTextureNorm => Memory.ClassFactory.Create<Texture>(ReadUInt32(108));
+
+        public Texture TrunkTextureNorm => Memory.ClassFactory.Create<Texture>(ReadUInt32(112));
+
+        public Texture DoorPTextureNorm => Memory.ClassFactory.Create<Texture>(ReadUInt32(116));
+
+        public Texture DoorDTextureNorm => Memory.ClassFactory.Create<Texture>(ReadUInt32(120));
+
         public Shader ChassisShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(124));
 
-        public Shader RoofShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(480));
+        public Texture ChassisTextureNorm => Memory.ClassFactory.Create<Texture>(ReadUInt32(128));
+
+        public Texture ChassisTextureDam => Memory.ClassFactory.Create<Texture>(ReadUInt32(132));
+
+        public VehicleParticleEmitter ParticleEmitter => Memory.ClassFactory.Create<VehicleParticleEmitter>(ReadUInt32(136));
+
+        public ParticleAttributes EngineParticleAttr
+        {
+            get => ReadStruct<ParticleAttributes>(140);
+            set => WriteStruct(140, value);
+        }
+
+        public ParticleAttributes LeftWheelParticleAttr
+        {
+            get => ReadStruct<ParticleAttributes>(160);
+            set => WriteStruct(140, value);
+        }
+
+        public ParticleAttributes RightWheelParticleAttr
+        {
+            get => ReadStruct<ParticleAttributes>(180);
+            set => WriteStruct(140, value);
+        }
+
+        public ParticleAttributes TailPipeParticleAttr
+        {
+            get => ReadStruct<ParticleAttributes>(200);
+            set => WriteStruct(140, value);
+        }
+
+        public ParticleSystem VariableEmissionParticleSystem => Memory.ClassFactory.Create<ParticleSystem>(ReadUInt32(220));
+
+        public SkidMarkGenerator SkidMarkGenerator => Memory.ClassFactory.Create<SkidMarkGenerator>(ReadUInt32(224));
+
+        public Animation Anim => Memory.ClassFactory.Create<Animation>(ReadUInt32(220));
+
+        public float AnimRevPerSecondBase
+        {
+            get => ReadSingle(232);
+            set => WriteSingle(232, value);
+        }
+
+        public float RevMult
+        {
+            get => ReadSingle(236);
+            set => WriteSingle(236, value);
+        }
+
+        public ParticleEnums.ParticleID SpecialEffect
+        {
+            get => (ParticleEnums.ParticleID)ReadInt32(240);
+            set => WriteInt32(240, (int)value);
+        }
+
+        public Vector3 LastPosition
+        {
+            get => ReadStruct<Vector3>(244);
+            set => WriteStruct(244, value);
+        }
+
+        public float CurEnvMapRotation
+        {
+            get => ReadSingle(256);
+            set => WriteSingle(256, value);
+        }
+
+        public StructArray<int> BrakeLightJoints => new(Memory, Address + 260, sizeof(int), 4);
+
+        public StructArray<int> ReverseLightJoints => new(Memory, Address + 276, sizeof(int), 4);
 
         public TrafficBodyDrawable TrafficBodyDrawable => Memory.ClassFactory.Create<TrafficBodyDrawable>(ReadUInt32(292));
 
         public TrafficBodyDrawable TrafficDoorDrawable => Memory.ClassFactory.Create<TrafficBodyDrawable>(ReadUInt32(296));
+
+        public StructArray<float> ShadowPointAdjustments => new(Memory, Address + 300, sizeof(float), 8);
+
+        public int FadeAlpha
+        {
+            get => ReadInt32(332);
+            set => WriteInt32(332, value);
+        }
+
+        public BillboardQuadGroup FrinkArc => Memory.ClassFactory.Create<BillboardQuadGroup>(ReadUInt32(336));
+
+        public StructArray<Color> OriginalFrinkArcColour => new(Memory, Address + 340, sizeof(int), 3);
+
+        public PointerArray<BillboardQuadGroup> BrakeLights => new(Memory, Address + 352, 4);
+
+        public StructArray<Color> OriginalBrakeLightColours => new(Memory, Address + 368, sizeof(int), 4);
+
+        public bool UsingTrafficModel
+        {
+            get => ReadBoolean(384);
+            set => WriteBoolean(384, value);
+        }
+
+        public bool HasGhostGlow
+        {
+            get => ReadBoolean(385);
+            set => WriteBoolean(385, value);
+        }
+
+        public PointerArray<BillboardQuadGroup> GhostGlows => new(Memory, Address + 388, 6);
+
+        public StructArray<Color> OriginalGhostGlowColours => new(Memory, Address + 412, sizeof(int), 6);
+
+        public bool HasNukeGlow
+        {
+            get => ReadBoolean(436);
+            set => WriteBoolean(436, value);
+        }
+
+        public PointerArray<BillboardQuadGroup> NukeGlows => new(Memory, Address + 440, 1);
+
+        public StructArray<Color> OriginalNukeGlowColours => new(Memory, Address + 444, sizeof(int), 3);
+
+        public bool BrakeLightsOn
+        {
+            get => ReadBoolean(456);
+            set => WriteBoolean(456, value);
+        }
+
+        public float BrakeLightScale
+        {
+            get => ReadSingle(460);
+            set => WriteSingle(460, value);
+        }
+
+        public float HeadLightScale
+        {
+            get => ReadSingle(464);
+            set => WriteSingle(464, value);
+        }
+
+        public bool EnableLights
+        {
+            get => ReadBoolean(468);
+            set => WriteBoolean(468, value);
+        }
+
+        public bool LightsOffDueToDamage
+        {
+            get => ReadBoolean(469);
+            set => WriteBoolean(469, value);
+        }
+
+        public DrawablePropElement RoofOpacShape => Memory.ClassFactory.Create<DrawablePropElement>(ReadUInt32(472));
+
+        public DrawablePropElement RoofAlphaShape => Memory.ClassFactory.Create<DrawablePropElement>(ReadUInt32(476));
+
+        public Shader RoofShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(480));
+
+        public int RoofAlpha
+        {
+            get => ReadInt32(484);
+            set => WriteInt32(484, value);
+        }
+
+        public int RoofTargetAlpha
+        {
+            get => ReadInt32(488);
+            set => WriteInt32(488, value);
+        }
+
+        // TODO: std::vector< VehicleFrameController, s2alloc< VehicleFrameController > > mFrameControllers; (492)
+
+        public StatePropCollectible Collectible => Memory.ClassFactory.Create<StatePropCollectible>(ReadUInt32(504));
+
+        public Matrix4x4 CollectibleTransform
+        {
+            get => ReadStruct<Matrix4x4>(508);
+            set => WriteStruct(508, value);
+        }
+
+        public byte EnvRef
+        {
+            get => ReadByte(572);
+            set => WriteByte(572, value);
+        }
 
         /// <summary>
         /// Sets the traffic body colour if applicable.
@@ -45,6 +239,13 @@ namespace SHARMemory.SHAR.Classes
             TrafficBodyDrawable trafficDoorDrawable = TrafficDoorDrawable;
             if (trafficDoorDrawable != null)
                 trafficDoorDrawable.DesiredColour = Colour;
+        }
+
+        public void SetEngineSmoke(ParticleEnums.ParticleID pid)
+        {
+            ParticleAttributes particleAttributes = EngineParticleAttr;
+            particleAttributes.Type = pid;
+            EngineParticleAttr = particleAttributes;
         }
     }
 }
