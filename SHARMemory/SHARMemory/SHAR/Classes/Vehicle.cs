@@ -1030,11 +1030,18 @@ namespace SHARMemory.SHAR.Classes
             articulatedPhyicsObject.TimeComputeInertiaMatrix = float.NaN;
 
             SymMatrix initialInertiaMatrix = articulatedPhyicsObject.InitialInertiaMatrix;
-            if (initialInertiaMatrix == null)
-                return;
+            if (initialInertiaMatrix != null)
+            {
+                initialInertiaMatrix.Identity();
+                initialInertiaMatrix.Scale(articulatedPhyicsObject.Mass);
+            }
 
-            initialInertiaMatrix.Identity();
-            initialInertiaMatrix.Scale(DesignerParams.Mass);
+            SymMatrix inertiaMatrix = articulatedPhyicsObject.InertiaMatrix;
+            if (inertiaMatrix != null)
+            {
+                inertiaMatrix.Identity();
+                inertiaMatrix.Scale(articulatedPhyicsObject.Mass);
+            }
         }
 
         public void FixWonkyDrivingAndTilt()
