@@ -1294,20 +1294,20 @@ namespace SHARMemory.SHAR.Classes
 
                     if (geometryVehicle != null)
                     {
-                        // TODO: geometryVehicle->DamageTextureHood(false);
-                        // TODO: geometryVehicle->DamageTextureTrunk(false);
-                        // TODO: geometryVehicle->DamageTextureDoorD(false);
-                        // TODO: geometryVehicle->DamageTextureDoorP(false);
+                        geometryVehicle.DamangeTextureHood(false);
+                        geometryVehicle.DamangeTextureTrunk(false);
+                        geometryVehicle.DamangeTextureDoorD(false);
+                        geometryVehicle.DamangeTextureDoorP(false);
                         geometryVehicle.SetEngineSmoke(ParticleEnums.ParticleID.Null);
                     }
                     break;
                 case DamageTypes.AI:
                     if (geometryVehicle != null)
                     {
-                        // TODO: geometryVehicle->DamageTextureHood(false);
-                        // TODO: geometryVehicle->DamageTextureTrunk(false);
-                        // TODO: geometryVehicle->DamageTextureDoorD(false);
-                        // TODO: geometryVehicle->DamageTextureDoorP(false);
+                        geometryVehicle.DamangeTextureHood(false);
+                        geometryVehicle.DamangeTextureTrunk(false);
+                        geometryVehicle.DamangeTextureDoorD(false);
+                        geometryVehicle.DamangeTextureDoorP(false);
                         geometryVehicle.SetEngineSmoke(ParticleEnums.ParticleID.Null);
                     }
                     break;

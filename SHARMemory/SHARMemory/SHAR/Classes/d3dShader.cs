@@ -100,5 +100,7 @@ namespace SHARMemory.SHAR.Classes
             get => ReadBoolean(89);
             set => WriteBoolean(89, value);
         }
+
+        public virtual void SetTexture(d3dTexture newTexture) { }
     }
 }

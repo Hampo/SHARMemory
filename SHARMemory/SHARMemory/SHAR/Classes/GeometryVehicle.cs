@@ -247,5 +247,53 @@ namespace SHARMemory.SHAR.Classes
             particleAttributes.Type = pid;
             EngineParticleAttr = particleAttributes;
         }
+
+        public void DamangeTextureHood(bool on)
+        {
+            if (HoodTextureDam?.PDDITexture is not d3dTexture hoodTextureDamD3D || HoodTextureNorm?.PDDITexture is not d3dTexture hoodTextureNormD3D)
+                return;
+
+            pddiShader hoodShader = HoodShader?.PDDIShader;
+            if (hoodShader is not d3dShader hoodShaderD3D)
+                return;
+
+            hoodShaderD3D.SetTexture(on ? hoodTextureDamD3D : hoodTextureNormD3D);
+        }
+
+        public void DamangeTextureTrunk(bool on)
+        {
+            if (TrunkTextureDam?.PDDITexture is not d3dTexture trunkTextureDamD3D || TrunkTextureNorm?.PDDITexture is not d3dTexture trunkTextureNormD3D)
+                return;
+
+            pddiShader trunkShader = TrunkShader?.PDDIShader;
+            if (trunkShader is not d3dShader trunkShaderD3D)
+                return;
+
+            trunkShaderD3D.SetTexture(on ? trunkTextureDamD3D : trunkTextureNormD3D);
+        }
+
+        public void DamangeTextureDoorP(bool on)
+        {
+            if (DoorPTextureDam?.PDDITexture is not d3dTexture doorPTextureDamD3D || DoorPTextureNorm?.PDDITexture is not d3dTexture doorPTextureNormD3D)
+                return;
+
+            pddiShader doorPShader = DoorPShader?.PDDIShader;
+            if (doorPShader is not d3dShader doorPShaderD3D)
+                return;
+
+            doorPShaderD3D.SetTexture(on ? doorPTextureDamD3D : doorPTextureNormD3D);
+        }
+
+        public void DamangeTextureDoorD(bool on)
+        {
+            if (DoorDTextureDam?.PDDITexture is not d3dTexture doorDTextureDamD3D || DoorDTextureNorm?.PDDITexture is not d3dTexture doorDTextureNormD3D)
+                return;
+
+            pddiShader doorDShader = DoorDShader?.PDDIShader;
+            if (doorDShader is not d3dShader doorDShaderD3D)
+                return;
+
+            doorDShaderD3D.SetTexture(on ? doorDTextureDamD3D : doorDTextureNormD3D);
+        }
     }
 }

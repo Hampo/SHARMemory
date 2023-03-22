@@ -12,7 +12,11 @@ namespace SHARMemory.SHAR.Classes
     {
         public d3dSimpleShader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public d3dTexture Texture => Memory.ClassFactory.Create<d3dTexture>(ReadUInt32(92));
+        public d3dTexture Texture
+        {
+            get => Memory.ClassFactory.Create<d3dTexture>(ReadUInt32(92));
+            set => WriteUInt32(92, value?.Address ?? 0);
+        }
 
         public bool UseMultiCBV
         {
@@ -49,5 +53,18 @@ namespace SHARMemory.SHAR.Classes
             get => ReadInt32(116);
             set => WriteInt32(116, value);
         }
+
+        public override void SetTexture(d3dTexture newTexture)
+        {
+            if (newTexture == null)
+                return;
+
+            d3dTexture oldTexture = Texture;
+            oldTexture.RefCount--;
+
+            newTexture.RefCount++;
+            Texture = newTexture;
+        }
+
     }
 }
