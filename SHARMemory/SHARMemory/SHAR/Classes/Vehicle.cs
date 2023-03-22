@@ -1,8 +1,8 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
 using SHARMemory.SHAR.Structs;
+using System;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using static SHARMemory.SHAR.Globals;
 
@@ -55,6 +55,23 @@ namespace SHARMemory.SHAR.Classes
 
         public Vehicle(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
+        public override Vector3 Position
+        {
+            get
+            {
+                Matrix4x4 transform = Transform;
+                return new(transform.M41, transform.M42, transform.M43);
+            }
+            set
+            {
+                Matrix4x4 transform = Transform;
+                transform.M41 = value.X;
+                transform.M42 = value.Y;
+                transform.M43 = value.Z;
+                Transform = transform;
+            }
+        }
+
         public bool AlreadyCalledAutoResetOnSpot
         {
             get => ReadBoolean(160);
@@ -87,7 +104,11 @@ namespace SHARMemory.SHAR.Classes
 
         public GeometryVehicle GeometryVehicle => Memory.ClassFactory.Create<GeometryVehicle>(ReadUInt32(180));
 
-        public Matrix4x4 Transform => ReadStruct<Matrix4x4>(184);
+        public Matrix4x4 Transform
+        {
+            get => ReadStruct<Matrix4x4>(184);
+            set => WriteStruct(184, value);
+        }
 
         public string Name => ReadNullStringPointer(248, Encoding.UTF8);
 
@@ -1066,7 +1087,9 @@ namespace SHARMemory.SHAR.Classes
             simVelocityState.Linear = new(0);
             simVelocityState.Angular = new(0);
             simStateArticulated.VelocityState = simVelocityState;
-            simStateArticulated.PhysicsObject.AngularMomentum = new(0);
+            if (SimStateArticulated.SimulatedObject is not PhysicsObject physicsObject)
+                return;
+            physicsObject.AngularMomentum = new(0);
         }
 
         /// <summary>
@@ -1098,6 +1121,33 @@ namespace SHARMemory.SHAR.Classes
         /// The colour to set.
         /// </param>
         public void SetTrafficBodyColour(Color Colour) => GeometryVehicle?.SetTrafficBodyColour(Colour);
+
+        public double GetFacingInRadians()
+        {
+            Vector3 facing = VehicleFacing;
+            double test = Math.Atan2(facing.X, facing.Z);
+
+            if (double.IsNaN(test))
+                return 0;
+
+            return test;
+        }
+
+        public void SetTransform(Matrix4x4 matrix)
+        {
+            SimStateArticulated simStateArticulated = SimStateArticulated;
+            if (simStateArticulated == null)
+                return;
+
+            if (simStateArticulated.Control == SimState.SimControlEnum.AICtrl)
+            {
+                simStateArticulated.SetTransform(matrix);
+            }
+            else
+            {
+                simStateArticulated.Control = 
+            }
+        }
 
         public void ResetFlagsOnly(bool resetDamage)
         {

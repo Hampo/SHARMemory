@@ -21,7 +21,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteStruct(84, value);
         }
 
-        public Vector3 Position
+        public virtual Vector3 Position
         {
             get => ReadStruct<Vector3>(100);
             set => WriteStruct(100, value);

@@ -50,11 +50,11 @@ namespace SHARMemory.SHAR.Structs
             if (Value is not MissionCarData Value2)
                 throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(MissionCarData)}'.", nameof(Value));
 
-            BitConverter.GetBytes(Value2.Vehicle.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.Vehicle?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
             Memory.GetStringBytes(Value2.Name, Encoding.UTF8, 32).CopyTo(Buffer, Offset);
             Offset += 32;
-            BitConverter.GetBytes(Value2.HuskVehicle.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.HuskVehicle?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
             BitConverter.GetBytes(Value2.UsingHusk).CopyTo(Buffer, Offset);
         }

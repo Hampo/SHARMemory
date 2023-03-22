@@ -73,9 +73,9 @@ namespace SHARMemory.SHAR.Structs
             Offset += Vector3.Size;
             BitConverter.GetBytes(Value2.Heading).CopyTo(Buffer, Offset);
             Offset += sizeof(float);
-            BitConverter.GetBytes(Value2.Vehicle.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.Vehicle?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
-            BitConverter.GetBytes(Value2.HuskVehicle.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.HuskVehicle?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
             BitConverter.GetBytes(Value2.UsingHusk).CopyTo(Buffer, Offset);
         }

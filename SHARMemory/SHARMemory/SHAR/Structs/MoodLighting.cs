@@ -60,13 +60,13 @@ namespace SHARMemory.SHAR.Structs
             if (Value is not MoodLighting Value2)
                 throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(MoodLighting)}'.", nameof(Value));
 
-            BitConverter.GetBytes(Value2.SunGroup.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.SunGroup?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
             Memory.BytesFromStruct(Value2.SrcModulus, Buffer, Offset);
             Offset += sizeof(int);
             Memory.BytesFromStruct(Value2.DstModulus, Buffer, Offset);
             Offset += sizeof(int);
-            BitConverter.GetBytes(Value2.Originals.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.Originals?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
             BitConverter.GetBytes(Value2.Transition).CopyTo(Buffer, Offset);
             Offset += sizeof(float);

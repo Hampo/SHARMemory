@@ -45,7 +45,7 @@ namespace SHARMemory.SHAR.Structs
 
             for (uint i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
             {
-                BitConverter.GetBytes(Value2.Vehicles[i].Address).CopyTo(Buffer, Offset);
+                BitConverter.GetBytes(Value2.Vehicles[i]?.Address ?? 0).CopyTo(Buffer, Offset);
                 Offset += sizeof(uint);
             }
             BitConverter.GetBytes(Value2.Counter).CopyTo(Buffer, Offset);

@@ -12,6 +12,13 @@ namespace SHARMemory.SHAR.Classes
         public const int MAX_BONUS_MISSIONS = 10;
         public const int MAX_VDU_CARS = 10;
 
+        public enum CarSlots
+        {
+            DefaultCar,
+            OtherCar,
+            AICar
+        }
+
         public enum GameTypes
         {
             Normal,
@@ -333,6 +340,67 @@ namespace SHARMemory.SHAR.Classes
             }
 
             return null;
+        }
+
+        public void RepairCurrentVehicle()
+        {
+            Vehicle currVehicle = CurrentVehicle;
+            if (currVehicle == null)
+                return;
+
+            CarData testVehicleData = VehicleSlots[(int)CarSlots.DefaultCar];
+            if (currVehicle == testVehicleData.Vehicle)
+            {
+                RepairVehicle(CarSlots.DefaultCar, testVehicleData);
+            }
+            else
+            {
+                testVehicleData = VehicleSlots[(int)CarSlots.OtherCar];
+                if (currVehicle == testVehicleData.Vehicle)
+                {
+                    RepairVehicle(CarSlots.OtherCar, testVehicleData);
+
+                    MissionCarData[] missionVehicleSlots = MissionVehicleSlots.ToArray();
+                    for (int i = 0; i < missionVehicleSlots.Length; i++)
+                    {
+                        MissionCarData missionCarData = missionVehicleSlots[i];
+                        if (missionCarData.Vehicle == testVehicleData.Vehicle)
+                        {
+                            //missionCarData.HuskVehicle->Release();
+                            missionCarData.HuskVehicle = null;
+                            missionCarData.UsingHusk = false;
+                            missionVehicleSlots[i] = missionCarData;
+                        }
+                    }
+                    MissionVehicleSlots.FromArray(missionVehicleSlots);
+                }
+            }
+        }
+
+        private void RepairVehicle(CarSlots carSlot, CarData carData)
+        {
+            if (carSlot == CarSlots.AICar)
+                return;
+
+            Vehicle veh = carData.Vehicle;
+            if (veh == null)
+                return;
+
+            if (carData.UsingHusk)
+            {
+                Vehicle husk = carData.HuskVehicle;
+
+                Vector3 carPos = husk.Position;
+                float angle = (float)husk.GetFacingInRadians();
+
+                Matrix4x4 m = new(0);
+                m.Identity();
+                m.FillRotateXYZ(0f, angle, 0f);
+                m.FillTranslate(carPos);
+                veh.SetTransform(m);
+            }
+
+            VehicleSlots[(int)carSlot] = carData;
         }
     }
 }

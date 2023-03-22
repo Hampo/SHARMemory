@@ -44,7 +44,7 @@ namespace SHARMemory.SHAR.Structs
             if (Value is not ChaseManager Value2)
                 throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(ChaseManager)}'.", nameof(Value));
 
-            BitConverter.GetBytes(Value2.ChaseManagerPtr.Address).CopyTo(Buffer, Offset);
+            BitConverter.GetBytes(Value2.ChaseManagerPtr?.Address ?? 0).CopyTo(Buffer, Offset);
             Offset += sizeof(uint);
             Memory.GetStringBytes(Value2.HostVehicle, Encoding.UTF8, 16).CopyTo(Buffer, Offset);
             Offset += 16;

@@ -18,6 +18,12 @@ namespace SHARMemory.SHAR.Structs
             Angular = angular;
         }
 
+        public void Reset()
+        {
+            Linear = new(0f);
+            Angular = new(0f);
+        }
+
         public override string ToString() => $"{Linear} | {Angular}";
     }
 
