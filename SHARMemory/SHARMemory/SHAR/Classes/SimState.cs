@@ -88,7 +88,7 @@ namespace SHARMemory.SHAR.Classes
 
                 Vector3 linearVelocity = VelocityState.Linear;
 
-                virtualCM.InitLinear(position, linearVelocity);
+                // TODO: virtualCM.InitLinear(position, linearVelocity);
             }
         }
 
@@ -104,8 +104,8 @@ namespace SHARMemory.SHAR.Classes
                 SimulatedObject simulatedObject = SimulatedObject;
                 if (simulatedObject != null)
                 {
-                    simulatedObject.SyncSimObj(false);
-                    simulatedObject.WakeUp();
+                    // TODO: simulatedObject.SyncSimObj(false);
+                    // TODO: simulatedObject.WakeUp();
                 }
                 else
                 {
@@ -131,7 +131,7 @@ namespace SHARMemory.SHAR.Classes
                 {
                     if (dt != 0)
                     {
-                        //ExtractVelocityFromMatrix(ref transform, ref inTransform, Scale, dt, ref velocityState);
+                        // TODO: ExtractVelocityFromMatrix(ref transform, ref inTransform, Scale, dt, ref velocityState);
                         VelocityState = velocityState;
                     }
                     else
@@ -161,7 +161,7 @@ namespace SHARMemory.SHAR.Classes
             VirtualCM virtualCM = VirtualCM;
             if (virtualCM != null)
             {
-                //virtualCM.Update(GetPosition(), velocityState.Linear, dt);
+                // TODO: virtualCM.Update(GetPosition(), velocityState.Linear, dt);
             }
 
             if (!Articulated)
@@ -222,7 +222,7 @@ namespace SHARMemory.SHAR.Classes
 
         public void ExtractVelocityFromMatrix(ref Matrix4x4 oldMatrix, ref Matrix4x4 newMatrix, float scale, float dt, ref SimVelocityState velocity)
         {
-
+            // TODO
         }
     }
 }

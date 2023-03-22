@@ -1145,7 +1145,9 @@ namespace SHARMemory.SHAR.Classes
             }
             else
             {
-                simStateArticulated.Control = 
+                simStateArticulated.SetControl(SimState.SimControlEnum.AICtrl);
+                simStateArticulated.SetTransform(matrix);
+                simStateArticulated.SetControl(SimState.SimControlEnum.SimulationCtrl);
             }
         }
 
@@ -1203,11 +1205,11 @@ namespace SHARMemory.SHAR.Classes
             DesiredDoorPosition.FromArray(new[] { 0f, 0f });
             DesiredDoorAction.FromArray(new[] { (int)DoorAction.None, (int)DoorAction.None });
 
-            //ActivateTriggers(true)
+            // TODO: ActivateTriggers(true)
 
             if (PlayerCar)
             {
-                //Memory.Singletons.CharacterSheetManager->UpdateCarHealth(CharacterSheetCarIndex, 1f);
+                // TODO: Memory.Singletons.CharacterSheetManager->UpdateCarHealth(CharacterSheetCarIndex, 1f);
             }
 
             switch (DamageType)
@@ -1292,20 +1294,20 @@ namespace SHARMemory.SHAR.Classes
 
                     if (geometryVehicle != null)
                     {
-                        //geometryVehicle->DamageTextureHood(false);
-                        //geometryVehicle->DamageTextureTrunk(false);
-                        //geometryVehicle->DamageTextureDoorD(false);
-                        //geometryVehicle->DamageTextureDoorP(false);
+                        // TODO: geometryVehicle->DamageTextureHood(false);
+                        // TODO: geometryVehicle->DamageTextureTrunk(false);
+                        // TODO: geometryVehicle->DamageTextureDoorD(false);
+                        // TODO: geometryVehicle->DamageTextureDoorP(false);
                         geometryVehicle.SetEngineSmoke(ParticleEnums.ParticleID.Null);
                     }
                     break;
                 case DamageTypes.AI:
                     if (geometryVehicle != null)
                     {
-                        //geometryVehicle->DamageTextureHood(false);
-                        //geometryVehicle->DamageTextureTrunk(false);
-                        //geometryVehicle->DamageTextureDoorD(false);
-                        //geometryVehicle->DamageTextureDoorP(false);
+                        // TODO: geometryVehicle->DamageTextureHood(false);
+                        // TODO: geometryVehicle->DamageTextureTrunk(false);
+                        // TODO: geometryVehicle->DamageTextureDoorD(false);
+                        // TODO: geometryVehicle->DamageTextureDoorP(false);
                         geometryVehicle.SetEngineSmoke(ParticleEnums.ParticleID.Null);
                     }
                     break;

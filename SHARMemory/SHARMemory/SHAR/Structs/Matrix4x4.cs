@@ -4,7 +4,7 @@ using System;
 namespace SHARMemory.SHAR.Structs
 {
     [Struct(typeof(Matrix4x4Struct))]
-    public struct Matrix4x4
+    public struct Matrix4x4 : IEquatable<Matrix4x4>
     {
         public const int Size = sizeof(float) * 4 * 4;
 
@@ -398,6 +398,50 @@ namespace SHARMemory.SHAR.Structs
         public static bool operator !=(Matrix4x4 matrix1, Matrix4x4 matrix2) => matrix1.M11 != matrix2.M11 || matrix1.M12 != matrix2.M12 || matrix1.M13 != matrix2.M13 || matrix1.M14 != matrix2.M14 || matrix1.M21 != matrix2.M21 || matrix1.M22 != matrix2.M22 || matrix1.M23 != matrix2.M23 || matrix1.M24 != matrix2.M24 || matrix1.M31 != matrix2.M31 || matrix1.M32 != matrix2.M32 || matrix1.M33 != matrix2.M33 || matrix1.M34 != matrix2.M34 || matrix1.M41 != matrix2.M41 || matrix1.M42 != matrix2.M42 || matrix1.M43 != matrix2.M43 || matrix1.M44 != matrix2.M44;
 
         public override string ToString() => $"{{ {{M11:{M11} M12:{M12} M13:{M13} M14:{M14}}} {{M21:{M21} M22:{M22} M23:{M23} M24:{M24}}} {{M31:{M31} M32:{M32} M33:{M33} M34:{M34}}} {{M41:{M41} M42:{M42} M43:{M43} M44:{M44}}} }}";
+
+        public override bool Equals(object obj) => obj is Matrix4x4 x && Equals(x);
+
+        public bool Equals(Matrix4x4 other)
+        {
+            return M11 == other.M11 &&
+                   M12 == other.M12 &&
+                   M13 == other.M13 &&
+                   M14 == other.M14 &&
+                   M21 == other.M21 &&
+                   M22 == other.M22 &&
+                   M23 == other.M23 &&
+                   M24 == other.M24 &&
+                   M31 == other.M31 &&
+                   M32 == other.M32 &&
+                   M33 == other.M33 &&
+                   M34 == other.M34 &&
+                   M41 == other.M41 &&
+                   M42 == other.M42 &&
+                   M43 == other.M43 &&
+                   M44 == other.M44;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1955208504;
+            hashCode = hashCode * -1521134295 + M11.GetHashCode();
+            hashCode = hashCode * -1521134295 + M12.GetHashCode();
+            hashCode = hashCode * -1521134295 + M13.GetHashCode();
+            hashCode = hashCode * -1521134295 + M14.GetHashCode();
+            hashCode = hashCode * -1521134295 + M21.GetHashCode();
+            hashCode = hashCode * -1521134295 + M22.GetHashCode();
+            hashCode = hashCode * -1521134295 + M23.GetHashCode();
+            hashCode = hashCode * -1521134295 + M24.GetHashCode();
+            hashCode = hashCode * -1521134295 + M31.GetHashCode();
+            hashCode = hashCode * -1521134295 + M32.GetHashCode();
+            hashCode = hashCode * -1521134295 + M33.GetHashCode();
+            hashCode = hashCode * -1521134295 + M34.GetHashCode();
+            hashCode = hashCode * -1521134295 + M41.GetHashCode();
+            hashCode = hashCode * -1521134295 + M42.GetHashCode();
+            hashCode = hashCode * -1521134295 + M43.GetHashCode();
+            hashCode = hashCode * -1521134295 + M44.GetHashCode();
+            return hashCode;
+        }
     }
 
     internal class Matrix4x4Struct : Struct
