@@ -393,10 +393,6 @@ namespace SHARMemory.SHAR.Structs
             return true;
         }
 
-        public static bool operator ==(Matrix4x4 matrix1, Matrix4x4 matrix2) => matrix1.M11 == matrix2.M11 && matrix1.M12 == matrix2.M12 && matrix1.M13 == matrix2.M13 && matrix1.M14 == matrix2.M14 && matrix1.M21 == matrix2.M21 && matrix1.M22 == matrix2.M22 && matrix1.M23 == matrix2.M23 && matrix1.M24 == matrix2.M24 && matrix1.M31 == matrix2.M31 && matrix1.M32 == matrix2.M32 && matrix1.M33 == matrix2.M33 && matrix1.M34 == matrix2.M34 && matrix1.M41 == matrix2.M41 && matrix1.M42 == matrix2.M42 && matrix1.M43 == matrix2.M43 && matrix1.M44 == matrix2.M44;
-
-        public static bool operator !=(Matrix4x4 matrix1, Matrix4x4 matrix2) => matrix1.M11 != matrix2.M11 || matrix1.M12 != matrix2.M12 || matrix1.M13 != matrix2.M13 || matrix1.M14 != matrix2.M14 || matrix1.M21 != matrix2.M21 || matrix1.M22 != matrix2.M22 || matrix1.M23 != matrix2.M23 || matrix1.M24 != matrix2.M24 || matrix1.M31 != matrix2.M31 || matrix1.M32 != matrix2.M32 || matrix1.M33 != matrix2.M33 || matrix1.M34 != matrix2.M34 || matrix1.M41 != matrix2.M41 || matrix1.M42 != matrix2.M42 || matrix1.M43 != matrix2.M43 || matrix1.M44 != matrix2.M44;
-
         public override string ToString() => $"{{ {{M11:{M11} M12:{M12} M13:{M13} M14:{M14}}} {{M21:{M21} M22:{M22} M23:{M23} M24:{M24}}} {{M31:{M31} M32:{M32} M33:{M33} M34:{M34}}} {{M41:{M41} M42:{M42} M43:{M43} M44:{M44}}} }}";
 
         public override bool Equals(object obj) => obj is Matrix4x4 x && Equals(x);
@@ -420,6 +416,10 @@ namespace SHARMemory.SHAR.Structs
                    M43 == other.M43 &&
                    M44 == other.M44;
         }
+
+        public static bool operator ==(Matrix4x4 matrix1, Matrix4x4 matrix2) => matrix1.Equals(matrix2);
+
+        public static bool operator !=(Matrix4x4 matrix1, Matrix4x4 matrix2) => !matrix1.Equals(matrix2);
 
         public override int GetHashCode()
         {

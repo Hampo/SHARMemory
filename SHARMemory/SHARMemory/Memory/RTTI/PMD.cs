@@ -41,16 +41,7 @@ namespace SHARMemory.Memory.RTTI
             return true;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-                return false;
-
-            if (obj is not PMD PMD)
-                return false;
-
-            return Equals(PMD);
-        }
+        public override bool Equals(object obj) => obj is PMD pmd && Equals(pmd);
 
         public static bool operator ==(PMD PMD1, PMD PMD2) => PMD1.Equals(PMD2);
         public static bool operator !=(PMD PMD1, PMD PMD2) => !PMD1.Equals(PMD2);
