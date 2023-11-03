@@ -248,7 +248,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(408, value);
         }
 
-        public Globals.RenderEnums.LayerEnum RenderLayerEnum
+        public RenderEnums.LayerEnum RenderLayerEnum
         {
             get => (Globals.RenderEnums.LayerEnum)ReadInt32(412);
             set => WriteInt32(412, (int)value);
@@ -618,7 +618,7 @@ namespace SHARMemory.SHAR.Classes
 
         public StructArray<int> WheelToJointIndexMapping => new(Memory, Address + 808, sizeof(int), 4);
 
-        StructArray<int> JointIndexToWheelMapping => new(Memory, ReadUInt32(824), sizeof(int), GeometryVehicle.CompositeDrawable?.Pose?.NumJoints ?? 0);
+        public StructArray<int> JointIndexToWheelMapping => new(Memory, ReadUInt32(824), sizeof(int), GeometryVehicle.CompositeDrawable?.Pose?.NumJoints ?? 0);
 
         public StructArray<Vector3> SuspensionRestPointsFromFile => new(Memory, Address + 840, Vector3.Size, 4);
 
@@ -627,7 +627,7 @@ namespace SHARMemory.SHAR.Classes
         public float SuspensionRestValue
         {
             get => ReadSingle(936);
-            set => WriteSingle(636, value);
+            set => WriteSingle(936, value);
         }
 
         public float SuspensionMaxValue
