@@ -1,14 +1,25 @@
-﻿using SHARMemory.Memory.RTTI;
+﻿using SHARMemory.Memory;
+using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Structs;
 using System.Text;
 
 namespace SHARMemory.SHAR.Classes
 {
     public class CharacterSheet : Class
     {
+        public const int MAX_LEVELS = 7;
+        public const int MAX_MISSIONS = 8;
+        public const int MAX_CARDS = 7;
+        public const int MAX_STREETRACES = 3;
+        public const int MAX_PURCHASED_ITEMS = 12;
+        public const int MAX_LEVEL_GAGS = 32;
+
         // TODO: Use Arrays and Structs and shit
         public CharacterSheet(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
         public string PlayerName => ReadString(0, Encoding.ASCII, 16u);
+
+        public StructArray<LevelRecord> LevelList => new(Memory, Address + 16, LevelRecord.Size, MAX_LEVELS);
 
         public string CardName(uint Level, uint Card) => ReadString(16 + 620 * Level + 17 * Card, Encoding.ASCII, 16u);
 
