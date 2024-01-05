@@ -10,7 +10,7 @@ namespace SHARMemory.SHAR.Classes
         {
             Idle,
             InProgress,
-            Compelte,
+            Complete,
             Failed,
             Backup,
             AllComplete,
