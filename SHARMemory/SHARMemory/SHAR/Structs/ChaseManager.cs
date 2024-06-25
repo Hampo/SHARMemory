@@ -33,9 +33,9 @@ namespace SHARMemory.SHAR.Structs
         {
             Classes.ChaseManager ChaseManagerPtr = Memory.ClassFactory.Create<Classes.ChaseManager>(BitConverter.ToUInt32(Bytes, Offset));
             Offset += sizeof(uint);
-            string HostVehicle = Encoding.UTF8.GetString(Bytes, Offset, 16);
+            string HostVehicle = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 16));
             Offset += 16;
-            string HostVehicleFilename = Encoding.UTF8.GetString(Bytes, Offset, 64);
+            string HostVehicleFilename = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 64));
             return new ChaseManager(ChaseManagerPtr, HostVehicle, HostVehicleFilename);
         }
 

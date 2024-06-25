@@ -37,7 +37,7 @@ namespace SHARMemory.SHAR.Structs
         {
             Vehicle Vehicle = Memory.ClassFactory.Create<Vehicle>(BitConverter.ToUInt32(Bytes, Offset));
             Offset += sizeof(uint);
-            string Name = Encoding.UTF8.GetString(Bytes, Offset, 32);
+            string Name = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 32));
             Offset += 32;
             Vehicle HuskVehicle = Memory.ClassFactory.Create<Vehicle>(BitConverter.ToUInt32(Bytes, Offset));
             Offset += sizeof(uint);

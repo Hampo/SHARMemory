@@ -7,7 +7,7 @@ namespace SHARMemory.SHAR.Structs
     [Struct(typeof(RecordStruct))]
     public struct Record
     {
-        public const int Size = 16 + 4;
+        public const int Size = 16 + 1;
 
         public string Name;
         public bool Completed;
@@ -27,7 +27,7 @@ namespace SHARMemory.SHAR.Structs
 
         public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
         {
-            string Name = Encoding.UTF8.GetString(Bytes, Offset, 16);
+            string Name = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 16));
             Offset += 16;
             bool Completed = BitConverter.ToBoolean(Bytes, Offset);
             return new Record(Name, Completed);

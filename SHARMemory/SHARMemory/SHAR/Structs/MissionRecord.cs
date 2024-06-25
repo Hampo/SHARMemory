@@ -35,7 +35,7 @@ namespace SHARMemory.SHAR.Structs
 
         public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
         {
-            string Name = Encoding.UTF8.GetString(Bytes, Offset, 16);
+            string Name = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 16));
             Offset += 16;
             bool Completed = BitConverter.ToBoolean(Bytes, Offset);
             Offset += 1;

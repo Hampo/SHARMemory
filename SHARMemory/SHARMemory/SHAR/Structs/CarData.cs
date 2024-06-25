@@ -44,9 +44,9 @@ namespace SHARMemory.SHAR.Structs
 
         public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
         {
-            string Filename = Encoding.UTF8.GetString(Bytes, Offset, 64);
+            string Filename = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 64));
             Offset += 64;
-            string Name = Encoding.UTF8.GetString(Bytes, Offset, 32);
+            string Name = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 32));
             Offset += 32;
             Vector3 Position = Memory.StructFromBytes<Vector3>(Bytes, Offset);
             Offset += Vector3.Size;

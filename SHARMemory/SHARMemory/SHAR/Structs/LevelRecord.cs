@@ -1,7 +1,6 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.SHAR.Classes;
 using System;
-using System.Reflection;
 using System.Text;
 
 namespace SHARMemory.SHAR.Structs
@@ -9,7 +8,7 @@ namespace SHARMemory.SHAR.Structs
     [Struct(typeof(LevelRecordStruct))]
     public struct LevelRecord
     {
-        public const int Size = CharCardList.Size + MissionList.Size + StreetRaceList.Size + MissionRecord.Size + MissionRecord.Size + 4 + sizeof(int) + sizeof(int) + sizeof(int) + 16 + sizeof(int) + sizeof(uint) + CharacterSheet.MAX_LEVEL_GAGS + CharacterSheet.MAX_PURCHASED_ITEMS;
+        public const int Size = CharCardList.Size + 1 + MissionList.Size + StreetRaceList.Size + MissionRecord.Size + MissionRecord.Size + 4 + sizeof(int) + sizeof(int) + sizeof(int) + 16 + sizeof(int) + sizeof(uint) + CharacterSheet.MAX_LEVEL_GAGS + CharacterSheet.MAX_PURCHASED_ITEMS;
 
         public CharCardList Cards;
 
@@ -65,6 +64,7 @@ namespace SHARMemory.SHAR.Structs
         {
             CharCardList Cards = Memory.StructFromBytes<CharCardList>(Bytes, Offset);
             Offset += CharCardList.Size;
+            Offset++; // Padding
 
             MissionList Missions = Memory.StructFromBytes<MissionList>(Bytes, Offset);
             Offset += MissionList.Size;
@@ -83,7 +83,7 @@ namespace SHARMemory.SHAR.Structs
             Offset += sizeof(int);
             int WaspsDestroyed = BitConverter.ToInt32(Bytes, Offset);
             Offset += sizeof(int);
-            string CurrentSkin = Encoding.UTF8.GetString(Bytes, Offset, 16);
+            string CurrentSkin = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 16));
             Offset += 16;
 
             int GagsViewed = BitConverter.ToInt32(Bytes, Offset);
@@ -112,10 +112,47 @@ namespace SHARMemory.SHAR.Structs
             if (Value is not LevelRecord Value2)
                 throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelRecord)}'.", nameof(Value));
 
-            throw new NotImplementedException();
-            /*Memory.GetStringBytes(Value2.Name, Encoding.UTF8, 16).CopyTo(Buffer, Offset);
+            Memory.BytesFromStruct(Value2.Cards, Buffer, Offset);
+            Offset += CharCardList.Size;
+            BitConverter.GetBytes((byte)0).CopyTo(Buffer, Offset); // padding
+            Offset += sizeof(byte);
+
+            Memory.BytesFromStruct(Value2.Missions, Buffer, Offset);
+            Offset += MissionList.Size;
+            Memory.BytesFromStruct(Value2.StreetRaces, Buffer, Offset);
+            Offset += StreetRaceList.Size;
+            Memory.BytesFromStruct(Value2.BonusMission, Buffer, Offset);
+            Offset += MissionRecord.Size;
+            Memory.BytesFromStruct(Value2.GambleRace, Buffer, Offset);
+            Offset += MissionRecord.Size;
+
+            BitConverter.GetBytes(Value2.FMVUnlocked).CopyTo(Buffer, Offset);
+            Offset += 4;
+            BitConverter.GetBytes(Value2.NumCarsPurchased).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.NumSkinsPurchased).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.WaspsDestroyed).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            Memory.GetStringBytes(Value2.CurrentSkin, Encoding.UTF8, 16).CopyTo(Buffer, Offset);
             Offset += 16;
-            BitConverter.GetBytes(Value2.Completed).CopyTo(Buffer, Offset);*/
+
+            BitConverter.GetBytes(Value2.GagsViewed).CopyTo(Buffer, Offset);
+            Offset += sizeof(int);
+            BitConverter.GetBytes(Value2.GagMask).CopyTo(Buffer, Offset);
+            Offset += sizeof(uint);
+
+            for (int i = 0; i < CharacterSheet.MAX_LEVEL_GAGS; i++)
+            {
+                BitConverter.GetBytes(Value2.Gags[i]).CopyTo(Buffer, Offset);
+                Offset += 1;
+            }
+
+            for (int i = 0; i < CharacterSheet.MAX_PURCHASED_ITEMS; i++)
+            {
+                BitConverter.GetBytes(Value2.PurchasedRewards[i]).CopyTo(Buffer, Offset);
+                Offset += 1;
+            }
         }
     }
 }

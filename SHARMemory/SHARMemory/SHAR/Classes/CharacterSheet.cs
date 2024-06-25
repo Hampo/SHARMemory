@@ -13,60 +13,60 @@ namespace SHARMemory.SHAR.Classes
         public const int MAX_STREETRACES = 3;
         public const int MAX_PURCHASED_ITEMS = 12;
         public const int MAX_LEVEL_GAGS = 32;
+        public const int MAX_CARS_OWNED = 60;
+        public const int NUM_BYTES_FOR_PERSISTENT_STATES = 1312;
 
-        // TODO: Use Arrays and Structs and shit
         public CharacterSheet(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public string PlayerName => ReadString(0, Encoding.ASCII, 16u);
+        private const uint PlayerNameOffset = 0;
+        public string PlayerName => ReadString(PlayerNameOffset, Encoding.ASCII, 16u);
 
-        public StructArray<LevelRecord> LevelList => new(Memory, Address + 16, LevelRecord.Size, MAX_LEVELS);
+        private const uint LevelListOffset = PlayerNameOffset + 16;
+        public StructArray<LevelRecord> LevelList => new(Memory, Address + LevelListOffset, LevelRecord.Size, MAX_LEVELS);
 
-        public string CardName(uint Level, uint Card) => ReadString(16 + 620 * Level + 17 * Card, Encoding.ASCII, 16u);
+        private const uint CurrentMissionInfoOffset = LevelListOffset + LevelRecord.Size * MAX_LEVELS;
+        public CurrentMission CurrentMissionInfo
+        {
+            get => ReadStruct<CurrentMission>(CurrentMissionInfoOffset);
+            set => WriteStruct(CurrentMissionInfoOffset, value);
+        }
 
-        public bool CardCollected(uint Level, uint Card) => ReadBoolean(16 + 620 * Level + 17 * Card + 16);
+        private const uint HighestMissionPlayedOffset = CurrentMissionInfoOffset + CurrentMission.Size;
+        public CurrentMission HighestMissionPlayed
+        {
+            get => ReadStruct<CurrentMission>(HighestMissionPlayedOffset);
+            set => WriteStruct(HighestMissionPlayedOffset, value);
+        }
 
-        public string MissionName(uint Level, uint Mission) => ReadString(16 + 620 * Level + 120 + 32 * Mission, Encoding.ASCII, 16u);
+        private const uint IsNavSystemEnabledOffset = HighestMissionPlayedOffset + CurrentMission.Size;
+        public bool IsNavSystemEnabled
+        {
+            get => ReadBoolean(IsNavSystemEnabledOffset);
+            set => WriteBoolean(IsNavSystemEnabledOffset, value);
+        }
 
-        public bool MissionCompleted(uint Level, uint Mission) => ReadBoolean(16 + 620 * Level + 120 + 32 * (Level == 0 ? Mission + 1 : Mission) + 16);
-
-        public string StreetRaceName(uint Level, uint StreetRace) => ReadString(16 + 620 * Level + 120 + 256 + 32 * StreetRace, Encoding.ASCII, 16u);
-
-        public bool StreetRaceCompleted(uint Level, uint StreetRace) => ReadBoolean(16 + 620 * Level + 120 + 256 + 32 * StreetRace + 16);
-
-        public string BonusMissionName(uint Level) => ReadString(16 + 620 * Level + 120 + 256 + 96, Encoding.ASCII, 16u);
-
-        public bool BonusMissionCompleted(uint Level) => ReadBoolean(16 + 620 * Level + 120 + 256 + 96 + 16);
-
-        public string GambleRaceName(uint Level) => ReadString(16 + 620 * Level + 120 + 256 + 96 + 32, Encoding.ASCII, 16u);
-
-        public bool GambleRaceCompleted(uint Level) => ReadBoolean(16 + 620 * Level + 120 + 256 + 96 + 32 + 16);
-
-        public bool FMVUnlocked(uint Level) => ReadBoolean(16 + 620 * Level + 120 + 256 + 96 + 32 + 32);
-
-        public uint VehiclesCount(uint Level) => ReadUInt32(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4);
-
-        public uint CharacterClothingCount(uint Level) => ReadUInt32(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4 + 4);
-
-        public uint WaspCamerasCount(uint Level) => ReadUInt32(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4 + 4 + 4);
-
-        public string CurrentSkinName(uint Level) => ReadString(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4 + 4 + 4 + 4, Encoding.ASCII, 16u);
-
-        public uint GagsCount(uint Level) => ReadUInt32(16 + 620 * Level + 120 + 256 + 96 + 32 + 32 + 4 + 4 + 4 + 4 + 16);
-
-        public Globals.RenderEnums.LevelEnum CurrentLevel => (Globals.RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount));
-
-        public int CurrentMission => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 4));
-
-        public Globals.RenderEnums.LevelEnum HighestLevel => (Globals.RenderEnums.LevelEnum)ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 8));
-
-        public int HighestMission => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 12));
-
-        public bool IsNavSystemEnabled => ReadBoolean((uint)(16 + 620 * Memory.Globals.LevelCount + 16));
-
+        public const uint CoinsOffset = IsNavSystemEnabledOffset + 4;
         public int Coins
         {
-            get => ReadInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 20));
-            set => WriteInt32((uint)(16 + 620 * Memory.Globals.LevelCount + 20), value);
+            get => ReadInt32(CoinsOffset);
+            set => WriteInt32(CoinsOffset, value);
+        }
+
+        private const uint CarInventoryOffset = CoinsOffset + sizeof(int);
+        public CarInventory CarInventory
+        {
+            get => ReadStruct<CarInventory>(CarInventoryOffset);
+            set => WriteStruct(CarInventoryOffset, value);
+        }
+
+        private const uint PersistentObjectStatesOffset = CarInventoryOffset + CarInventory.Size;
+        public StructArray<byte> PersistentObjectStates => new(Memory, Address + PersistentObjectStatesOffset, sizeof(byte), NUM_BYTES_FOR_PERSISTENT_STATES);
+
+        private const uint StateOffset = PersistentObjectStatesOffset + NUM_BYTES_FOR_PERSISTENT_STATES;
+        public byte State
+        {
+            get => ReadByte(StateOffset);
+            set => WriteByte(StateOffset, value);
         }
     }
 }
