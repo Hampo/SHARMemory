@@ -1,77 +1,76 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
 
-namespace SHARMemory.SHAR.Classes
+namespace SHARMemory.SHAR.Classes;
+
+[ClassFactory.TypeInfoName(".?AVPresentationEvent@@")]
+public class PresentationEvent : Class
 {
-    [ClassFactory.TypeInfoName(".?AVPresentationEvent@@")]
-    public class PresentationEvent : Class
+    public PresentationEvent(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+
+    private byte Bitfield_0x4
     {
-        public PresentationEvent(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+        get => ReadByte(4);
+        set => WriteByte(4, value);
+    }
 
-        private byte Bitfield_0x4
+    public bool AutoPlay
+    {
+        get => (Bitfield_0x4 & 0b00000001) != 0;
+        set
         {
-            get => ReadByte(4);
-            set => WriteByte(4, value);
+            if (value)
+                Bitfield_0x4 |= 0b00000001;
+            else
+                Bitfield_0x4 &= 0b11111110;
         }
+    }
 
-        public bool AutoPlay
+    public bool ClearWhenDone
+    {
+        get => (Bitfield_0x4 & 0b00000010) != 0;
+        set
         {
-            get => (Bitfield_0x4 & 0b00000001) != 0;
-            set
-            {
-                if (value)
-                    Bitfield_0x4 |= 0b00000001;
-                else
-                    Bitfield_0x4 &= 0b11111110;
-            }
+            if (value)
+                Bitfield_0x4 |= 0b00000010;
+            else
+                Bitfield_0x4 &= 0b11111101;
         }
+    }
 
-        public bool ClearWhenDone
+    public bool Loaded
+    {
+        get => (Bitfield_0x4 & 0b00000100) != 0;
+        set
         {
-            get => (Bitfield_0x4 & 0b00000010) != 0;
-            set
-            {
-                if (value)
-                    Bitfield_0x4 |= 0b00000010;
-                else
-                    Bitfield_0x4 &= 0b11111101;
-            }
+            if (value)
+                Bitfield_0x4 |= 0b00000100;
+            else
+                Bitfield_0x4 &= 0b11111011;
         }
+    }
 
-        public bool Loaded
+    public bool KeepLayersFrozen
+    {
+        get => (Bitfield_0x4 & 0b00001000) != 0;
+        set
         {
-            get => (Bitfield_0x4 & 0b00000100) != 0;
-            set
-            {
-                if (value)
-                    Bitfield_0x4 |= 0b00000100;
-                else
-                    Bitfield_0x4 &= 0b11111011;
-            }
+            if (value)
+                Bitfield_0x4 |= 0b00001000;
+            else
+                Bitfield_0x4 &= 0b11110111;
         }
+    }
 
-        public bool KeepLayersFrozen
+    public bool IsSkippable
+    {
+        get => (Bitfield_0x4 & 0b00010000) != 0;
+        set
         {
-            get => (Bitfield_0x4 & 0b00001000) != 0;
-            set
-            {
-                if (value)
-                    Bitfield_0x4 |= 0b00001000;
-                else
-                    Bitfield_0x4 &= 0b11110111;
-            }
-        }
-
-        public bool IsSkippable
-        {
-            get => (Bitfield_0x4 & 0b00010000) != 0;
-            set
-            {
-                if (value)
-                    Bitfield_0x4 |= 0b00010000;
-                else
-                    Bitfield_0x4 &= 0b11101111;
-            }
+            if (value)
+                Bitfield_0x4 |= 0b00010000;
+            else
+                Bitfield_0x4 &= 0b11101111;
         }
     }
 }

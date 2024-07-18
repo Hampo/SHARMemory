@@ -1,13 +1,12 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
 
-namespace SHARMemory.SHAR.Classes
-{
-    [ClassFactory.TypeInfoName(".?AVCarStartLocator@@")]
-    public class CarStartLocator : Locator
-    {
-        public CarStartLocator(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+namespace SHARMemory.SHAR.Classes;
 
-        // TODO
-    }
+[ClassFactory.TypeInfoName(".?AVCarStartLocator@@")]
+public class CarStartLocator : Locator
+{
+    public CarStartLocator(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+
+    // TODO
 }

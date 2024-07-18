@@ -1,46 +1,45 @@
 ﻿using SHARMemory.Memory;
 using System;
 
-namespace SHARMemory.SHAR.Structs
+namespace SHARMemory.SHAR.Structs;
+
+[Struct(typeof(SmootherStruct))]
+public struct Smoother
 {
-    [Struct(typeof(SmootherStruct))]
-    public struct Smoother
+    public const int Size = sizeof(float) + sizeof(float);
+
+    public float RollingAverage;
+
+    public float Factor;
+
+    public Smoother(float rollingAverage, float factor)
     {
-        public const int Size = sizeof(float) + sizeof(float);
-
-        public float RollingAverage;
-
-        public float Factor;
-
-        public Smoother(float rollingAverage, float factor)
-        {
-            RollingAverage = rollingAverage;
-            Factor = factor;
-        }
-
-        public override string ToString() => $"{RollingAverage} | {Factor}";
+        RollingAverage = rollingAverage;
+        Factor = factor;
     }
 
-    internal class SmootherStruct : Struct
+    public override readonly string ToString() => $"{RollingAverage} | {Factor}";
+}
+
+internal class SmootherStruct : Struct
+{
+    public override int Size => Smoother.Size;
+
+    public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
     {
-        public override int Size => Smoother.Size;
+        float RollingAverage = BitConverter.ToSingle(Bytes, Offset);
+        Offset += sizeof(float);
+        float Factor = BitConverter.ToSingle(Bytes, Offset);
+        return new Smoother(RollingAverage, Factor);
+    }
 
-        public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
-        {
-            float RollingAverage = BitConverter.ToSingle(Bytes, Offset);
-            Offset += sizeof(float);
-            float Factor = BitConverter.ToSingle(Bytes, Offset);
-            return new Smoother(RollingAverage, Factor);
-        }
+    public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
+    {
+        if (Value is not Smoother Value2)
+            throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Smoother)}'.", nameof(Value));
 
-        public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
-        {
-            if (Value is not Smoother Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Smoother)}'.", nameof(Value));
-
-            BitConverter.GetBytes(Value2.RollingAverage).CopyTo(Buffer, Offset);
-            Offset += sizeof(float);
-            BitConverter.GetBytes(Value2.Factor).CopyTo(Buffer, Offset);
-        }
+        BitConverter.GetBytes(Value2.RollingAverage).CopyTo(Buffer, Offset);
+        Offset += sizeof(float);
+        BitConverter.GetBytes(Value2.Factor).CopyTo(Buffer, Offset);
     }
 }

@@ -2,43 +2,42 @@
 using SHARMemory.Memory.RTTI;
 using System.Drawing;
 
-namespace SHARMemory.SHAR.Classes
-{
-    [ClassFactory.TypeInfoName(".?AVd3dReflShader@@")]
+namespace SHARMemory.SHAR.Classes;
+
+[ClassFactory.TypeInfoName(".?AVd3dReflShader@@")]
 #pragma warning disable IDE1006 // Naming Styles
-    public class d3dReflShader : d3dShader
+public class d3dReflShader : d3dShader
 #pragma warning restore IDE1006 // Naming Styles
+{
+    public d3dReflShader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+
+    public d3dTexture Texture
     {
-        public d3dReflShader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+        get => Memory.ClassFactory.Create<d3dTexture>(ReadUInt32(92));
+        set => WriteUInt32(92, value?.Address ?? 0);
+    }
 
-        public d3dTexture Texture
-        {
-            get => Memory.ClassFactory.Create<d3dTexture>(ReadUInt32(92));
-            set => WriteUInt32(92, value?.Address ?? 0);
-        }
+    public d3dTexture ReflectionMap
+    {
+        get => Memory.ClassFactory.Create<d3dTexture>(ReadUInt32(96));
+        set => WriteUInt32(96, value?.Address ?? 0);
+    }
 
-        public d3dTexture ReflectionMap
-        {
-            get => Memory.ClassFactory.Create<d3dTexture>(ReadUInt32(96));
-            set => WriteUInt32(96, value?.Address ?? 0);
-        }
+    public Color EnvironmentBlend
+    {
+        get => ReadStruct<Color>(100);
+        set => WriteStruct(100, value);
+    }
 
-        public Color EnvironmentBlend
-        {
-            get => ReadStruct<Color>(100);
-            set => WriteStruct(100, value);
-        }
+    public override void SetTexture(d3dTexture newTexture)
+    {
+        if (newTexture == null)
+            return;
 
-        public override void SetTexture(d3dTexture newTexture)
-        {
-            if (newTexture == null)
-                return;
+        d3dTexture oldTexture = Texture;
+        oldTexture.RefCount--;
 
-            d3dTexture oldTexture = Texture;
-            oldTexture.RefCount--;
-
-            newTexture.RefCount++;
-            Texture = newTexture;
-        }
+        newTexture.RefCount++;
+        Texture = newTexture;
     }
 }
