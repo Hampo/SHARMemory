@@ -289,6 +289,9 @@ namespace SHARMemory.Memory
             if (Address == 0)
                 return null;
 
+            if (Type == typeof(Class))
+                return CreatePolymorphicInternal(Address);
+
             var TypeInfoName = ClassFactory.TypeInfoName.Get(Type);
             if (TypeInfoName != null)
                 return CreatePolymorphicInternal(Address, TypeInfoName);
