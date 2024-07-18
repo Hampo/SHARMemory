@@ -45,7 +45,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(IsNavSystemEnabledOffset, value);
         }
 
-        public const uint CoinsOffset = IsNavSystemEnabledOffset + 4;
+        private const uint CoinsOffset = IsNavSystemEnabledOffset + 4;
         public int Coins
         {
             get => ReadInt32(CoinsOffset);
