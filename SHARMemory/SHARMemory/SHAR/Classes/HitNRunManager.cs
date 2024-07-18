@@ -146,7 +146,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(92, value);
         }
 
-        public PointerArray<SHARMemory.Memory.Class> PrevHits => new(Memory, Address + 96, 16);
+        public PointerArray<Class> PrevHits => new(Memory, Address + 96, 16);
 
         public int LeastRecentlyHit
         {
