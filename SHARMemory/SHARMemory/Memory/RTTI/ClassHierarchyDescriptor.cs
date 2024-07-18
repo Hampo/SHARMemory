@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace SHARMemory.Memory.RTTI;
+﻿namespace SHARMemory.Memory.RTTI;
 
 public class ClassHierarchyDescriptor : Class
 {

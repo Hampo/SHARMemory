@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Net;
 using System.Text;
 
 namespace SHARMemory.Memory;
@@ -79,7 +78,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not bool Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Boolean)}'.", nameof(Value));
 
             Memory.WriteBoolean(Address, Value2);
         }
@@ -104,7 +103,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not double Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Double)}'.", nameof(Value));
 
             Memory.WriteDouble(Address, Value2);
         }
@@ -129,7 +128,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not float Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Single)}'.", nameof(Value));
 
             Memory.WriteSingle(Address, Value2);
         }
@@ -154,7 +153,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not short Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Int16)}'.", nameof(Value));
 
             Memory.WriteInt16(Address, Value2);
         }
@@ -179,7 +178,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not int Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Int32)}'.", nameof(Value));
 
             Memory.WriteInt32(Address, Value2);
         }
@@ -204,7 +203,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not long Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Int64)}'.", nameof(Value));
 
             Memory.WriteInt64(Address, Value2);
         }
@@ -229,7 +228,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not ushort Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(UInt16)}'.", nameof(Value));
 
             Memory.WriteUInt16(Address, Value2);
         }
@@ -254,7 +253,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not uint Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(UInt32)}'.", nameof(Value));
 
             Memory.WriteUInt32(Address, Value2);
         }
@@ -279,7 +278,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not ulong Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(UInt64)}'.", nameof(Value));
 
             Memory.WriteUInt64(Address, Value2);
         }
@@ -317,7 +316,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value)
         {
             if (Value is not Color Value2)
-                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Byte)}'.", nameof(Value));
+                throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(Color)}'.", nameof(Value));
 
             Memory.WriteInt32(Address, Value2.ToArgb());
         }

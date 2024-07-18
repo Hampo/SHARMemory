@@ -1,5 +1,4 @@
 ﻿using SHARMemory.Memory;
-using System.Runtime.InteropServices;
 
 namespace SHARMemory.SHAR;
 

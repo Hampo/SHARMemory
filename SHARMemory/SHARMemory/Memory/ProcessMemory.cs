@@ -137,8 +137,6 @@ public class ProcessMemory
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern bool CloseHandle(IntPtr handle);
 
-    //internal readonly List<IntPtr> ASMFunctions = new();
-
     /// <summary>
     /// The <c>ProcessMemory</c> constructor.
     /// </summary>
