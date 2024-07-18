@@ -15,9 +15,12 @@ namespace SHARMemory.Memory
     public class PointerArray<T> : IEnumerable<T> where T : Class
     {
         private readonly ProcessMemory Memory;
-        private readonly uint Address;
         /// <summary>
-        /// How many elements are in this array
+        /// The base address of the array.
+        /// </summary>
+        public readonly uint Address;
+        /// <summary>
+        /// How many elements are in this array.
         /// </summary>
         public readonly int Count;
 
