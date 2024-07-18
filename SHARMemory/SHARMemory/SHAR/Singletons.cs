@@ -20,6 +20,12 @@ namespace SHARMemory.SHAR
         /// </summary>
         public CharacterSheetManager CharacterSheetManager => CharacterSheetManagerSingleton.Get();
 
+        private readonly Singleton<CoinManager> CoinManagerSingleton;
+        /// <summary>
+        /// A reference to SHAR's <see cref="Classes.CoinManager"/> singleton.
+        /// </summary>
+        public CoinManager CoinManager => CoinManagerSingleton.Get();
+
         private readonly Singleton<GameFlow> GameFlowSingleton;
         /// <summary>
         /// A reference to SHAR's <see cref="Classes.GameFlow"/> singleton.
@@ -90,6 +96,7 @@ namespace SHARMemory.SHAR
         {
             CharacterManagerSingleton = new(memory, memory.SelectAddress(0x6C8470, 0x6C8430, 0x6C8430, 0x6C8468));
             CharacterSheetManagerSingleton = new(memory, memory.SelectAddress(0x6C8984, 0x6C8944, 0x6C8944, 0x6C897C));
+            CoinManagerSingleton = new(memory, memory.SelectAddress(0x6C8450, 0x6C8410, 0x6C8410, 0x6C8448));
             GameFlowSingleton = new(memory, memory.SelectAddress(0x6C9014, 0x6C8FD4, 0x6C8FD4, 0x6C900C));
             HitNRunManagerSingleton = new(memory, memory.SelectAddress(0x6C84E0, 0x6C84A0, 0x6C84A0, 0x6C84D8));
             InteriorManagerSingleton = new(memory, memory.SelectAddress(0x6C8FF8, 0x6C8FB8, 0x6C8FB8, 0x6C8FF0));
