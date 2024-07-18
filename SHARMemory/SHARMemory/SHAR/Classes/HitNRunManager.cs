@@ -8,25 +8,25 @@ namespace SHARMemory.SHAR.Classes
     {
         public HitNRunManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public float HitAndRun
+        public float CurrHitAndRun
         {
             get => ReadSingle(4);
             set => WriteSingle(4, value);
         }
 
-        public float DecayPerSecond
+        public float DecayRatePerSecond
         {
             get => ReadSingle(8);
             set => WriteSingle(8, value);
         }
 
-        public float DecayWhileSpawning
+        public float DecayRateWhileSpawning
         {
             get => ReadSingle(12);
             set => WriteSingle(12, value);
         }
 
-        public float DecayInsidePerSecond
+        public float DecayRateInsidePerSecond
         {
             get => ReadSingle(16);
             set => WriteSingle(16, value);
@@ -50,49 +50,49 @@ namespace SHARMemory.SHAR.Classes
             set => WriteSingle(28, value);
         }
 
-        public float BreakableDelta
+        public float HitBreakableDelta
         {
             get => ReadSingle(32);
             set => WriteSingle(32, value);
         }
 
-        public int BreakableCoins
+        public int HitBreakableCoins
         {
             get => ReadInt32(36);
             set => WriteInt32(36, value);
         }
 
-        public float MoveableDelta
+        public float HitMoveableDelta
         {
             get => ReadSingle(40);
             set => WriteSingle(40, value);
         }
 
-        public int MoveableCoins
+        public int HitMoveableCoins
         {
             get => ReadInt32(44);
             set => WriteInt32(44, value);
         }
 
-        public float KrustyGlassDelta
+        public float HitKrustyGlassDelta
         {
             get => ReadSingle(48);
             set => WriteSingle(48, value);
         }
 
-        public int KrustyGlassCoins
+        public int HitKrustyGlassCoins
         {
             get => ReadInt32(52);
             set => WriteInt32(52, value);
         }
 
-        public float ColaPropDelta
+        public float ColaPropDestroyedDelta
         {
             get => ReadSingle(56);
             set => WriteSingle(56, value);
         }
 
-        public int ColaPropCoins
+        public int ColaPropDestroyedCoins
         {
             get => ReadInt32(60);
             set => WriteInt32(60, value);
@@ -110,13 +110,13 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(68, value);
         }
 
-        public float HitNPCDelta
+        public float PlayerCarHitNPCDelta
         {
             get => ReadSingle(72);
             set => WriteSingle(72, value);
         }
 
-        public int HitNPCCoins
+        public int PlayerCarHitNPCCoins
         {
             get => ReadInt32(76);
             set => WriteInt32(76, value);
@@ -128,13 +128,13 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(80, value);
         }
 
-        public float HitSwitchSkinDelta
+        public float SwitchSkinDelta
         {
             get => ReadSingle(84);
             set => WriteSingle(84, value);
         }
 
-        public float HitChangeVehicleDelta
+        public float ChangeVehicleDelta
         {
             get => ReadSingle(88);
             set => WriteSingle(88, value);
@@ -146,7 +146,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteUInt32(92, value);
         }
 
-        // TODO: 96 = PrevHits[16]
+        public PointerArray<SHARMemory.Memory.Class> PrevHits => new(Memory, Address + 96, 16);
 
         public int LeastRecentlyHit
         {
@@ -190,7 +190,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteInt32(180, value);
         }
 
-        public bool Disabled
+        public bool HitnRunDisabled
         {
             get => ReadBoolean(184);
             set => WriteBoolean(184, value);
@@ -202,25 +202,25 @@ namespace SHARMemory.SHAR.Classes
             set => WriteBoolean(185, value);
         }
 
-        public float TicketDistance
+        public float CopTicketDistance
         {
             get => ReadSingle(188);
             set => WriteSingle(188, value);
         }
 
-        public float TicketDistanceOnFoot
+        public float CopTicketDistanceOnFoot
         {
             get => ReadSingle(192);
             set => WriteSingle(192, value);
         }
 
-        public float TicketSpeedThreshold
+        public float CopTicketSpeedThreshold
         {
             get => ReadSingle(196);
             set => WriteSingle(196, value);
         }
 
-        public float TicketTimeThreshold
+        public float CopTicketTimeThreshold
         {
             get => ReadSingle(200);
             set => WriteSingle(200, value);
@@ -256,7 +256,7 @@ namespace SHARMemory.SHAR.Classes
             set => WriteSingle(220, value);
         }
 
-        public float UnresponsiveTimer
+        public float UnresponsiveTime
         {
             get => ReadSingle(224);
             set => WriteSingle(224, value);
