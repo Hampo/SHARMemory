@@ -393,6 +393,8 @@ namespace SHARMemory.SHAR.Structs
             return true;
         }
 
+        public Vector3 GetPosition() => new(M41, M42, M43);
+
         public override string ToString() => $"{{ {{M11:{M11} M12:{M12} M13:{M13} M14:{M14}}} {{M21:{M21} M22:{M22} M23:{M23} M24:{M24}}} {{M31:{M31} M32:{M32} M33:{M33} M34:{M34}}} {{M41:{M41} M42:{M42} M43:{M43} M44:{M44}}} }}";
 
         public override bool Equals(object obj) => obj is Matrix4x4 x && Equals(x);
