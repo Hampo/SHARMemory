@@ -8,8 +8,12 @@ namespace SHARMemory.SHAR.Classes
     {
         public DrawablePose(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-        public Skeleton Skeleton => Memory.ClassFactory.Create<Skeleton>(ReadUInt32(20));
+        internal const uint tPosableVFTableOffset = NameOffset + sizeof(long);
 
-        public Pose Pose => Memory.ClassFactory.Create<Pose>(ReadUInt32(24));
+        internal const uint SkeletonOffset = tPosableVFTableOffset + sizeof(uint);
+        public Skeleton Skeleton => Memory.ClassFactory.Create<Skeleton>(ReadUInt32(SkeletonOffset));
+
+        internal const uint PoseOffset = SkeletonOffset + sizeof(uint);
+        public Pose Pose => Memory.ClassFactory.Create<Pose>(ReadUInt32(PoseOffset));
     }
 }

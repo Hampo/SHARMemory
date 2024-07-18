@@ -9,24 +9,28 @@ namespace SHARMemory.SHAR.Classes
     {
         public Mesh(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
+        internal const uint BoxOffset = NameOffset + sizeof(long);
         public Box3D Box
         {
-            get => ReadStruct<Box3D>(16);
-            set => WriteStruct(16, value);
+            get => ReadStruct<Box3D>(BoxOffset);
+            set => WriteStruct(BoxOffset, value);
         }
 
+        internal const uint SphereOffset = BoxOffset + Box3D.Size;
         public Sphere Sphere
         {
-            get => ReadStruct<Sphere>(40);
-            set => WriteStruct(40, value);
+            get => ReadStruct<Sphere>(SphereOffset);
+            set => WriteStruct(SphereOffset, value);
         }
 
+        internal const uint CastsShadowOffset = SphereOffset + Sphere.Size;
         public int CastsShadow
         {
-            get => ReadInt32(56);
-            set => WriteInt32(56, value);
+            get => ReadInt32(CastsShadowOffset);
+            set => WriteInt32(CastsShadowOffset, value);
         }
 
-        public PointerArray<PrimGroup> PrimGroups => PointerArrayExtensions.FromPtrArray<PrimGroup>(Memory, this, 60);
+        internal const uint PrimGroupsOffset = CastsShadowOffset + sizeof(int);
+        public PointerArray<PrimGroup> PrimGroups => PointerArrayExtensions.FromPtrArray<PrimGroup>(Memory, this, PrimGroupsOffset);
     }
 }

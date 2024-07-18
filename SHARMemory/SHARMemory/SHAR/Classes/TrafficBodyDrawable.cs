@@ -9,26 +9,31 @@ namespace SHARMemory.SHAR.Classes
     {
         public TrafficBodyDrawable(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
+        internal const uint FadeAlphaOffset = NameOffset + sizeof(long);
         public int FadeAlpha
         {
-            get => ReadInt32(16);
-            set => WriteInt32(16, value);
+            get => ReadInt32(FadeAlphaOffset);
+            set => WriteInt32(FadeAlphaOffset, value);
         }
 
+        internal const uint FadingOffset = FadeAlphaOffset + sizeof(int);
         public bool Fading
         {
-            get => ReadBoolean(20);
-            set => WriteBoolean(20, value);
+            get => ReadBoolean(FadingOffset);
+            set => WriteBoolean(FadingOffset, value);
         }
 
-        public Drawable BodyPropDrawable => Memory.ClassFactory.Create<Drawable>(ReadUInt32(24));
+        internal const uint BodyPropDrawableOffset = FadingOffset + 4; // Padding
+        public Drawable BodyPropDrawable => Memory.ClassFactory.Create<Drawable>(ReadUInt32(BodyPropDrawableOffset));
 
-        public Shader BodyShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(28));
+        internal const uint BodyShaderOffset = BodyPropDrawableOffset + sizeof(uint);
+        public Shader BodyShader => Memory.ClassFactory.Create<Shader>(ReadUInt32(BodyShaderOffset));
 
+        internal const uint DesiredColourOffset = BodyShaderOffset + sizeof(uint);
         public Color DesiredColour
         {
-            get => ReadStruct<Color>(32);
-            set => WriteStruct(32, value);
+            get => ReadStruct<Color>(DesiredColourOffset);
+            set => WriteStruct(DesiredColourOffset, value);
         }
     }
 }

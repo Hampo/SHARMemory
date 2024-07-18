@@ -8,20 +8,30 @@ namespace SHARMemory.SHAR.Classes
     {
         public IEntityDSG(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
+        internal const uint DrawableShaderCallbackVFTableOffset = NameOffset + sizeof(long);
+
+        internal const uint RankOffset = DrawableShaderCallbackVFTableOffset + sizeof(uint);
         public float Rank
         {
-            get => ReadSingle(0);
-            set => WriteSingle(0, value);
+            get => ReadSingle(RankOffset);
+            set => WriteSingle(RankOffset, value);
         }
 
+        internal const uint TranslucentOffset = RankOffset + sizeof(float);
         public bool Translucent
         {
             get => ReadBoolean(4);
             set => WriteBoolean(4, value);
         }
 
-        // TODO: Implement the name bullshit for shader name (8)
+        internal const uint ShaderNameOffset = TranslucentOffset + 4; // Padding
+        public long ShaderName
+        {
+            get => ReadInt64(ShaderNameOffset);
+            set => WriteInt64(ShaderNameOffset, value);
+        }
 
-        // TODO: SpatialNode? (12)
+        internal const uint SpatialNodeOffset = ShaderNameOffset + sizeof(long);
+        public Class SpatialNode => Memory.ClassFactory.Create<Class>(ReadUInt32(SpatialNodeOffset));
     }
 }
