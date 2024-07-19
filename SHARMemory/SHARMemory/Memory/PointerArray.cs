@@ -121,9 +121,10 @@ public class PointerArray<T> : IEnumerable<T> where T : Class
         public T Current => array[position];
         object IEnumerator.Current => Current;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization", Justification = "Causes infinite loop")]
         public PointerEnumerator(PointerArray<T> array)
         {
-            this.array = [.. array];
+            this.array = array.ToArray();
         }
 
         public bool MoveNext()
