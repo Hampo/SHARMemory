@@ -616,9 +616,9 @@ public class Vehicle : DynaPhysDSG
 
     public PointerArray<SuspensionJointDriver> SuspensionJointDrivers => new(Memory, Address + 804, 4);
 
-    public StructArray<int> WheelToJointIndexMapping => new(Memory, Address + 808, sizeof(int), 4);
+    public StructArray<int> WheelToJointIndexMapping => new(Memory, Address + 820, sizeof(int), 4);
 
-    public StructArray<int> JointIndexToWheelMapping => new(Memory, ReadUInt32(824), sizeof(int), GeometryVehicle.CompositeDrawable?.Pose?.NumJoints ?? 0);
+    public StructArray<int> JointIndexToWheelMapping => new(Memory, ReadUInt32(836), sizeof(int), GeometryVehicle.CompositeDrawable?.Pose?.NumJoints ?? 0);
 
     public StructArray<Vector3> SuspensionRestPointsFromFile => new(Memory, Address + 840, Vector3.Size, 4);
 
