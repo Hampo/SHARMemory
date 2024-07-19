@@ -4,9 +4,8 @@ using SHARMemory.Memory.RTTI;
 namespace SHARMemory.SHAR.Classes;
 
 [ClassFactory.TypeInfoName(".?AVpddiBaseShader@@")]
-#pragma warning disable IDE1006 // Naming Styles
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Radical naming")]
 public class pddiBaseShader : pddiShader
-#pragma warning restore IDE1006 // Naming Styles
 {
     public pddiBaseShader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 

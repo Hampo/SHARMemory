@@ -78,7 +78,7 @@ public class GeometryVehicle : Class
 
     public SkidMarkGenerator SkidMarkGenerator => Memory.ClassFactory.Create<SkidMarkGenerator>(ReadUInt32(224));
 
-    public Animation Anim => Memory.ClassFactory.Create<Animation>(ReadUInt32(220));
+    public tAnimation Anim => Memory.ClassFactory.Create<tAnimation>(ReadUInt32(220));
 
     public float AnimRevPerSecondBase
     {

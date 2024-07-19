@@ -5,9 +5,8 @@ using System.Drawing;
 namespace SHARMemory.SHAR.Classes;
 
 [ClassFactory.TypeInfoName(".?AVd3dReflShader@@")]
-#pragma warning disable IDE1006 // Naming Styles
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Radical naming")]
 public class d3dReflShader : d3dShader
-#pragma warning restore IDE1006 // Naming Styles
 {
     public d3dReflShader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 

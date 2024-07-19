@@ -4,7 +4,7 @@ using SHARMemory.Memory.RTTI;
 namespace SHARMemory.SHAR.Classes;
 
 [ClassFactory.TypeInfoName(".?AVCStateProp@@")]
-public class CStateProp : Entity
+public class CStateProp : tEntity
 {
     public const int MaxListeners = 10;
 

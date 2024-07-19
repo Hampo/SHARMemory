@@ -6,9 +6,8 @@ using static SHARMemory.SHAR.Globals;
 namespace SHARMemory.SHAR.Classes;
 
 [ClassFactory.TypeInfoName(".?AVd3dSimpleShader@@")]
-#pragma warning disable IDE1006 // Naming Styles
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Radical naming")]
 public class d3dSimpleShader : d3dShader
-#pragma warning restore IDE1006 // Naming Styles
 {
     public d3dSimpleShader(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
