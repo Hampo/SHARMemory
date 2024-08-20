@@ -10,7 +10,7 @@ public class VehicleCentral : Class
     {
         if (memory.ModLauncherOrdinals.TryGetValue(3360, out uint MaxVehiclesAddress) && memory.ModLauncherOrdinals.TryGetValue(3364, out uint ActiveVehiclesOffsetAddress))
         {
-            MaxVehicles = memory.ReadUInt32(MaxVehiclesAddress);
+            MaxVehicles = memory.ReadInt32(MaxVehiclesAddress);
             ActiveVehiclesOffset = memory.ReadUInt32(ActiveVehiclesOffsetAddress);
         }
         else
@@ -20,7 +20,7 @@ public class VehicleCentral : Class
         }
     }
 
-    private readonly uint MaxVehicles;
+    private readonly int MaxVehicles;
     private readonly uint ActiveVehiclesOffset;
-    public PointerArray<Vehicle> ActiveVehicles => new(Memory, Address + ActiveVehiclesOffset, (int)MaxVehicles);
+    public PointerArray<Vehicle> ActiveVehicles => new(Memory, Address + ActiveVehiclesOffset, MaxVehicles);
 }

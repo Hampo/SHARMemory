@@ -239,7 +239,7 @@ public class GameplayManager : Class
     public VDU VDU
     {
         get => ReadStruct<VDU>(1192);
-        set => WriteStruct(119, value);
+        set => WriteStruct(1192, value);
     }
 
     public int NumBonusMissions
@@ -288,58 +288,64 @@ public class GameplayManager : Class
 
     public Messages CurrentMessage
     {
-        get => (Messages)ReadInt32(6052);
-        set => WriteInt32(6052, (int)value);
+        get => (Messages)ReadInt32(5812);
+        set => WriteInt32(5812, (int)value);
     }
 
-    public RespawnManager RespawnManager => Memory.ClassFactory.Create<RespawnManager>(ReadUInt32(6056));
+    public RespawnManager RespawnManager => Memory.ClassFactory.Create<RespawnManager>(ReadUInt32(5816));
 
     public float IrisSpeed
     {
-        get => ReadSingle(6060);
-        set => WriteSingle(6060, value);
+        get => ReadSingle(5820);
+        set => WriteSingle(5820, value);
     }
 
-    public bool PutPlayerInCae
+    public bool PutPlayerInCar
     {
-        get => ReadBoolean(6064);
+        get => ReadBoolean(5824);
         set => WriteBoolean(6064, value);
     }
 
     public bool ManualControlFade
     {
-        get => ReadBoolean(6065);
+        get => ReadBoolean(5825);
         set => WriteBoolean(6065, value);
     }
 
     public int CurrentVehicleIconID
     {
-        get => ReadInt32(6068);
-        set => WriteInt32(6068, value);
+        get => ReadInt32(5828);
+        set => WriteInt32(5828, value);
     }
 
     public uint ElapsedIdleTime
     {
-        get => ReadUInt32(6072);
-        set => WriteUInt32(6072, value);
+        get => ReadUInt32(5832);
+        set => WriteUInt32(5832, value);
     }
 
-    public Mission GetCurrentMission()
+    public int GetCurrentMissionIndex()
     {
         if (IsInBonusMission)
         {
             int currBonusMission = CurrentBonusMission;
             if (currBonusMission >= MAX_MISSIONS && currBonusMission < MAX_MISSIONS + MAX_BONUS_MISSIONS)
-                return Missions[currBonusMission];
+                return currBonusMission;
         }
         else
         {
             int currMission = CurrentMission;
             if (currMission >= 0 && currMission < NumMissions)
-                return Missions[currMission];
+                return currMission;
         }
 
-        return null;
+        return -1;
+    }
+
+    public Mission GetCurrentMission()
+    {
+        int index = GetCurrentMissionIndex();
+        return index >= 0 ? Missions[index] : null;
     }
 
     public void RepairCurrentVehicle()

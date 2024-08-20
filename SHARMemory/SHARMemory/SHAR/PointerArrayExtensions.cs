@@ -39,7 +39,24 @@ public static class PointerArrayExtensions
     /// <returns>
     /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
     /// </returns>
-    public static PointerArray<T> FromVector<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 4), (int)@class.ReadUInt32(offset + 8));
+    public static PointerArray<T> FromRVector<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 4), (int)@class.ReadUInt32(offset + 8));
+
+    /// <summary>
+    /// Creates a <see cref="PointerArray{T}"/> from a <c>std::vector</c>.
+    /// </summary>
+    /// <param name="memory">
+    /// The <see cref="SHAR.Memory"/> to use.
+    /// </param>
+    /// <param name="class">
+    /// The <see cref="Class"/> the array is in.
+    /// </param>
+    /// <param name="offset">
+    /// The address offset in the class.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
+    /// </returns>
+    public static PointerArray<T> FromVector<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset), (int)(@class.ReadUInt32(offset + 8) - @class.ReadUInt32(offset)) / 4);
 
     /// <summary>
     /// Creates a <see cref="PointerArray{T}"/> from a <c>TList</c> in SHAR.

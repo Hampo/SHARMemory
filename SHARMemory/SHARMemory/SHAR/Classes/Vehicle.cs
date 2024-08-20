@@ -1044,20 +1044,20 @@ public class Vehicle : DynaPhysDSG
 
     public void EnableWonkyDriving()
     {
-        ArticulatedPhysicsObject articulatedPhyicsObject = ArticulatedPhysicsObject;
+        var articulatedPhyicsObject = ArticulatedPhysicsObject;
         if (articulatedPhyicsObject == null)
             return;
 
         articulatedPhyicsObject.TimeComputeInertiaMatrix = float.NaN;
 
-        SymMatrix initialInertiaMatrix = articulatedPhyicsObject.InitialInertiaMatrix;
+        var initialInertiaMatrix = articulatedPhyicsObject.InitialInertiaMatrix;
         if (initialInertiaMatrix != null)
         {
             initialInertiaMatrix.Identity();
             initialInertiaMatrix.Scale(articulatedPhyicsObject.Mass);
         }
 
-        SymMatrix inertiaMatrix = articulatedPhyicsObject.InertiaMatrix;
+        var inertiaMatrix = articulatedPhyicsObject.InertiaMatrix;
         if (inertiaMatrix != null)
         {
             inertiaMatrix.Identity();

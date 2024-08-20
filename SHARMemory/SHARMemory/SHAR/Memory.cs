@@ -99,6 +99,10 @@ public class Memory : ProcessMemory
     /// References to SHAR's singletons.
     /// </summary>
     public readonly Singletons Singletons;
+    /// <summary>
+    /// The watcher class for monitoring game changes in realtime.
+    /// </summary>
+    public readonly Watcher Watcher;
 
     /// <summary>
     /// Checks if <see href="https://modbakery.donutteam.com/releases/view/lucas-mod-launcher" langword=" (Lucas' Mod Launcher)" /> is loaded.
@@ -111,6 +115,8 @@ public class Memory : ProcessMemory
 
         3360, // Max Cars
         3364, // Cars Offset
+
+        3362, // Max Traffic
 
         3947, // Max Stages
         3948, // Stages Offset
@@ -312,6 +318,7 @@ public class Memory : ProcessMemory
 
         Globals = new(this);
         Singletons = new(this);
+        Watcher = new(this);
     }
 
     [DllImport("user32.dll")]

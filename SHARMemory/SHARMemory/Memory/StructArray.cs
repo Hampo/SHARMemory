@@ -125,10 +125,7 @@ public class StructArray<T> : IEnumerable<T> where T : struct
         object IEnumerator.Current => Current;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0305:Simplify collection initialization", Justification = "Causes infinite loop")]
-        public StructEnumerator(StructArray<T> array)
-        {
-            this.array = array.ToArray();
-        }
+        public StructEnumerator(StructArray<T> array) => this.array = array.ToArray();
 
         public bool MoveNext()
         {
@@ -136,10 +133,7 @@ public class StructArray<T> : IEnumerable<T> where T : struct
             return position < array.Length;
         }
 
-        public void Reset()
-        {
-            position = -1;
-        }
+        public void Reset() => position = -1;
 
         public void Dispose() { }
     }

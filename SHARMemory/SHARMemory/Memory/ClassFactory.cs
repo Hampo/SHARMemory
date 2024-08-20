@@ -286,7 +286,7 @@ public class ClassFactory
         if (Address == 0)
             return null;
 
-        if (typeof(Class).IsAssignableFrom(Type) && Type.IsAbstract)
+        if (Type.IsAbstract)
             return CreatePolymorphicInternal(Address);
 
         var TypeInfoName = ClassFactory.TypeInfoName.Get(Type);

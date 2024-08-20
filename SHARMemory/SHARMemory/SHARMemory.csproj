@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net40</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ApplicationIcon>256x256.ico</ApplicationIcon>
     <PlatformTarget>x86</PlatformTarget>

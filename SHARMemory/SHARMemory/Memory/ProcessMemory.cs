@@ -12,7 +12,7 @@ namespace SHARMemory.Memory;
 /// Class <c>ProcessMemory</c> is a base class for reading and writing to a <c>Process</c>'s memory.
 /// Initially created by Lucas Cardellini, further developed by Proddy.
 /// </summary>
-public class ProcessMemory
+public class ProcessMemory : IDisposable
 {
     /// <summary>
     /// The <see cref="System.Diagnostics.Process"/> that is being managed.
@@ -902,6 +902,8 @@ public class ProcessMemory
     }
 
     private readonly Dictionary<string, Dictionary<string, uint>> namedAddressCache = [];
+    private bool disposedValue;
+
     /// <summary>
     /// Gets the base address of a given module's procedure in <see cref="Process"/>.
     /// </summary>
@@ -1159,22 +1161,43 @@ public class ProcessMemory
     /// <summary>
     /// Disposes the <see cref="Process"/>, and also cleans up all injected functions.
     /// </summary>
+    /// <param name="disposing">
+    /// If the object is being disposed.
+    /// </param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                //IntPtr procHandle = IntPtr.Zero;
+                //try
+                //{
+                //    procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
+                //    if (procHandle != IntPtr.Zero)
+                //        foreach (IntPtr Address in ASMFunctions)
+                //            if (Address != IntPtr.Zero)
+                //                VirtualFreeEx(procHandle, Address, 0, MEM_RELEASE);
+                //}
+                //finally
+                //{
+                //    if (procHandle != IntPtr.Zero)
+                //        CloseHandle(procHandle);
+                //}
+                Process.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    /// <summary>
+    /// Disposes the <see cref="Process"/>, and also cleans up all injected functions.
+    /// </summary>
     public void Dispose()
     {
-        //IntPtr procHandle = IntPtr.Zero;
-        //try
-        //{
-        //    procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, Process.Id);
-        //    if (procHandle != IntPtr.Zero)
-        //        foreach (IntPtr Address in ASMFunctions)
-        //            if (Address != IntPtr.Zero)
-        //                VirtualFreeEx(procHandle, Address, 0, MEM_RELEASE);
-        //}
-        //finally
-        //{
-        //    if (procHandle != IntPtr.Zero)
-        //        CloseHandle(procHandle);
-        //}
-        Process.Dispose();
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }
