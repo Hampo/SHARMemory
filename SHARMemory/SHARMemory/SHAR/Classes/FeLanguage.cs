@@ -65,6 +65,9 @@ public class FeLanguage : Class
 
     public bool SetString(uint hash, string value)
     {
+        if (value.Length == 0)
+            throw new ArgumentException($"{nameof(value)} cannot be an empty string. Must have at least one char.");
+
         int? index = GetIndex(hash);
         if (!index.HasValue)
             return false;
