@@ -113,7 +113,7 @@ public class GameplayManager : Class
     public GameTypes GameType
     {
         get => (GameTypes)ReadUInt32(928);
-        set => WriteUInt32(924, (uint)value);
+        set => WriteUInt32(928, (uint)value);
     }
 
     public string PostLevelFMV
