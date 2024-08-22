@@ -40,6 +40,8 @@ public sealed partial class Globals
     private readonly uint FlippableCarsAddress;
     /// <summary>
     /// A property representing if <c>FlippableCars</c> is enabled in <see cref="Memory"/>.
+    /// <para>If <c>true</c>, the function <c>PhysicsLocomotion::DurangoStyleStabilizer</c> is patched to instantly return.</para>
+    /// <para>If <c>false</c>, the function <c>PhysicsLocomotion::DurangoStyleStabilizer</c> is returned to vanilla functionality.</para>
     /// </summary>
     public bool FlippableCars
     {
@@ -65,6 +67,8 @@ public sealed partial class Globals
     private readonly uint TurboAddress2;
     /// <summary>
     /// A property representing if <c>Turbo</c> is enabled in <see cref="Memory"/>.
+    /// <para>If <c>true</c>, the function <c>VehicleCentral::PreSubstepUpdate</c> is patched to run both the SuperSprint and Normal game if statements.</para>
+    /// <para>If <c>false</c>, the function <c>VehicleCentral::PreSubstepUpdate</c> is returned to vanilla functionality.</para>
     /// </summary>
     public bool TurboEnabled
     {
@@ -89,6 +93,8 @@ public sealed partial class Globals
     private readonly uint TurboShadowAddress;
     /// <summary>
     /// A property representing if <c>TurboShadow</c> is enabled in <see cref="Memory"/>.
+    /// <para>If <c>true</c>, the function <c>GeometryVehicle::DisplayShadow</c> is patched to only run the SuperSprint side of the first if statement.</para>
+    /// <para>If <c>false</c>, the function <c>GeometryVehicle::DisplayShadow</c> is returned to vanilla functionality.</para>
     /// </summary>
     public bool TurboShadow
     {
@@ -101,6 +107,8 @@ public sealed partial class Globals
     private readonly uint CharacterShadowAddress;
     /// <summary>
     /// A property representing if <c>CharacterShadow</c> is enabled in <see cref="Memory"/>.
+    /// <para>If <c>true</c>, the function <c>CharacterRenderable::DisplayShadow</c> is patched to only run the SuperSprint side of the first if statement.</para>
+    /// <para>If <c>false</c>, the function <c>CharacterRenderable::DisplayShadow</c> is returned to vanilla functionality.</para>
     /// </summary>
     public bool CharacterShadow
     {
@@ -127,5 +135,6 @@ public sealed partial class Globals
 
         TurboShadowAddress = Memory.SelectAddress(0x4E0D80, 0x4E0E60, 0x4E1120, 0x4E0F00);
 
+        CharacterShadowAddress = Memory.SelectAddress(0x4FE846, 0x4FE956, 0x4FEC26, 0x4FEA46);
     }
 }
