@@ -443,6 +443,8 @@ public sealed class Watcher
         {
             if (nowPlaying is DialogSelectionGroup nowPlayingGroup)
                 nowPlaying = nowPlayingGroup.DialogVector[nowPlayingGroup.CurrentlyPlayingDialog];
+            else if (nowPlaying is Conversation nowPlayingConversation)
+                nowPlaying = nowPlayingConversation.CurrentLine;
 
             if (nowPlaying.Address != lastDialogAddress)
             {
