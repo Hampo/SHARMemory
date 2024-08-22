@@ -8,7 +8,7 @@ public class DialogSelectionGroup : SelectableDialog
 {
     public DialogSelectionGroup(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-    internal const uint UnknownOffset = NextListObjectOffset + sizeof(uint);
+    internal const uint UnknownOffset = NextListObjectOffset + sizeof(uint); // TODO: Check if just part of the Vector
 
     internal const uint DialogVectorOffset = UnknownOffset + sizeof(uint);
     public PointerArray<SelectableDialog> DialogVector => PointerArrayExtensions.FromVector<SelectableDialog>(Memory, this, DialogVectorOffset);
