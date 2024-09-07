@@ -15,6 +15,11 @@ namespace SHARMemory.Memory;
 public class ProcessMemory : IDisposable
 {
     /// <summary>
+    /// How many bytes per block when using <see cref="AllocateMemoryBlock"/> or <see cref="AllocateMemoryBlocks(uint)"/>.
+    /// </summary>
+    public const uint BYTES_PER_BLOCK = 4096;
+
+    /// <summary>
     /// The <see cref="System.Diagnostics.Process"/> that is being managed.
     /// </summary>
     public Process Process { get; }
@@ -209,9 +214,8 @@ public class ProcessMemory : IDisposable
     {
         IntPtr intPtr = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, bInheritHandle: false, Process.Id);
         if (intPtr == IntPtr.Zero)
-        {
             throw new Win32Exception(Marshal.GetLastWin32Error());
-        }
+
         try
         {
             int num = default;
@@ -219,17 +223,14 @@ public class ProcessMemory : IDisposable
             try
             {
                 if (!WriteProcessMemory(Process.Handle, new UIntPtr(Address), Buffer, new IntPtr(Buffer.Length), out UIntPtr lpNumberOfBytesWritten))
-                {
                     throw new Win32Exception(Marshal.GetLastWin32Error());
-                }
+
                 Written = lpNumberOfBytesWritten.ToUInt32();
             }
             finally
             {
                 if (flag)
-                {
                     VirtualProtectEx(intPtr, new UIntPtr(Address), Buffer.Length, num, num);
-                }
             }
         }
         finally
@@ -555,13 +556,7 @@ public class ProcessMemory : IDisposable
     /// <param name="Value">
     /// The <c>byte</c> value to write.
     /// </param>
-    public void WriteByte(uint Address, byte Value)
-    {
-        Write(Address,
-        [
-        Value
-        ], out _);
-    }
+    public void WriteByte(uint Address, byte Value) => Write(Address, [Value], out _);
 
     /// <summary>
     /// Writes the given value to <see cref="Process"/>'s memory at the given address.
@@ -803,7 +798,7 @@ public class ProcessMemory : IDisposable
     public void BytesFromStruct<T>(T Value, byte[] Bytes, int Offset = 0) => BytesFromStruct(typeof(T), Value, Bytes, Offset);
 
     /// <summary>
-    /// Allocates <c>4096</c> bytes of memory in <see cref="Process"/>.
+    /// Allocates 1 block of memory in <see cref="Process"/>.
     /// </summary>
     /// <returns>
     /// The address of the allocated memory.
@@ -811,16 +806,29 @@ public class ProcessMemory : IDisposable
     /// <exception cref="Win32Exception">
     /// Throws if any Windows exceptions happen.
     /// </exception>
-    public uint AllocateMemory()
+    public uint AllocateMemoryBlock() => AllocateMemoryBlocks(1);
+
+    /// <summary>
+    /// Allocates <see cref="BYTES_PER_BLOCK"/> bytes of memory in <see cref="Process"/>.
+    /// </summary>
+    /// <returns>
+    /// The address of the allocated memory.
+    /// </returns>
+    /// <exception cref="Win32Exception">
+    /// Throws if any Windows exceptions happen.
+    /// </exception>
+    public uint AllocateMemoryBlocks(uint blocks)
     {
+        if (blocks < 1)
+            throw new ArgumentException($"{nameof(blocks)} must be greater than or equal to 1.", nameof(blocks));
+
         IntPtr intPtr = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, bInheritHandle: false, Process.Id);
         if (intPtr == IntPtr.Zero)
-        {
             throw new Win32Exception(Marshal.GetLastWin32Error());
-        }
+
         try
         {
-            IntPtr allocMemAddress = VirtualAllocEx(intPtr, IntPtr.Zero, 4096, MEM_COMMIT, PAGE_READWRITE);
+            IntPtr allocMemAddress = VirtualAllocEx(intPtr, IntPtr.Zero, BYTES_PER_BLOCK * blocks, MEM_COMMIT, PAGE_READWRITE);
             if (allocMemAddress == IntPtr.Zero)
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
@@ -829,6 +837,49 @@ public class ProcessMemory : IDisposable
         finally
         {
             CloseHandle(intPtr);
+        }
+    }
+
+    private uint CurrentAddress = 0;
+    private uint BytesRemaining = 0;
+    private readonly object AllocationLock = new();
+    /// <summary>
+    /// Allocates memory and writes <paramref name="Value"/> in <see cref="Process"/>.
+    /// </summary>
+    /// <param name="Value">
+    /// The <c>byte[]</c> value to write.
+    /// </param>
+    /// <returns>
+    /// The address written to.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    /// Throws if <paramref name="Value"/> is empty.
+    /// </exception>
+    /// <exception cref="Win32Exception">
+    /// Throws if any Windows exceptions happen.
+    /// </exception>
+    public uint AllocateAndWriteMemory(byte[] Value)
+    {
+        var length = (uint)Value?.Length;
+        if (length == 0)
+            throw new ArgumentException($"{nameof(Value)} cannot have a length of 0.");
+
+        lock (AllocationLock)
+        {
+            if (CurrentAddress == 0 || BytesRemaining < length)
+            {
+                uint blocks = (uint)Math.Ceiling(1d * length / BYTES_PER_BLOCK);
+                CurrentAddress = AllocateMemoryBlocks(blocks);
+                BytesRemaining = BYTES_PER_BLOCK * blocks;
+            }
+
+            var address = CurrentAddress;
+            WriteBytes(address, Value);
+
+            BytesRemaining -= length;
+            CurrentAddress += length;
+
+            return address;
         }
     }
 

@@ -1,5 +1,7 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
+using System;
+using System.Collections.Generic;
 
 namespace SHARMemory.SHAR.Classes;
 
@@ -16,14 +18,16 @@ public class TimeOutCondition : MissionCondition
 
     public static TimeOutCondition CreateNew(Memory memory, bool isViolated, bool leaveInterior, bool done)
     {
-        uint address = memory.AllocateMemory();
+        List<byte> classBytes = new(sizeof(uint) + sizeof(int) + 4);
 
-        memory.WriteUInt32(address, memory.SelectAddress(0x611288, 0x611330, 0x6112F8, 0x611388));
-        memory.WriteInt32(address + 4, (int)ConditionTypes.TimeOut);
-        memory.WriteBoolean(address + 8, isViolated);
-        memory.WriteBoolean(address + 9, leaveInterior);
-        memory.WriteBoolean(address + 10, done);
+        classBytes.AddRange(BitConverter.GetBytes(memory.SelectAddress(0x611288, 0x611330, 0x6112F8, 0x611388)));
+        classBytes.AddRange(BitConverter.GetBytes((int)ConditionTypes.TimeOut));
+        classBytes.Add((byte)(isViolated ? 1 : 0));
+        classBytes.Add((byte)(leaveInterior ? 1 : 0));
+        classBytes.Add((byte)(done ? 1 : 0));
+        classBytes.Add(0);
 
+        uint address = memory.AllocateAndWriteMemory([.. classBytes]);
         return memory.ClassFactory.Create<TimeOutCondition>(address);
     }
 }
