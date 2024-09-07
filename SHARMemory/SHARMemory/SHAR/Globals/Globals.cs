@@ -1,4 +1,5 @@
 ﻿using SHARMemory.SHAR.Classes;
+using System;
 using System.Linq;
 
 namespace SHARMemory.SHAR;
@@ -49,7 +50,7 @@ public sealed partial class Globals
         set => Memory.WriteBytes(FlippableCarsAddress, value ? FlippableCarsEnable : FlippableCarsDisable);
     }
 
-    public readonly uint DefaultNumTurbosAddress;
+    private readonly uint DefaultNumTurbosAddress;
     /// <summary>
     /// A property representing the default <see cref="Vehicle.NumTurbos"/> set in the <c>Vehicle</c> constructor in <see cref="Memory"/>.
     /// <para>Because ASM, this also affects the default <see cref="Vehicle.WasHitByVehicleType"/> value, however this value should be updated before its ever checked so probably fine.</para>
@@ -58,6 +59,38 @@ public sealed partial class Globals
     {
         get => Memory.ReadInt32(DefaultNumTurbosAddress);
         set => Memory.WriteInt32(DefaultNumTurbosAddress, value);
+    }
+
+    private readonly uint TurboSpeedMPSAddress1;
+    private readonly uint TurboSpeedMPSAddress2;
+    private readonly uint TurboSpeedMPSAddress3;
+    private uint TurboSpeedMPSValueAddress = 0;
+    /// <summary>
+    /// A property representing the speed applied when using a turbo.
+    /// </summary>
+    public float TurboSpeedMPS
+    {
+        get
+        {
+            uint valueAdress = Memory.ReadUInt32(TurboSpeedMPSAddress1);
+            float value = Memory.ReadSingle(valueAdress);
+            return value;
+        }
+        set
+        {
+            if (TurboSpeedMPSValueAddress == 0)
+            {
+                TurboSpeedMPSValueAddress = Memory.AllocateAndWriteMemory(BitConverter.GetBytes(value));
+
+                Memory.WriteUInt32(TurboSpeedMPSAddress1, TurboSpeedMPSValueAddress);
+                Memory.WriteUInt32(TurboSpeedMPSAddress2, TurboSpeedMPSValueAddress);
+                Memory.WriteUInt32(TurboSpeedMPSAddress3, TurboSpeedMPSValueAddress);
+            }
+            else
+            {
+                Memory.WriteSingle(TurboSpeedMPSValueAddress, value);
+            }
+        }
     }
 
     private static readonly byte[] TurboEnable = [0x90, 0x90];
@@ -86,6 +119,20 @@ public sealed partial class Globals
                 Memory.WriteBytes(TurboAddress2, TurboDisable2);
             }
         }
+    }
+
+    private static readonly byte[] NPCTurboEnable = [0x90, 0x90];
+    private static readonly byte[] NPCTurboDisable = [0x75, 0x07];
+    private readonly uint NPCTurboAddress;
+    /// <summary>
+    /// A property representing if <c>NPCTurbo</c> is enabled in <see cref="Memory"/>.
+    /// <para>If <c>true</c>, the function <c>WaypointAI::DoCatchUp</c> is patched to run the first SuperSprint if statements.</para>
+    /// <para>If <c>false</c>, the function <c>WaypointAI::DoCatchUp</c> is returned to vanilla functionality.</para>
+    /// </summary>
+    public bool NPCTurboEnabled
+    {
+        get => Enumerable.SequenceEqual(Memory.ReadBytes(NPCTurboAddress, 2), TurboEnable);
+        set => Memory.WriteBytes(NPCTurboAddress, value ? NPCTurboEnable : NPCTurboDisable);
     }
 
     private static readonly byte[] TurboShadowEnable = [0x90, 0x90];
@@ -130,8 +177,14 @@ public sealed partial class Globals
 
         DefaultNumTurbosAddress = Memory.SelectAddress(0x4EF12A, 0x4EF23A, 0x4EF4DA, 0x4EF2DA) + 1;
 
+        TurboSpeedMPSAddress1 = Memory.SelectAddress(0x4EABAE, 0x4EAC8E, 0x4EAF4E, 0x4EAD1E) + 2;
+        TurboSpeedMPSAddress2 = Memory.SelectAddress(0x4EABBD, 0x4EAC9D, 0x4EAF5D, 0x4EAD2D) + 2;
+        TurboSpeedMPSAddress3 = Memory.SelectAddress(0x4EABC9, 0x4EACA9, 0x4EAF69, 0x4EAD39) + 2;
+
         TurboAddress1 = Memory.SelectAddress(0x4DB5B1, 0x4DB691, 0x4DB951, 0x4DB731);
         TurboAddress2 = Memory.SelectAddress(0x4DB5B8, 0x4DB698, 0x4DB958, 0x4DB738);
+
+        NPCTurboAddress = Memory.SelectAddress(0x413D6B, 0, 0, 0);
 
         TurboShadowAddress = Memory.SelectAddress(0x4E0D80, 0x4E0E60, 0x4E1120, 0x4E0F00);
 
