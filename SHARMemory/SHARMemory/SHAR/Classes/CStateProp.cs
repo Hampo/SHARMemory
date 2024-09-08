@@ -11,13 +11,13 @@ public class CStateProp : tEntity
     public CStateProp(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
     private const uint StatePropDataOffset = NameOffset + sizeof(long);
-    public Class StatePropData => Memory.ClassFactory.Create<Class>(ReadUInt32(StatePropDataOffset));
+    public SHARMemory.Memory.Class StatePropData => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(StatePropDataOffset));
 
     private const uint AnimatedObjectOffset = StatePropDataOffset + sizeof(uint);
-    public Class AnimatedObject => Memory.ClassFactory.Create<Class>(ReadUInt32(AnimatedObjectOffset));
+    public SHARMemory.Memory.Class AnimatedObject => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(AnimatedObjectOffset));
 
     private const uint BaseFrameControllerOffset = AnimatedObjectOffset + sizeof(uint);
-    public Class BaseFrameController => Memory.ClassFactory.Create<Class>(ReadUInt32(BaseFrameControllerOffset));
+    public SHARMemory.Memory.Class BaseFrameController => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(BaseFrameControllerOffset));
 
     private const uint FastDisplayDrawableOffset = BaseFrameControllerOffset + sizeof(uint);
     public Drawable FastDisplayDrawable => Memory.ClassFactory.Create<Drawable>(ReadUInt32(FastDisplayDrawableOffset));
@@ -37,5 +37,5 @@ public class CStateProp : tEntity
     }
 
     private const uint StatePropListenersOffset = NumStatePropListenersOffset + sizeof(uint);
-    public PointerArray<Class> StatePropListener => new(Memory, Address + StatePropListenersOffset, MaxListeners);
+    public PointerArray<SHARMemory.Memory.Class> StatePropListener => new(Memory, Address + StatePropListenersOffset, MaxListeners);
 }

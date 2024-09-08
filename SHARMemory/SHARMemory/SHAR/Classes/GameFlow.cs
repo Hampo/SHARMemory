@@ -27,7 +27,7 @@ public class GameFlow : Class
     internal const uint IRadTimerCallbackVFTableOffset = 0;
 
     internal const uint TimerOffset = IRadTimerCallbackVFTableOffset + sizeof(uint);
-    public Class Timer => Memory.ClassFactory.Create<Class>(ReadUInt32(TimerOffset));
+    public SHARMemory.Memory.Class Timer => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(TimerOffset));
 
     internal const uint CurrentContextOffset = TimerOffset + sizeof(uint);
     public GameState CurrentContext

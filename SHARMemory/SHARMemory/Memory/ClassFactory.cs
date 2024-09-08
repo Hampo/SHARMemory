@@ -202,6 +202,8 @@ public class ClassFactory
     private Class CreatePolymorphicInternal(uint Address, string TypeInfoName = null)
     {
         var FuncTable = Memory.ReadUInt32(Address);
+        if (FuncTable == 0)
+            return null;
         var CompleteObjectLocatorAddress = (uint)(FuncTable + 0x4 * -1);
         if (!CompleteObjectLocatorCache.TryGetValue(CompleteObjectLocatorAddress, out CompleteObjectLocator CompleteObjectLocator))
         {

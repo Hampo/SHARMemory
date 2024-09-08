@@ -1,0 +1,42 @@
+﻿using SHARMemory.Memory.RTTI;
+
+namespace SHARMemory.SHAR.Classes;
+
+public class Button : Class
+{
+    public Button(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+
+    public static uint TickCount(Memory memory) => memory.ReadUInt32(memory.SelectAddress(0x6C900C, 0, 0, 0));
+
+    internal const uint ValueOffset = 0;
+    public float Value
+    {
+        get => ReadSingle(ValueOffset);
+        set => WriteSingle(ValueOffset, value);
+    }
+
+    internal const uint TickCountAtChangeOffset = ValueOffset + sizeof(float);
+    public uint TickCountAtChange
+    {
+        get => ReadUInt32(TickCountAtChangeOffset);
+        set => WriteUInt32(TickCountAtChangeOffset, value);
+    }
+
+    public const uint Size = TickCountAtChangeOffset + sizeof(uint);
+
+    public void ForceChange()
+    {
+        TickCountAtChange = TickCount(Memory);
+    }
+
+    public void SetValue(float value)
+    {
+        if (value < -1)
+            value = -1;
+        else if (value > 1)
+            value = 1;
+
+        Value = value;
+        TickCountAtChange = TickCount(Memory);
+    }
+}

@@ -146,7 +146,7 @@ public class HitNRunManager : Class
         set => WriteUInt32(92, value);
     }
 
-    public PointerArray<Class> PrevHits => new(Memory, Address + 96, 16);
+    public PointerArray<SHARMemory.Memory.Class> PrevHits => new(Memory, Address + 96, 16);
 
     public int LeastRecentlyHit
     {

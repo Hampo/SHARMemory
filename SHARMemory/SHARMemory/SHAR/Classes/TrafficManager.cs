@@ -64,7 +64,7 @@ public class TrafficManager : Class
     }
 
     internal const uint IntersectionsOffset = NumCharsToStopForOffset + sizeof(int);
-    public PointerArray<Class> Intersections => new(Memory, Address + IntersectionsOffset, MaxIntersections); // TODO: Add Intersection. Looks scary
+    public PointerArray<SHARMemory.Memory.Class> Intersections => new(Memory, Address + IntersectionsOffset, MaxIntersections); // TODO: Add Intersection. Looks scary
 
     internal const uint MillisecondsBetweenRemoveOffset = IntersectionsOffset + sizeof(uint) * MaxIntersections;
     public uint MillisecondsBetweenRemove

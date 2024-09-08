@@ -32,5 +32,5 @@ public class IEntityDSG : Drawable
     }
 
     internal const uint SpatialNodeOffset = ShaderNameOffset + sizeof(long);
-    public Class SpatialNode => Memory.ClassFactory.Create<Class>(ReadUInt32(SpatialNodeOffset));
+    public SHARMemory.Memory.Class SpatialNode => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(SpatialNodeOffset));
 }

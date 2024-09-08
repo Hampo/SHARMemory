@@ -44,6 +44,12 @@ public sealed class Singletons
     /// </summary>
     public HitNRunManager HitNRunManager => HitNRunManagerSingleton.Get();
 
+    private readonly Singleton<InputManager> InputManagerSingleton;
+    /// <summary>
+    /// A reference to SHAR's <see cref="Classes.InputManager"/> singleton.
+    /// </summary>
+    public InputManager InputManager => InputManagerSingleton.Get();
+
     private readonly Singleton<InteriorManager> InteriorManagerSingleton;
     /// <summary>
     /// A reference to SHAR's <see cref="Classes.InteriorManager"/> singleton.
@@ -112,6 +118,7 @@ public sealed class Singletons
         GameFlowSingleton = new(memory, memory.SelectAddress(0x6C9014, 0x6C8FD4, 0x6C8FD4, 0x6C900C));
         GameDataManagerSingleton = new(memory, memory.SelectAddress(0x6C842C, 0x6C83EC, 0x6C83EC, 0x6C8424));
         HitNRunManagerSingleton = new(memory, memory.SelectAddress(0x6C84E0, 0x6C84A0, 0x6C84A0, 0x6C84D8));
+        InputManagerSingleton = new(memory, memory.SelectAddress(0x6C9008, 0x6C8FC8, 0x6C8FC8, 0x6C9000));
         InteriorManagerSingleton = new(memory, memory.SelectAddress(0x6C8FF8, 0x6C8FB8, 0x6C8FB8, 0x6C8FF0));
         IntersectManagerSingleton = new(memory, memory.SelectAddress(0x6C87A4, 0x6C8764, 0x6C8764, 0x6C879C));
         LoadingManagerSingleton = new(memory, memory.SelectAddress(0x6C8FF4, 0x6C8FB4, 0x6C8FB4, 0x6C8FEC));

@@ -13,7 +13,7 @@ public class DialogCoordinator : Class
     internal const uint DialogNamespaceOffset = EventListenerVFTableOffset + sizeof(uint);
 
     internal const uint DialogListOffset = DialogNamespaceOffset + sizeof(uint);
-    public Class DialogList => Memory.ClassFactory.Create<Class>(ReadUInt32(DialogListOffset));
+    public SHARMemory.Memory.Class DialogList => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(DialogListOffset));
 
     internal const uint PlaybackQueueOffset = DialogListOffset + sizeof(uint);
     public DialogPriorityQueue PlaybackQueue => Memory.ClassFactory.Create<DialogPriorityQueue>(ReadUInt32(PlaybackQueueOffset));

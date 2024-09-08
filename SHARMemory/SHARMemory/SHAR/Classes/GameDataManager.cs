@@ -43,7 +43,7 @@ public class GameDataManager : Class
     public GameDataManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
     internal const uint RegisteredGameDataOffset = 12; // VFTables
-    public PointerArray<Class> RegisteredGameData => new(Memory, Address + RegisteredGameDataOffset, MaxNumGameData); // TODO: GameData class
+    public PointerArray<SHARMemory.Memory.Class> RegisteredGameData => new(Memory, Address + RegisteredGameDataOffset, MaxNumGameData); // TODO: GameData class
 
     internal const uint NumRegisteredGameDataOffset = RegisteredGameDataOffset + MaxNumGameData * sizeof(uint);
     public uint NumRegisteredGameData
@@ -53,7 +53,7 @@ public class GameDataManager : Class
     }
 
     internal const uint GameDataBufferOffset = NumRegisteredGameDataOffset + sizeof(uint);
-    public Class GameDataBuffer => Memory.ClassFactory.Create<Class>(ReadUInt32(GameDataBufferOffset)); // TODO: GameDataByte class
+    public SHARMemory.Memory.Class GameDataBuffer => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(GameDataBufferOffset)); // TODO: GameDataByte class
 
     internal const uint GameDataSizeOffset = GameDataBufferOffset + sizeof(uint);
     public uint GameDataSize
@@ -63,13 +63,13 @@ public class GameDataManager : Class
     }
 
     internal const uint GameDataLoadCallbackOffset = GameDataSizeOffset + sizeof(uint);
-    public Class GameDataLoadCallback => Memory.ClassFactory.Create<Class>(ReadUInt32(GameDataLoadCallbackOffset)); // TODO: GameDataLoadCallback class
+    public SHARMemory.Memory.Class GameDataLoadCallback => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(GameDataLoadCallbackOffset)); // TODO: GameDataLoadCallback class
 
     internal const uint GameDataSaveCallbackOffset = GameDataLoadCallbackOffset + sizeof(uint);
-    public Class GameDataSaveCallback => Memory.ClassFactory.Create<Class>(ReadUInt32(GameDataSaveCallbackOffset)); // TODO: GameDataSaveCallback class
+    public SHARMemory.Memory.Class GameDataSaveCallback => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(GameDataSaveCallbackOffset)); // TODO: GameDataSaveCallback class
 
     internal const uint GameDataDeleteCallbackOffset = GameDataSaveCallbackOffset + sizeof(uint);
-    public Class GameDataDeleteCallback => Memory.ClassFactory.Create<Class>(ReadUInt32(GameDataDeleteCallbackOffset)); // TODO: GameDataDeleteCallback class
+    public SHARMemory.Memory.Class GameDataDeleteCallback => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(GameDataDeleteCallbackOffset)); // TODO: GameDataDeleteCallback class
 
     internal const uint MinimumLoadSaveTimeOffset = GameDataDeleteCallbackOffset + sizeof(uint);
     public uint MinimumLoadSaveTime
@@ -93,10 +93,10 @@ public class GameDataManager : Class
     }
 
     internal const uint SaveGameInfoHandlerOffset = IsGameLoadedOffset + 4; // Padding
-    public Class SaveGameInfoHandler => Memory.ClassFactory.Create<Class>(ReadUInt32(SaveGameInfoHandlerOffset)); // TODO: SaveGameInfo class
+    public SHARMemory.Memory.Class SaveGameInfoHandler => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(SaveGameInfoHandlerOffset)); // TODO: SaveGameInfo class
 
     internal const uint RadFileOffset = SaveGameInfoHandlerOffset + sizeof(uint);
-    public Class RadFile => Memory.ClassFactory.Create<Class>(ReadUInt32(RadFileOffset)); // TODO: IRadFile class
+    public SHARMemory.Memory.Class RadFile => Memory.ClassFactory.Create<SHARMemory.Memory.Class>(ReadUInt32(RadFileOffset)); // TODO: IRadFile class
 
     internal const uint CurrentFileOperationOffset = RadFileOffset + sizeof(uint);
     public FileOperation CurrentFileOperation

@@ -12,7 +12,7 @@ public static class Helpers
     /// <param name="keyValue">The initial key value.</param>
     /// <returns>A key corresponding to the given string.</returns>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Radical's naming")]
-    public static long radMakeKey(string pToken, long keyValue = 0)
+    public static ulong radMakeKey(string pToken, ulong keyValue = 0)
     {
         if (pToken == null || pToken.Length == 0)
             return keyValue;
@@ -36,5 +36,5 @@ public static class Helpers
     /// </summary>
     /// <param name="x">The string to hash.</param>
     /// <returns>A key corresponding to the given string.</returns>
-    public static long MakeUID(string x) => radMakeKey(x);
+    public static ulong MakeUID(string x) => radMakeKey(x);
 }
