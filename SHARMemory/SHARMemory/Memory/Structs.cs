@@ -34,7 +34,7 @@ public sealed class Structs
 
     }
 
-    private class ByteStruct : Struct
+    internal class ByteStruct : Struct
     {
         public override int Size => sizeof(byte);
 
@@ -59,7 +59,7 @@ public sealed class Structs
         }
     }
 
-    private class BooleanStruct : Struct
+    internal class BooleanStruct : Struct
     {
         public override int Size => sizeof(bool);
 
@@ -84,7 +84,7 @@ public sealed class Structs
         }
     }
 
-    private class DoubleStruct : Struct
+    internal class DoubleStruct : Struct
     {
         public override int Size => sizeof(double);
 
@@ -109,7 +109,7 @@ public sealed class Structs
         }
     }
 
-    private class SingleStruct : Struct
+    internal class SingleStruct : Struct
     {
         public override int Size => sizeof(float);
 
@@ -134,7 +134,7 @@ public sealed class Structs
         }
     }
 
-    private class Int16Struct : Struct
+    internal class Int16Struct : Struct
     {
         public override int Size => sizeof(short);
 
@@ -159,7 +159,7 @@ public sealed class Structs
         }
     }
 
-    private class Int32Struct : Struct
+    internal class Int32Struct : Struct
     {
         public override int Size => sizeof(int);
 
@@ -184,7 +184,7 @@ public sealed class Structs
         }
     }
 
-    private class Int64Struct : Struct
+    internal class Int64Struct : Struct
     {
         public override int Size => sizeof(long);
 
@@ -209,7 +209,7 @@ public sealed class Structs
         }
     }
 
-    private class UInt16Struct : Struct
+    internal class UInt16Struct : Struct
     {
         public override int Size => sizeof(ushort);
 
@@ -234,7 +234,7 @@ public sealed class Structs
         }
     }
 
-    private class UInt32Struct : Struct
+    internal class UInt32Struct : Struct
     {
         public override int Size => sizeof(uint);
 
@@ -259,7 +259,7 @@ public sealed class Structs
         }
     }
 
-    private class UInt64Struct : Struct
+    internal class UInt64Struct : Struct
     {
         public override int Size => sizeof(ulong);
 
@@ -284,7 +284,7 @@ public sealed class Structs
         }
     }
 
-    private class NullStringPointerStruct : Struct
+    internal class NullStringPointerStruct : Struct
     {
         public override int Size => sizeof(uint);
 
@@ -297,7 +297,7 @@ public sealed class Structs
         public override void Write(ProcessMemory Memory, uint Address, object Value) => throw new NotSupportedException();
     }
 
-    private class ColorStruct : Struct
+    internal class ColorStruct : Struct
     {
         public override int Size => sizeof(int);
 
