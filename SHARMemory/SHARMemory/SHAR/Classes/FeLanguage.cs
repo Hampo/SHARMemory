@@ -111,8 +111,9 @@ public class FeLanguage : Class
     {
         uint Hash = 0;
 
+        var modulo = Modulo;
         foreach (char c in name)
-            Hash = ((byte)c + (Hash << 6)) % Modulo;
+            Hash = ((byte)c + (Hash << 6)) % modulo;
 
         return Hash;
     }
