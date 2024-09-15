@@ -184,7 +184,7 @@ public sealed partial class Globals
         TurboAddress1 = Memory.SelectAddress(0x4DB5B1, 0x4DB691, 0x4DB951, 0x4DB731);
         TurboAddress2 = Memory.SelectAddress(0x4DB5B8, 0x4DB698, 0x4DB958, 0x4DB738);
 
-        NPCTurboAddress = Memory.SelectAddress(0x413D6B, 0, 0, 0);
+        NPCTurboAddress = Memory.SelectAddress(0x413D6B, 0x413D8B, 0x413D7B, 0x413D2B);
 
         TurboShadowAddress = Memory.SelectAddress(0x4E0D80, 0x4E0E60, 0x4E1120, 0x4E0F00);
 
