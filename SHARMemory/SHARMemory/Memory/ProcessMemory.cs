@@ -379,7 +379,7 @@ public class ProcessMemory : IDisposable
     /// </returns>
     public ushort ReadUInt16(uint Address)
     {
-        byte[] array = new byte[4];
+        byte[] array = new byte[2];
         Read(Address, array, out _);
         return BitConverter.ToUInt16(array, 0);
     }
@@ -411,7 +411,7 @@ public class ProcessMemory : IDisposable
     /// </returns>
     public ulong ReadUInt64(uint Address)
     {
-        byte[] array = new byte[4];
+        byte[] array = new byte[8];
         Read(Address, array, out _);
         return BitConverter.ToUInt64(array, 0);
     }
