@@ -8,6 +8,8 @@ using SHARMemory.SHAR.Events.CharacterSheet;
 using SHARMemory.SHAR.Classes;
 using SHARMemory.SHAR.Events.GameplayManager;
 using SHARMemory.SHAR.Events.SoundManager;
+using System.Linq;
+using SHARMemory.SHAR.Events.CardGallery;
 
 namespace SHARMemory.SHAR;
 
@@ -57,10 +59,6 @@ public sealed class Watcher
     /// </summary>
     public event AsyncEventHandler<GambleRaceCompleteEventArgs> GambleRaceComplete;
     /// <summary>
-    /// An event handler for when a Collector Card is collected.
-    /// </summary>
-    public event AsyncEventHandler<CardCollectedEventArgs> CardCollected;
-    /// <summary>
     /// An event handler for when a Wasp is destroyed.
     /// </summary>
     public event AsyncEventHandler<WaspDestroyedEventArgs> WaspDestroyed;
@@ -88,6 +86,11 @@ public sealed class Watcher
     /// An event handler for when the Coins value changes.
     /// </summary>
     public event AsyncEventHandler<CoinsChangedEventArgs> CoinsChanged;
+
+    /// <summary>
+    /// An event handler for when a Collector Card is collected.
+    /// </summary>
+    public event AsyncEventHandler<CardCollectedEventArgs> CardCollected;
 
     /// <summary>
     /// An event handler for when the Current Mission changes.
@@ -219,6 +222,7 @@ public sealed class Watcher
 
                 await CheckGameDataManager();
                 await CheckCharacterSheet();
+                await CheckCardGallery();
                 await CheckGameplayManager();
                 await CheckSoundManager();
             }
@@ -262,7 +266,6 @@ public sealed class Watcher
     private readonly bool[] bonusMissionComplete = new bool[7];
     private readonly bool[][] racesComplete = new bool[7][];
     private readonly bool[] gambleRaceComplete = new bool[7];
-    private readonly bool[][] cardsCollected = new bool[7][];
     private readonly int[] waspsDestroyed = new int[7];
     private readonly bool[] fmvsWatched = new bool[7];
     private readonly int[] carsPurchased = new int[7];
@@ -315,18 +318,6 @@ public sealed class Watcher
                 await GambleRaceComplete.InvokeAsync(Memory, new(level), CancellationToken.None);
             }
             gambleRaceComplete[level] = levelData.GambleRace.Completed;
-
-            for (int i = 0; i < cardsCollected[level].Length; i++)
-            {
-                var cardData = levelData.Cards.List[i];
-
-                if (!cardsCollected[level][i] && cardData.Completed)
-                {
-                    await CardCollected.InvokeAsync(Memory, new(level, i), CancellationToken.None);
-                }
-
-                cardsCollected[level][i] = cardData.Completed;
-            }
 
             if (levelData.WaspsDestroyed > waspsDestroyed[level])
             {
@@ -383,6 +374,33 @@ public sealed class Watcher
         {
             await CoinsChanged.InvokeAsync(Memory, new(lastCoins, newCoins), CancellationToken.None);
             lastCoins = newCoins;
+        }
+    }
+
+    private readonly bool[][] cardsCollected = new bool[7][];
+    private async Task CheckCardGallery()
+    {
+        var cardGallery = Memory.Singletons.CardGallery;
+        if (cardGallery == null)
+            return;
+
+        var collectedCards = cardGallery.CollectedCards.ToArray();
+        for (int level = 0; level < collectedCards.Length; level++)
+        {
+            var levelCards = collectedCards[level].Cards.ToArray();
+
+            for (int card = 0; card < levelCards.Length; card++)
+            {
+                bool collected = levelCards[card] != null;
+
+                if (collected != cardsCollected[level][card])
+                {
+                    cardsCollected[level][card] = collected;
+
+                    if (collected)
+                        await CardCollected.InvokeAsync(Memory, new(level, card), CancellationToken.None);
+                }
+            }
         }
     }
 

@@ -47,18 +47,6 @@ public class GambleRaceCompleteEventArgs : EventArgs
     }
 }
 
-public class CardCollectedEventArgs : EventArgs
-{
-    public int Level { get; }
-    public int Card { get; }
-
-    public CardCollectedEventArgs(int level, int card)
-    {
-        Level = level;
-        Card = card;
-    }
-}
-
 public class WaspDestroyedEventArgs : EventArgs
 {
     public int Level { get; }
