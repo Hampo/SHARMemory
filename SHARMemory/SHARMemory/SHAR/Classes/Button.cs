@@ -31,11 +31,6 @@ public class Button : Class
 
     public void SetValue(float value)
     {
-        if (value < -1)
-            value = -1;
-        else if (value > 1)
-            value = 1;
-
         Value = value;
         TickCountAtChange = TickCount(Memory);
     }

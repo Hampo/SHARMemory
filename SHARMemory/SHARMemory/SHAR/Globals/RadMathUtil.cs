@@ -13,5 +13,32 @@ public partial class Globals
         }
 
         public static bool Epsilon(float x, float n, float epsilon = 0.000001f) => (x >= -epsilon + n) && (x <= epsilon + n);
+
+        public static float Clamp(float x, float min, float max)
+        {
+            if (x < min)
+                return min;
+            if (x > max)
+                return max;
+            return x;
+        }
+
+        public static int Clamp(int x, int min, int max)
+        {
+            if (x < min)
+                return min;
+            if (x > max)
+                return max;
+            return x;
+        }
+
+        public static uint Clamp(uint x, uint min, uint max)
+        {
+            if (x < min)
+                return min;
+            if (x > max)
+                return max;
+            return x;
+        }
     }
 }

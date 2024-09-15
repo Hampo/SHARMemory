@@ -8,8 +8,8 @@ namespace SHARMemory.SHAR.Classes;
 [ClassFactory.TypeInfoName(".?AVUserController@@")]
 public class UserController : Class
 {
-    public const int MAX_PHYSICAL_BUTTONS = 49;
-    public const int MAX_LOGICAL_BUTTONS = 49;
+    public const int MAX_PHYSICAL_BUTTONS = 53;
+    public const int MAX_LOGICAL_BUTTONS = 53;
     public const int MAX_MAPPABLES = 16;
     public const int MAX_MAPPINGS = 2;
     public const int MAX_VIRTUAL_MAPPINGS = 2;
@@ -85,17 +85,52 @@ public class UserController : Class
     public const uint ButtonArrayOffset = NumButtonsOffset + sizeof(int);
     public ClassArray<Button> ButtonArray => new(Memory, Address + ButtonArrayOffset, Button.Size, MAX_PHYSICAL_BUTTONS);
 
-    public const uint ButtonNamesOffset = ButtonArrayOffset + Button.Size * MAX_PHYSICAL_BUTTONS + 32; // Unknown 32 bytes
+    public const uint ButtonNamesOffset = ButtonArrayOffset + Button.Size * MAX_PHYSICAL_BUTTONS;
     public StructArray<ulong> ButtonNames => new(Memory, Address + ButtonNamesOffset, sizeof(ulong), MAX_PHYSICAL_BUTTONS);
 
-    public const uint ButtonDeadZonesOffset = ButtonNamesOffset + sizeof(ulong) * MAX_PHYSICAL_BUTTONS + 32; // Unknown 32 bytes
+    public const uint ButtonDeadZonesOffset = ButtonNamesOffset + sizeof(ulong) * MAX_PHYSICAL_BUTTONS;
     public StructArray<float> ButtonDeadZones => new(Memory, Address + ButtonDeadZonesOffset, sizeof(float), MAX_PHYSICAL_BUTTONS);
 
-    public const uint ButtonStickyOffset = ButtonDeadZonesOffset + sizeof(float) * MAX_PHYSICAL_BUTTONS + 16; // Unknown 32 bytes
+    public const uint ButtonStickyOffset = ButtonDeadZonesOffset + sizeof(float) * MAX_PHYSICAL_BUTTONS;
     public StructArray<bool> ButtonSticky => new(Memory, Address + ButtonStickyOffset, sizeof(bool), MAX_PHYSICAL_BUTTONS);
 
-    public void SetButtonValue(InputManager.Buttons button, float value)
+    public void SetButtonValue(InputManager.Buttons button, float value, bool sticky) => SetButtonValue((int)button, value, sticky);
+
+    public void SetButtonValue(int button, float value, bool sticky)
     {
-        ButtonArray[(int)button].SetValue(value);
+        var buttons = ButtonArray.ToArray();
+        if (button < 0 || button >= buttons.Length)
+            throw new ArgumentOutOfRangeException(nameof(button), $"{nameof(button)} must be between 0 and {buttons.Length}.");
+
+        if (ButtonSticky[button] && !sticky)
+            return;
+
+        var lastValue = buttons[button].Value;
+        var deadZone = ButtonDeadZones[button];
+
+        if (Globals.RadMathUtil.Epsilon(value, 0, deadZone))
+        {
+            value = 0;
+        }
+        else
+        {
+            value = Globals.RadMathUtil.Clamp(value, -1, 1);
+
+            float sign = Math.Sign(value);
+            float calibratedButtonData = Globals.RadMathUtil.Fabs(value) - deadZone;
+
+            calibratedButtonData *= 1f / (1f - deadZone);
+            calibratedButtonData *= sign;
+
+            bool bChanged = !Globals.RadMathUtil.Epsilon(lastValue, calibratedButtonData, 0.05f);
+            value = bChanged ? calibratedButtonData : lastValue;
+        }
+
+        if (value > 0 || lastValue > 0)
+            ButtonArray[button].SetValue(value);
+
+        ButtonSticky[button] = sticky;
+        if (sticky && value == 0)
+            ButtonSticky[button] = false;
     }
 }
