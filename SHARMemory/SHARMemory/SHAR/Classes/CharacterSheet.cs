@@ -18,51 +18,51 @@ public class CharacterSheet : Class
 
     public CharacterSheet(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-    private const uint PlayerNameOffset = 0;
+    internal const uint PlayerNameOffset = 0;
     public string PlayerName => ReadString(PlayerNameOffset, Encoding.ASCII, 16u);
 
-    private const uint LevelListOffset = PlayerNameOffset + 16;
+    internal const uint LevelListOffset = PlayerNameOffset + 16;
     public StructArray<LevelRecord> LevelList => new(Memory, Address + LevelListOffset, LevelRecord.Size, MAX_LEVELS);
 
-    private const uint CurrentMissionInfoOffset = LevelListOffset + LevelRecord.Size * MAX_LEVELS;
+    internal const uint CurrentMissionInfoOffset = LevelListOffset + LevelRecord.Size * MAX_LEVELS;
     public CurrentMission CurrentMissionInfo
     {
         get => ReadStruct<CurrentMission>(CurrentMissionInfoOffset);
         set => WriteStruct(CurrentMissionInfoOffset, value);
     }
 
-    private const uint HighestMissionPlayedOffset = CurrentMissionInfoOffset + CurrentMission.Size;
+    internal const uint HighestMissionPlayedOffset = CurrentMissionInfoOffset + CurrentMission.Size;
     public CurrentMission HighestMissionPlayed
     {
         get => ReadStruct<CurrentMission>(HighestMissionPlayedOffset);
         set => WriteStruct(HighestMissionPlayedOffset, value);
     }
 
-    private const uint IsNavSystemEnabledOffset = HighestMissionPlayedOffset + CurrentMission.Size;
+    internal const uint IsNavSystemEnabledOffset = HighestMissionPlayedOffset + CurrentMission.Size;
     public bool IsNavSystemEnabled
     {
         get => ReadBoolean(IsNavSystemEnabledOffset);
         set => WriteBoolean(IsNavSystemEnabledOffset, value);
     }
 
-    private const uint CoinsOffset = IsNavSystemEnabledOffset + 4;
+    internal const uint CoinsOffset = IsNavSystemEnabledOffset + 4;
     public int Coins
     {
         get => ReadInt32(CoinsOffset);
         set => WriteInt32(CoinsOffset, value);
     }
 
-    private const uint CarInventoryOffset = CoinsOffset + sizeof(int);
+    internal const uint CarInventoryOffset = CoinsOffset + sizeof(int);
     public CarInventory CarInventory
     {
         get => ReadStruct<CarInventory>(CarInventoryOffset);
         set => WriteStruct(CarInventoryOffset, value);
     }
 
-    private const uint PersistentObjectStatesOffset = CarInventoryOffset + CarInventory.Size;
+    internal const uint PersistentObjectStatesOffset = CarInventoryOffset + CarInventory.Size;
     public StructArray<byte> PersistentObjectStates => new(Memory, Address + PersistentObjectStatesOffset, sizeof(byte), NUM_BYTES_FOR_PERSISTENT_STATES);
 
-    private const uint StateOffset = PersistentObjectStatesOffset + NUM_BYTES_FOR_PERSISTENT_STATES;
+    internal const uint StateOffset = PersistentObjectStatesOffset + NUM_BYTES_FOR_PERSISTENT_STATES;
     public byte State
     {
         get => ReadByte(StateOffset);
