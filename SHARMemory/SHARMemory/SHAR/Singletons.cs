@@ -98,6 +98,12 @@ public sealed class Singletons
     /// </summary>
     public RenderManager RenderManager => RenderManagerSingleton.Get();
 
+    private readonly Singleton<RewardsManager> RewardsManagerSingleton;
+    /// <summary>
+    /// A reference to SHAR's <see cref="Classes.RewardsManager"/> singleton.
+    /// </summary>
+    public RewardsManager RewardsManager => RewardsManagerSingleton.Get();
+
     private readonly Singleton<SoundManager> SoundManagerSingleton;
     /// <summary>
     /// A reference to SHAR's <see cref="Classes.SoundManager"/> singleton.
@@ -133,6 +139,7 @@ public sealed class Singletons
         PresentationManagerSingleton = new(memory, memory.SelectAddress(0x6C8980, 0x6C8940, 0x6C8940, 0x6C8978));
         RenderFlowSingleton = new(memory, memory.SelectAddress(0x6C87D8, 0x6C8798, 0x6C8798, 0x6C87D0));
         RenderManagerSingleton = new(memory, memory.SelectAddress(0x6C87B4, 0x6C8774, 0x6C8774, 0x6C87AC));
+        RewardsManagerSingleton = new(memory, memory.SelectAddress(0x6C8988, 0x6C8948, 0x6C8948, 0x6C8980));
         SoundManagerSingleton = new(memory, memory.SelectAddress(0x6C8590, 0x6C8550, 0x6C8550, 0x6C8588));
         TrafficManagerSingleton = new(memory, memory.SelectAddress(0x6C8468, 0x6C8428, 0x6C8428, 0x6C8460));
         VehicleCentralSingleton = new(memory, memory.SelectAddress(0x6C84D8, 0x6C8498, 0x6C8498, 0x6C84D0));
