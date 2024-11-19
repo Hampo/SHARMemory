@@ -41,7 +41,7 @@ internal class VDUStruct : Struct
     public override void ToBytes(ProcessMemory Memory, object Value, byte[] Buffer, int Offset = 0)
     {
         if (Value is not VDU Value2)
-            throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(LevelData)}'.", nameof(Value));
+            throw new ArgumentException($"Argument '{nameof(Value)}' must be of type '{nameof(VDU)}'.", nameof(Value));
 
         for (uint i = 0; i < GameplayManager.MAX_VDU_CARS; i++)
         {
