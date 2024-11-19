@@ -7,7 +7,7 @@ namespace SHARMemory.SHAR.Classes;
 [ClassFactory.TypeInfoName(".?AVReward@@")]
 public class Reward : Class
 {
-    public enum QuestTypes
+    public enum RewardTypes
     {
         Null,
         SkinOther,
@@ -16,7 +16,7 @@ public class Reward : Class
         Toy
     }
 
-    public enum RewardTypes
+    public enum QuestTypes
     {
         Blank,
         DefaultCar,
