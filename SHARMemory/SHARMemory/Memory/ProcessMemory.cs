@@ -1075,7 +1075,7 @@ public class ProcessMemory : IDisposable
     /// A <c>uint</c> that is the procedure's exit code.
     /// </returns>
     /// <exception cref="Win32Exception"></exception>
-    protected uint Execute(IntPtr Address, object Parameter)
+    internal uint Execute(IntPtr Address, object Parameter)
     {
         IntPtr procHandle = IntPtr.Zero;
         IntPtr allocMemAddress = IntPtr.Zero;
@@ -1139,7 +1139,7 @@ public class ProcessMemory : IDisposable
     /// An <c>IntPtr</c> of the procedure's address.
     /// </returns>
     /// <exception cref="Win32Exception"></exception>
-    protected IntPtr InjectFunction(byte[] Bytes)
+    internal IntPtr InjectFunction(byte[] Bytes)
     {
         IntPtr procHandle = IntPtr.Zero;
         try

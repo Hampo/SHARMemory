@@ -100,6 +100,10 @@ public class Memory : ProcessMemory
     /// </summary>
     public readonly Singletons Singletons;
     /// <summary>
+    /// References to SHAR's custom functions.
+    /// </summary>
+    public readonly Functions Functions;
+    /// <summary>
     /// The watcher class for monitoring game changes in realtime.
     /// </summary>
     public readonly Watcher Watcher;
@@ -318,6 +322,7 @@ public class Memory : ProcessMemory
 
         Globals = new(this);
         Singletons = new(this);
+        Functions = new(this);
         Watcher = new(this);
     }
 
