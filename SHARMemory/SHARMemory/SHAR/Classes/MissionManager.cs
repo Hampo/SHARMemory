@@ -7,11 +7,47 @@ namespace SHARMemory.SHAR.Classes;
 [ClassFactory.TypeInfoName(".?AVMissionManager@@")]
 public class MissionManager : GameplayManager
 {
+    public enum LoadingStates : uint
+    {
+        Invalid,
+        Level,
+        MissionLoad,
+        MissionLoading,
+        MissionInit,
+        MissionIniting,
+        MissionDynaload,
+        WaitForDynaload,
+        MissionStart,
+    }
+
+    public enum MissionStates : uint
+    {
+        Invalid,
+        Loading,
+        Init,
+        Suspend,
+        Running
+    }
+
     public MissionManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
     internal const uint LoadingManagerProcessRequetsCallbackVFTableOffset = ElapsedIdleTimeOffset + sizeof(uint);
 
-    internal const uint LastFileNameOffset = LoadingManagerProcessRequetsCallbackVFTableOffset + sizeof(uint) + 8; // TF is the 8???
+    internal const uint LoadingStateOffset = LoadingManagerProcessRequetsCallbackVFTableOffset + sizeof(uint);
+    public LoadingStates LoadingState
+    {
+        get => (LoadingStates)ReadUInt32(LoadingStateOffset);
+        set => WriteUInt32(LoadingStateOffset, (uint)value);
+    }
+
+    internal const uint MissionStateOffset = LoadingStateOffset + sizeof(uint);
+    public MissionStates MissionState
+    {
+        get => (MissionStates)ReadUInt32(MissionStateOffset);
+        set => WriteUInt32(MissionStateOffset, (uint)value);
+    }
+
+    internal const uint LastFileNameOffset = MissionStateOffset + sizeof(uint);
     public string LastFileName
     {
         get => ReadString(LastFileNameOffset, Encoding.UTF8, 256);
