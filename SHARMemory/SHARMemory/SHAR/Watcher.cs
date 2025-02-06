@@ -86,6 +86,10 @@ public sealed class Watcher
     /// An event handler for when the Coins value changes.
     /// </summary>
     public event AsyncEventHandler<CoinsChangedEventArgs> CoinsChanged;
+    /// <summary>
+    /// An event handler for when a Persistent Object is destroyed.
+    /// </summary>
+    public event AsyncEventHandler<PersistentObjectDestroyedEventArts> PersistentObjectDestroyed;
 
     /// <summary>
     /// An event handler for when a Collector Card is collected.
@@ -191,6 +195,10 @@ public sealed class Watcher
                 gagsViewed[level][i] = false;
             }
         }
+
+        for (int i = 0; i < persistentObjectStates.Length; i++)
+            persistentObjectStates[i] = false;
+
         lastCoins = 0;
 
         var gameplayManager = Memory.Globals.GameplayManager;
@@ -287,13 +295,13 @@ public sealed class Watcher
     private readonly int[] skinsPurchased = new int[7];
     private readonly string[] currentSkins = new string[7];
     private readonly bool[][] gagsViewed = new bool[7][];
+    private readonly bool[] persistentObjectStates = new bool[82 * 128]; // 75 region sections + 7 level sectors * 128 bits per sector
     private int lastCoins = 0;
     private async Task CheckCharacterSheet()
     {
         var characterSheet = Memory.Singletons.CharacterSheetManager?.CharacterSheet;
         if (characterSheet == null)
             return;
-
 
         var levelArray = characterSheet.LevelList.ToArray();
         for (int level = 0; level < 7; level++)
@@ -409,6 +417,19 @@ public sealed class Watcher
                 {
                     gagsViewed[level][i] = gagViewed;
                 }
+            }
+        }
+
+        var currentPersistentObjectStates = characterSheet.PersistentObjectStates.ToArray();
+        for (int i = 0; i < currentPersistentObjectStates.Length * 8; i++)
+        {
+            uint index = (uint)i / 8;
+            bool state = (currentPersistentObjectStates[index] & (1 << i % 8)) == 0;
+            if (state != persistentObjectStates[i])
+            {
+                persistentObjectStates[i] = state;
+                if (state)
+                    await PersistentObjectDestroyed.InvokeAsync(Memory, new((uint)i), CancellationToken.None);
             }
         }
 
