@@ -253,9 +253,13 @@ public sealed class Watcher
         if (lastIsGameLoaded && !gameDataManager.IsGameLoaded)
         {
             ResetData();
+            lastIsGameLoaded = gameDataManager.IsGameLoaded;
             await NewGame.InvokeAsync(Memory, new(), CancellationToken.None);
         }
-        lastIsGameLoaded = gameDataManager.IsGameLoaded;
+        else
+        {
+            lastIsGameLoaded = gameDataManager.IsGameLoaded;
+        }
 
         var newFileOperation = gameDataManager.CurrentFileOperation;
         if (lastFileOperation != newFileOperation)
@@ -263,10 +267,13 @@ public sealed class Watcher
             if (newFileOperation == GameDataManager.FileOperation.LoadComplete)
             {
                 ResetData();
+                lastFileOperation = newFileOperation;
                 await LoadGame.InvokeAsync(Memory, new(), CancellationToken.None);
             }
-
-            lastFileOperation = newFileOperation;
+            else
+            {
+                lastFileOperation = newFileOperation;
+            }
         }
     }
 
@@ -299,16 +306,23 @@ public sealed class Watcher
 
                 if (!missionsComplete[level][i] && missionData.Completed)
                 {
+                    missionsComplete[level][i] = missionData.Completed;
                     await MissionComplete.InvokeAsync(Memory, new(level, i), CancellationToken.None);
                 }
-
-                missionsComplete[level][i] = missionData.Completed;
+                else
+                {
+                    missionsComplete[level][i] = missionData.Completed;
+                }
             }
             if (!bonusMissionComplete[level] && levelData.BonusMission.Completed)
             {
+                bonusMissionComplete[level] = levelData.BonusMission.Completed;
                 await BonusMissionComplete.InvokeAsync(Memory, new(level), CancellationToken.None);
             }
-            bonusMissionComplete[level] = levelData.BonusMission.Completed;
+            else
+            {
+                bonusMissionComplete[level] = levelData.BonusMission.Completed;
+            }
 
             for (int i = 0; i < racesComplete[level].Length; i++)
             {
@@ -316,54 +330,71 @@ public sealed class Watcher
 
                 if (!racesComplete[level][i] && raceData.Completed)
                 {
+                    racesComplete[level][i] = raceData.Completed;
                     await StreetRaceComplete.InvokeAsync(Memory, new(level, i), CancellationToken.None);
                 }
-
-                racesComplete[level][i] = raceData.Completed;
-            }
-            if (!gambleRaceComplete[level] && levelData.GambleRace.Completed)
-            {
-                await GambleRaceComplete.InvokeAsync(Memory, new(level), CancellationToken.None);
-            }
-            gambleRaceComplete[level] = levelData.GambleRace.Completed;
-
-            if (levelData.WaspsDestroyed > waspsDestroyed[level])
-            {
-                for (int i = 1; i <= levelData.WaspsDestroyed - waspsDestroyed[level]; i++)
+                else
                 {
-                    await WaspDestroyed.InvokeAsync(Memory, new(level, waspsDestroyed[level] + i), CancellationToken.None);
+                    racesComplete[level][i] = raceData.Completed;
                 }
             }
+
+
+            if (!gambleRaceComplete[level] && levelData.GambleRace.Completed)
+            {
+                gambleRaceComplete[level] = levelData.GambleRace.Completed;
+                await GambleRaceComplete.InvokeAsync(Memory, new(level), CancellationToken.None);
+            }
+            else
+            {
+                gambleRaceComplete[level] = levelData.GambleRace.Completed;
+            }
+
+            var lastWaspsDestroyed = waspsDestroyed[level];
             waspsDestroyed[level] = levelData.WaspsDestroyed;
+            if (levelData.WaspsDestroyed > lastWaspsDestroyed)
+            {
+                for (int i = 1; i <= levelData.WaspsDestroyed - lastWaspsDestroyed; i++)
+                {
+                    await WaspDestroyed.InvokeAsync(Memory, new(level, lastWaspsDestroyed + i), CancellationToken.None);
+                }
+            }
 
             if (!fmvsWatched[level] && levelData.FMVUnlocked)
             {
+                fmvsWatched[level] = levelData.FMVUnlocked;
                 await FMVWatched.InvokeAsync(Memory, new(level), CancellationToken.None);
             }
-            fmvsWatched[level] = levelData.FMVUnlocked;
-
-            if (levelData.NumCarsPurchased > carsPurchased[level])
+            else
             {
-                for (int i = 1; i <= levelData.NumCarsPurchased - carsPurchased[level]; i++)
-                {
-                    await CarPurchased.InvokeAsync(Memory, new(level, carsPurchased[level] + i), CancellationToken.None);
-                }
+                fmvsWatched[level] = levelData.FMVUnlocked;
             }
+
+            var lastNumCarsPurchased = carsPurchased[level];
             carsPurchased[level] = levelData.NumCarsPurchased;
-
-            if (levelData.NumSkinsPurchased > skinsPurchased[level])
+            if (levelData.NumCarsPurchased > lastNumCarsPurchased)
             {
-                for (int i = 1; i <= levelData.NumSkinsPurchased - skinsPurchased[level]; i++)
+                for (int i = 1; i <= levelData.NumCarsPurchased - lastNumCarsPurchased; i++)
                 {
-                    await SkinPurchased.InvokeAsync(Memory, new(level, skinsPurchased[level] + i), CancellationToken.None);
+                    await CarPurchased.InvokeAsync(Memory, new(level, lastNumCarsPurchased + i), CancellationToken.None);
                 }
             }
+
+            var lastNumSkinsPurchased = skinsPurchased[level];
             skinsPurchased[level] = levelData.NumSkinsPurchased;
+            if (levelData.NumSkinsPurchased > lastNumSkinsPurchased)
+            {
+                for (int i = 1; i <= levelData.NumSkinsPurchased - lastNumSkinsPurchased; i++)
+                {
+                    await SkinPurchased.InvokeAsync(Memory, new(level, lastNumSkinsPurchased + i), CancellationToken.None);
+                }
+            }
 
             if (levelData.CurrentSkin != currentSkins[level])
             {
-                await SkinChanged.InvokeAsync(Memory, new(level, currentSkins[level], levelData.CurrentSkin), CancellationToken.None);
+                var lastSkin = currentSkins[level];
                 currentSkins[level] = levelData.CurrentSkin;
+                await SkinChanged.InvokeAsync(Memory, new(level, lastSkin, levelData.CurrentSkin), CancellationToken.None);
             }
 
             for (int i = 0; i < gagsViewed[level].Length; i++)
@@ -371,17 +402,21 @@ public sealed class Watcher
                 var gagViewed = (levelData.GagMask & (1 << i)) != 0;
                 if (!gagsViewed[level][i] && gagViewed)
                 {
+                    gagsViewed[level][i] = gagViewed;
                     await GagViewed.InvokeAsync(Memory, new(level, i), CancellationToken.None);
                 }
-                gagsViewed[level][i] = gagViewed;
+                else
+                {
+                    gagsViewed[level][i] = gagViewed;
+                }
             }
         }
 
         var newCoins = characterSheet.Coins;
         if (newCoins != lastCoins)
         {
-            await CoinsChanged.InvokeAsync(Memory, new(lastCoins, newCoins), CancellationToken.None);
             lastCoins = newCoins;
+            await CoinsChanged.InvokeAsync(Memory, new(lastCoins, newCoins), CancellationToken.None);
         }
     }
 
@@ -431,10 +466,9 @@ public sealed class Watcher
         var missionIndex = gameplayManager.GetCurrentMissionIndex();
         if (!lastLevel.HasValue || lastLevel.Value != levelData.Level || lastMissionIndex != missionIndex)
         {
-            await MissionIndexChanged.InvokeAsync(Memory, new(lastLevel, lastMissionIndex, levelData.Level, missionIndex), CancellationToken.None);
-
             lastLevel = levelData.Level;
             lastMissionIndex = missionIndex;
+            await MissionIndexChanged.InvokeAsync(Memory, new(lastLevel, lastMissionIndex, levelData.Level, missionIndex), CancellationToken.None);
         }
 
         if (gameplayManager is MissionManager missionManager)
@@ -451,9 +485,8 @@ public sealed class Watcher
                     }
                     catch { }
                 }
-                await MissionChanged.InvokeAsync(Memory, new(lastMission2, mission), CancellationToken.None);
-
                 lastMission = mission?.Address ?? 0;
+                await MissionChanged.InvokeAsync(Memory, new(lastMission2, mission), CancellationToken.None);
             }
 
             var stage = mission?.GetCurrentStage();
@@ -468,9 +501,8 @@ public sealed class Watcher
                     }
                     catch { }
                 }
-                await MissionStageChanged.InvokeAsync(Memory, new(lastStage2, stage), CancellationToken.None);
-
                 lastStage = stage?.Address ?? 0;
+                await MissionStageChanged.InvokeAsync(Memory, new(lastStage2, stage), CancellationToken.None);
             }
         }
 
@@ -486,9 +518,8 @@ public sealed class Watcher
                 }
                 catch { }
             }
-            await VehicleChanged.InvokeAsync(Memory, new(lastVehicle2, vehicle), CancellationToken.None);
-
             lastVehicle = vehicle?.Address ?? 0;
+            await VehicleChanged.InvokeAsync(Memory, new(lastVehicle2, vehicle), CancellationToken.None);
         }
     }
 
@@ -516,9 +547,8 @@ public sealed class Watcher
 
             if (nowPlaying.Address != lastDialogAddress)
             {
-                await DialogPlaying.InvokeAsync(Memory, new(nowPlaying), CancellationToken.None);
-
                 lastDialogAddress = nowPlaying.Address;
+                await DialogPlaying.InvokeAsync(Memory, new(nowPlaying), CancellationToken.None);
             }
         }
     }
