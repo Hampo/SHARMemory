@@ -486,7 +486,7 @@ public sealed class Watcher
                     catch { }
                 }
                 lastMission = mission?.Address ?? 0;
-                await MissionChanged.InvokeAsync(Memory, new(lastMission2, mission), CancellationToken.None);
+                await MissionChanged.InvokeAsync(Memory, new(lastMission2, mission, levelData.Level, missionIndex), CancellationToken.None);
             }
 
             var stage = mission?.GetCurrentStage();
@@ -502,7 +502,7 @@ public sealed class Watcher
                     catch { }
                 }
                 lastStage = stage?.Address ?? 0;
-                await MissionStageChanged.InvokeAsync(Memory, new(lastStage2, stage), CancellationToken.None);
+                await MissionStageChanged.InvokeAsync(Memory, new(lastStage2, stage, levelData.Level, missionIndex), CancellationToken.None);
             }
         }
 
