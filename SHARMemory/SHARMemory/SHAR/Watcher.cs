@@ -421,7 +421,7 @@ public sealed class Watcher
         }
 
         var currentPersistentObjectStates = characterSheet.PersistentObjectStates.ToArray();
-        for (int i = 0; i < currentPersistentObjectStates.Length * 8; i++)
+        for (int i = 0; i < persistentObjectStates.Length; i++)
         {
             uint index = (uint)i / 8;
             bool state = (currentPersistentObjectStates[index] & (1 << i % 8)) == 0;
