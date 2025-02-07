@@ -101,10 +101,7 @@ public class Mouse : RealController
         if (mouseButton == NUM_MOUSE_BUTTONS)
             return;
 
-        var buttonMap = ButtonMap;
-        buttonMap[mapType, mouseButton, 0] = -1;
-        ButtonMap = buttonMap;
-        //WriteInt32((uint)(ButtonMapOffset + mapType * NUM_MOUSE_BUTTONS * sizeof(int) + mouseButton * sizeof(int)), -1);
+        WriteInt32((uint)(ButtonMapOffset + mapType * NUM_MOUSE_BUTTONS * NUM_DIRECTION_TYPES * sizeof(int) + mouseButton * NUM_DIRECTION_TYPES * sizeof(int)), -1);
     }
 
     public override void EnableButton(int mapType, int buttonId, InputManager.Buttons button)
@@ -116,9 +113,6 @@ public class Mouse : RealController
         if (mouseButton == NUM_MOUSE_BUTTONS)
             return;
 
-        var buttonMap = ButtonMap;
-        buttonMap[mapType, mouseButton, 0] = (int)button;
-        ButtonMap = buttonMap;
-        //WriteInt32((uint)(ButtonMapOffset + mapType * NUM_MOUSE_BUTTONS * sizeof(int) + buttonId * sizeof(int)), (int)button);
+        WriteInt32((uint)(ButtonMapOffset + mapType * NUM_MOUSE_BUTTONS * NUM_DIRECTION_TYPES * sizeof(int) + mouseButton * NUM_DIRECTION_TYPES * sizeof(int)), (int)button);
     }
 }
