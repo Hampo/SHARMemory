@@ -168,4 +168,42 @@ public class UserController : Class
         if (sticky && value == 0)
             ButtonSticky[button] = false;
     }
+
+    public void DisableButton(InputManager.Buttons button)
+    {
+        var mapType = InputManager.ButtonToMapType(button);
+        if (mapType == InputManager.MapType.Frontend)
+            throw new ArgumentException($"Button {button} is a Frontend button. Disabling unsupported.");
+
+        foreach (var virtualMap in VirtualMap)
+        {
+            var code = virtualMap.ButtonMap[(int)button];
+            if (code == -1)
+                continue;
+
+            var buttonId = code & 0xFFFFFF;
+
+            foreach (var controller in Controller)
+                controller.DisableButton((int)mapType, buttonId);
+        }
+    }
+
+    public void EnableButton(InputManager.Buttons button)
+    {
+        var mapType = InputManager.ButtonToMapType(button);
+        if (mapType == InputManager.MapType.Frontend)
+            throw new ArgumentException($"Button {button} is a Frontend button. Enabling unsupported.");
+
+        foreach (var virtualMap in VirtualMap)
+        {
+            var code = virtualMap.ButtonMap[(int)button];
+            if (code == -1)
+                continue;
+
+            var buttonId = code & 0xFFFFFF;
+
+            foreach (var controller in Controller)
+                controller.EnableButton((int)mapType, buttonId, button);
+        }
+    }
 }
