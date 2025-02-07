@@ -6,12 +6,14 @@ namespace SHARMemory.SHAR.Classes;
 [ClassFactory.TypeInfoName(".?AVRealController@@")]
 public class RealController : Class
 {
+    public const int NUM_CONTROLLER_TYPES = 4;
+
     public enum ControllerTypes
     {
         Gamepad,
         Keyboard,
         Mouse,
-        SteeringWheel
+        SteeringWheel,
     }
 
     public RealController(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }

@@ -8,6 +8,7 @@ namespace SHARMemory.SHAR.Classes;
 [ClassFactory.TypeInfoName(".?AVInputManager@@")]
 public class InputManager : Class
 {
+    public const int MAX_CONTROLLERS = 4;
     public const int MAX_PLAYERS = 4;
 
     public enum Buttons : uint
@@ -85,19 +86,16 @@ public class InputManager : Class
 
     public InputManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-    internal const uint UserController1Offset = 0xC;
-    public UserController UserController1 => Memory.ClassFactory.Create<UserController>(Address + UserController1Offset);
+    internal const uint IRadControllerConnectionChangeCallbackVFTableOffset = 0;
 
-    internal const uint UserController2Offset = UserController1Offset + 1676;
-    public UserController UserController2 => Memory.ClassFactory.Create<UserController>(Address + UserController2Offset);
+    internal const uint IControllerSystem2Offset = IRadControllerConnectionChangeCallbackVFTableOffset + sizeof(uint);
 
-    internal const uint UserController3Offset = UserController2Offset + 1676;
-    public UserController UserController3 => Memory.ClassFactory.Create<UserController>(Address + UserController3Offset);
+    internal const uint GameDataHandlerVFTableOffset = IControllerSystem2Offset + sizeof(uint);
 
-    internal const uint UserController4Offset = UserController3Offset + 1676;
-    public UserController UserController4 => Memory.ClassFactory.Create<UserController>(Address + UserController4Offset);
+    internal const uint ControllerArrayOffset = GameDataHandlerVFTableOffset + sizeof(uint);
+    public ClassArray<UserController> ControllerArray => new(Memory, Address + ControllerArrayOffset, UserController.Size, MAX_CONTROLLERS);
 
-    internal const uint GameStateOffset = UserController4Offset + 1676;
+    internal const uint GameStateOffset = ControllerArrayOffset + UserController.Size * MAX_CONTROLLERS;
     public ActiveState GameState
     {
         get => (ActiveState)ReadUInt32(GameStateOffset);
