@@ -600,27 +600,27 @@ public sealed class Watcher
         var tokenStores = rewardsManager.LevelTokenStoreList.ToArray();
         for (int level = 0; level < 7; level++)
         {
-            var tokenStore = tokenStores[level];
+            var levelTokenStore = tokenStores[level];
 
 
-            var levelMerch = merchandiseEarned[level];
-            while (levelMerch.Count > tokenStore.Counter)
-                levelMerch.RemoveAt(levelMerch.Count - 1);
-            while (levelMerch.Count < tokenStore.Counter)
-                levelMerch.Add(false);
+            var levelMerchandise = merchandiseEarned[level];
+            while (levelMerchandise.Count > levelTokenStore.Counter)
+                levelMerchandise.RemoveAt(levelMerchandise.Count - 1);
+            while (levelMerchandise.Count < levelTokenStore.Counter)
+                levelMerchandise.Add(false);
 
-            for (int rewardIndex = 0; rewardIndex < tokenStore.Counter; rewardIndex++)
+            for (int merchandiseIndex = 0; merchandiseIndex < levelTokenStore.Counter; merchandiseIndex++)
             {
-                var merchandise = Memory.Functions.GetMerchandise(level, rewardIndex);
+                var merchandise = Memory.Functions.GetMerchandise(level, merchandiseIndex);
                 if (merchandise == null)
                     continue;
 
-                if (merchandise.Earned != levelMerch[rewardIndex])
+                if (merchandise.Earned != levelMerchandise[merchandiseIndex])
                 {
-                    levelMerch[rewardIndex] = merchandise.Earned;
+                    levelMerchandise[merchandiseIndex] = merchandise.Earned;
                     if (merchandise.Earned)
                     {
-                        await MerchandisePurchased.InvokeAsync(Memory, new(level, rewardIndex, merchandise), CancellationToken.None);
+                        await MerchandisePurchased.InvokeAsync(Memory, new(level, merchandiseIndex, merchandise), CancellationToken.None);
                     }
                 }
             }
