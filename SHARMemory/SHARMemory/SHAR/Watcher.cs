@@ -10,6 +10,8 @@ using SHARMemory.SHAR.Events.GameplayManager;
 using SHARMemory.SHAR.Events.SoundManager;
 using System.Linq;
 using SHARMemory.SHAR.Events.CardGallery;
+using System.Collections.Generic;
+using SHARMemory.SHAR.Events.RewardsManager;
 
 namespace SHARMemory.SHAR;
 
@@ -118,6 +120,11 @@ public sealed class Watcher
     /// </summary>
     public event AsyncEventHandler<DialogPlaying> DialogPlaying;
 
+    /// <summary>
+    /// An event handler for when Merchandise is purchased.
+    /// </summary>
+    public event AsyncEventHandler<MerchandisePurchased> MerchandisePurchased;
+
     private readonly Memory Memory;
 
     private bool Running = false;
@@ -194,6 +201,8 @@ public sealed class Watcher
             {
                 gagsViewed[level][i] = false;
             }
+
+            merchandiseEarned[level].Clear();
         }
 
         for (int i = 0; i < persistentObjectStates.Length; i++)
@@ -241,6 +250,7 @@ public sealed class Watcher
                 await CheckCardGallery();
                 await CheckGameplayManager();
                 await CheckSoundManager();
+                await CheckRewardsManager();
             }
             catch (Exception ex)
             {
@@ -570,6 +580,49 @@ public sealed class Watcher
             {
                 lastDialogAddress = nowPlaying.Address;
                 await DialogPlaying.InvokeAsync(Memory, new(nowPlaying), CancellationToken.None);
+            }
+        }
+    }
+
+
+    private readonly Dictionary<int, List<bool>> merchandiseEarned = new() { { 0, new() }, { 1, new() }, { 2, new() }, { 3, new() }, { 4, new() }, { 5, new() }, { 6, new() } };
+
+    private async Task CheckRewardsManager()
+    {
+        var rewardsManager = Memory.Singletons.RewardsManager;
+        if (rewardsManager == null)
+        {
+            for (int level = 0; level < 7; level++)
+                merchandiseEarned[level].Clear();
+            return;
+        }
+
+        var tokenStores = rewardsManager.LevelTokenStoreList.ToArray();
+        for (int level = 0; level < 7; level++)
+        {
+            var tokenStore = tokenStores[level];
+
+
+            var levelMerch = merchandiseEarned[level];
+            while (levelMerch.Count > tokenStore.Counter)
+                levelMerch.RemoveAt(levelMerch.Count - 1);
+            while (levelMerch.Count < tokenStore.Counter)
+                levelMerch.Add(false);
+
+            for (int rewardIndex = 0; rewardIndex < tokenStore.Counter; rewardIndex++)
+            {
+                var merchandise = Memory.Functions.GetMerchandise(level, rewardIndex);
+                if (merchandise == null)
+                    continue;
+
+                if (merchandise.Earned != levelMerch[rewardIndex])
+                {
+                    levelMerch[rewardIndex] = merchandise.Earned;
+                    if (merchandise.Earned)
+                    {
+                        await MerchandisePurchased.InvokeAsync(Memory, new(level, rewardIndex, merchandise), CancellationToken.None);
+                    }
+                }
             }
         }
     }
