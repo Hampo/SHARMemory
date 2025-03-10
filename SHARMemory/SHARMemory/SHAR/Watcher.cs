@@ -12,6 +12,7 @@ using System.Linq;
 using SHARMemory.SHAR.Events.CardGallery;
 using System.Collections.Generic;
 using SHARMemory.SHAR.Events.RewardsManager;
+using SHARMemory.SHAR.Events.Error;
 
 namespace SHARMemory.SHAR;
 
