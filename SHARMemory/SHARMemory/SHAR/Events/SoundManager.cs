@@ -2,11 +2,11 @@
 
 namespace SHARMemory.SHAR.Events.SoundManager;
 
-public class DialogPlaying : EventArgs
+public class DialogPlayingEventArgs : EventArgs
 {
     public Classes.SelectableDialog Dialog { get; }
 
-    public DialogPlaying(Classes.SelectableDialog dialog)
+    public DialogPlayingEventArgs(Classes.SelectableDialog dialog)
     {
         Dialog = dialog;
     }
