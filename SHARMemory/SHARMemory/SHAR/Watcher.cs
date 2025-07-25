@@ -214,6 +214,7 @@ public sealed class Watcher
 
             merchandiseEarned[level].Clear();
             rewardsUnlocked[level].Clear();
+            rewardsUnlocked[level].AddRange([false, false, false, false, false, false]);
         }
 
         for (int i = 0; i < persistentObjectStates.Length; i++)
@@ -614,6 +615,7 @@ public sealed class Watcher
             {
                 merchandiseEarned[level].Clear();
                 rewardsUnlocked[level].Clear();
+                rewardsUnlocked[level].AddRange([false, false, false, false, false, false]);
             }
             return;
         }
@@ -646,11 +648,6 @@ public sealed class Watcher
             }
 
             var levelRewards = rewardsUnlocked[level];
-            var rewardTypes = Enum.GetValues(typeof(RewardUnlockedEventArgs.RewardType));
-            while (levelRewards.Count > rewardTypes.Length)
-                levelRewards.RemoveAt(levelRewards.Count - 1);
-            while (levelRewards.Count < rewardTypes.Length)
-                levelRewards.Add(false);
 
             var levelRewardsList = rewardsList[level];
 
