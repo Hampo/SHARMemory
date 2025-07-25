@@ -130,6 +130,11 @@ public sealed class Watcher
     /// </summary>
     public event AsyncEventHandler<MerchandisePurchasedEventArgs> MerchandisePurchased;
 
+    /// <summary>
+    /// An event handler for when a Reward is unlocked.
+    /// </summary>
+    public event AsyncEventHandler<RewardUnlockedEventArgs> RewardUnlocked;
+
     private readonly Memory Memory;
 
     private bool Running = false;
@@ -208,6 +213,7 @@ public sealed class Watcher
             }
 
             merchandiseEarned[level].Clear();
+            rewardsUnlocked[level].Clear();
         }
 
         for (int i = 0; i < persistentObjectStates.Length; i++)
@@ -597,6 +603,7 @@ public sealed class Watcher
 
 
     private readonly Dictionary<int, List<bool>> merchandiseEarned = new() { { 0, new() }, { 1, new() }, { 2, new() }, { 3, new() }, { 4, new() }, { 5, new() }, { 6, new() } };
+    private readonly Dictionary<int, List<bool>> rewardsUnlocked = new() { { 0, new() }, { 1, new() }, { 2, new() }, { 3, new() }, { 4, new() }, { 5, new() }, { 6, new() } };
 
     private async Task CheckRewardsManager()
     {
@@ -604,15 +611,18 @@ public sealed class Watcher
         if (rewardsManager == null)
         {
             for (int level = 0; level < 7; level++)
+            {
                 merchandiseEarned[level].Clear();
+                rewardsUnlocked[level].Clear();
+            }
             return;
         }
 
         var tokenStores = rewardsManager.LevelTokenStoreList.ToArray();
+        var rewardsList = rewardsManager.RewardsList.ToArray();
         for (int level = 0; level < 7; level++)
         {
             var levelTokenStore = tokenStores[level];
-
 
             var levelMerchandise = merchandiseEarned[level];
             while (levelMerchandise.Count > levelTokenStore.Counter)
@@ -626,13 +636,117 @@ public sealed class Watcher
                 if (merchandise == null)
                     continue;
 
-                if (merchandise.Earned != levelMerchandise[merchandiseIndex])
+                var earned = merchandise.Earned;
+                if (earned != levelMerchandise[merchandiseIndex])
                 {
-                    levelMerchandise[merchandiseIndex] = merchandise.Earned;
-                    if (merchandise.Earned)
-                    {
+                    levelMerchandise[merchandiseIndex] = earned;
+                    if (earned)
                         await MerchandisePurchased.InvokeAsync(Memory, new(level, merchandiseIndex, merchandise), CancellationToken.None);
-                    }
+                }
+            }
+
+            var levelRewards = rewardsUnlocked[level];
+            var rewardTypes = Enum.GetValues(typeof(RewardUnlockedEventArgs.RewardType));
+            while (levelRewards.Count > rewardTypes.Length)
+                levelRewards.RemoveAt(levelRewards.Count - 1);
+            while (levelRewards.Count < rewardTypes.Length)
+                levelRewards.Add(false);
+
+            var levelRewardsList = rewardsList[level];
+
+            var streetRaceReward = levelRewardsList.StreetRace;
+            if (streetRaceReward == null)
+            {
+                levelRewards[(int)RewardUnlockedEventArgs.RewardType.StreetRace] = false;
+            }
+            else
+            {
+                var earned = streetRaceReward.Earned;
+                if (earned != levelRewards[(int)RewardUnlockedEventArgs.RewardType.StreetRace])
+                {
+                    levelRewards[(int)RewardUnlockedEventArgs.RewardType.StreetRace] = earned;
+                    if (earned)
+                        await RewardUnlocked.InvokeAsync(Memory, new(level, RewardUnlockedEventArgs.RewardType.StreetRace, streetRaceReward), CancellationToken.None);
+                }
+            }
+
+            var bonusMissionReward = levelRewardsList.BonusMission;
+            if (bonusMissionReward == null)
+            {
+                levelRewards[(int)RewardUnlockedEventArgs.RewardType.BonusMission] = false;
+            }
+            else
+            {
+                var earned = bonusMissionReward.Earned;
+                if (earned != levelRewards[(int)RewardUnlockedEventArgs.RewardType.BonusMission])
+                {
+                    levelRewards[(int)RewardUnlockedEventArgs.RewardType.BonusMission] = earned;
+                    if (earned)
+                        await RewardUnlocked.InvokeAsync(Memory, new(level, RewardUnlockedEventArgs.RewardType.BonusMission, bonusMissionReward), CancellationToken.None);
+                }
+            }
+
+            var cardsReward = levelRewardsList.Cards;
+            if (cardsReward == null)
+            {
+                levelRewards[(int)RewardUnlockedEventArgs.RewardType.Cards] = false;
+            }
+            else
+            {
+                var earned = cardsReward.Earned;
+                if (earned != levelRewards[(int)RewardUnlockedEventArgs.RewardType.Cards])
+                {
+                    levelRewards[(int)RewardUnlockedEventArgs.RewardType.Cards] = earned;
+                    if (earned)
+                        await RewardUnlocked.InvokeAsync(Memory, new(level, RewardUnlockedEventArgs.RewardType.Cards, cardsReward), CancellationToken.None);
+                }
+            }
+
+            var defaultCarReward = levelRewardsList.DefaultCar;
+            if (defaultCarReward == null)
+            {
+                levelRewards[(int)RewardUnlockedEventArgs.RewardType.DefaultCar] = false;
+            }
+            else
+            {
+                var earned = defaultCarReward.Earned;
+                if (earned != levelRewards[(int)RewardUnlockedEventArgs.RewardType.DefaultCar])
+                {
+                    levelRewards[(int)RewardUnlockedEventArgs.RewardType.DefaultCar] = earned;
+                    if (earned)
+                        await RewardUnlocked.InvokeAsync(Memory, new(level, RewardUnlockedEventArgs.RewardType.DefaultCar, defaultCarReward), CancellationToken.None);
+                }
+            }
+
+            var defaultSkinReward = levelRewardsList.DefaultSkin;
+            if (defaultSkinReward == null)
+            {
+                levelRewards[(int)RewardUnlockedEventArgs.RewardType.DefaultSkin] = false;
+            }
+            else
+            {
+                var earned = defaultSkinReward.Earned;
+                if (earned != levelRewards[(int)RewardUnlockedEventArgs.RewardType.DefaultSkin])
+                {
+                    levelRewards[(int)RewardUnlockedEventArgs.RewardType.DefaultSkin] = earned;
+                    if (earned)
+                        await RewardUnlocked.InvokeAsync(Memory, new(level, RewardUnlockedEventArgs.RewardType.DefaultSkin, defaultSkinReward), CancellationToken.None);
+                }
+            }
+
+            var goldCardsReward = levelRewardsList.GoldCards;
+            if (goldCardsReward == null)
+            {
+                levelRewards[(int)RewardUnlockedEventArgs.RewardType.GoldCards] = false;
+            }
+            else
+            {
+                var earned = goldCardsReward.Earned;
+                if (earned != levelRewards[(int)RewardUnlockedEventArgs.RewardType.GoldCards])
+                {
+                    levelRewards[(int)RewardUnlockedEventArgs.RewardType.GoldCards] = earned;
+                    if (earned)
+                        await RewardUnlocked.InvokeAsync(Memory, new(level, RewardUnlockedEventArgs.RewardType.GoldCards, goldCardsReward), CancellationToken.None);
                 }
             }
         }
