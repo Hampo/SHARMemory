@@ -10,7 +10,6 @@ public class CompleteObjectLocator : Class
 
     public CompleteObjectLocator(ProcessMemory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator)
     {
-        memory.CheckValidMemoryAddress(address);
         Signature = ReadUInt32(0);
         Offset = ReadUInt32(4);
         ConstructorDisplacementOffset = ReadUInt32(8);
