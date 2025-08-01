@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
+using System.Linq;
 
 namespace SHARMemory.Memory;
 
@@ -202,55 +201,6 @@ public class ProcessMemory : IDisposable
         }
     }
 
-    private struct MemoryRange
-    {
-        public readonly uint Start;
-        public readonly uint End;
-
-        public MemoryRange(uint start, uint end)
-        {
-            Start = start;
-            End = end;
-        }
-    }
-    private readonly List<MemoryRange> _committedRanges = [];
-    private readonly ReaderWriterLockSlim _committedRangesLock = new();
-    private bool IsInCommittedRange(uint address)
-    {
-        int low = 0, high = _committedRanges.Count - 1;
-
-        while (low <= high)
-        {
-            int mid = (low + high) / 2;
-            var range = _committedRanges[mid];
-
-            if (address < range.Start)
-                high = mid - 1;
-            else if (address >= range.End)
-                low = mid + 1;
-            else
-                return true;
-        }
-
-        return false;
-    }
-    private int BinarySearchInsertIndex(uint address)
-    {
-        int low = 0, high = _committedRanges.Count - 1;
-
-        while (low <= high)
-        {
-            int mid = (low + high) / 2;
-            var range = _committedRanges[mid];
-
-            if (address < range.Start)
-                high = mid - 1;
-            else
-                low = mid + 1;
-        }
-
-        return low;
-    }
     /// <summary>
     /// Checks if the given <paramref name="address"/> is within the bounds of <see cref="Process"/>'s memory.
     /// </summary>
@@ -265,54 +215,10 @@ public class ProcessMemory : IDisposable
         if (address < BaseAddress)
             throw new ArgumentOutOfRangeException(nameof(address), $"Address 0x{address:X} is too small. Minimum value: 0x{BaseAddress:X}.");
 
-        _committedRangesLock.EnterReadLock();
-        try
-        {
-            if (IsInCommittedRange(address))
-                return;
-        }
-        finally
-        {
-            _committedRangesLock.ExitReadLock();
-        }
-
-        _committedRangesLock.EnterWriteLock();
-        try
-        {
-            if (IsInCommittedRange(address))
-                return;
-
-            int result = VirtualQueryEx(Process.Handle, new UIntPtr(address), out MEMORY_BASIC_INFORMATION mbi, (UIntPtr)Marshal.SizeOf(typeof(MEMORY_BASIC_INFORMATION)));
-
-            if (result == 0 || mbi.State != MEM_COMMIT)
-                throw new ArgumentOutOfRangeException(nameof(address),
-                    string.Format("Address 0x{0:X} is outside allocated memory regions.", address));
-
-            uint start = (uint)mbi.BaseAddress;
-            uint end = start + (uint)mbi.RegionSize;
-
-            int insertIndex = BinarySearchInsertIndex(start);
-
-            if (insertIndex > 0 && _committedRanges[insertIndex - 1].End >= start)
-            {
-                insertIndex--;
-                start = _committedRanges[insertIndex].Start;
-                end = Math.Max(end, _committedRanges[insertIndex].End);
-                _committedRanges.RemoveAt(insertIndex);
-            }
-
-            while (insertIndex < _committedRanges.Count && _committedRanges[insertIndex].Start <= end)
-            {
-                end = Math.Max(end, _committedRanges[insertIndex].End);
-                _committedRanges.RemoveAt(insertIndex);
-            }
-
-            _committedRanges.Insert(insertIndex, new MemoryRange(start, end));
-        }
-        finally
-        {
-            _committedRangesLock.ExitWriteLock();
-        }
+        MEMORY_BASIC_INFORMATION mbi = new();
+        int result = VirtualQueryEx(Process.Handle, new UIntPtr(address), out mbi, (UIntPtr)Marshal.SizeOf(typeof(MEMORY_BASIC_INFORMATION)));
+        if (result == 0 || mbi.State != MEM_COMMIT)
+            throw new ArgumentOutOfRangeException(nameof(address), $"Address 0x{address:X} is outside allocated memory regions.");
     }
 
     /// <summary>
@@ -332,7 +238,7 @@ public class ProcessMemory : IDisposable
     /// </exception>
     public void Read(uint Address, byte[] Buffer, out uint Read)
     {
-        CheckValidMemoryAddress(Address);
+        //CheckValidMemoryAddress(Address);
 
         UIntPtr lpNumberOfBytesRead = default;
         if (!ReadProcessMemory(Process.Handle, new UIntPtr(Address), Buffer, new IntPtr(Buffer.Length), lpNumberOfBytesRead))
@@ -359,7 +265,7 @@ public class ProcessMemory : IDisposable
     /// </exception>
     public void Write(uint Address, byte[] Buffer, out uint Written)
     {
-        CheckValidMemoryAddress(Address);
+        //CheckValidMemoryAddress(Address);
 
         IntPtr intPtr = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, bInheritHandle: false, Process.Id);
         if (intPtr == IntPtr.Zero)
