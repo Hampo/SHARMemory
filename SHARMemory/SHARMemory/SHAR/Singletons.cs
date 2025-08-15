@@ -8,6 +8,12 @@ namespace SHARMemory.SHAR;
 /// </summary>
 public sealed class Singletons
 {
+    private readonly Singleton<ActorManager> ActorManagerSingleton;
+    /// <summary>
+    /// A reference to SHAR's <see cref="Classes.ActorManager"/> singleton.
+    /// </summary>
+    public ActorManager ActorManager => ActorManagerSingleton.Get();
+    
     private readonly Singleton<CardGallery> CardGallerySingleton;
     /// <summary>
     /// A reference to SHAR's <see cref="Classes.CardGallery"/> singleton.
@@ -130,6 +136,7 @@ public sealed class Singletons
 
     internal Singletons(Memory memory)
     {
+        ActorManagerSingleton = new(memory, memory.SelectAddress(0x6C90C4, 0x6C9084, 0x6C9084, 0x6C90BC));
         CardGallerySingleton = new(memory, memory.SelectAddress(0x6C9064, 0x6C9024, 0x6C9024, 0x6C905C));
         CharacterManagerSingleton = new(memory, memory.SelectAddress(0x6C8470, 0x6C8430, 0x6C8430, 0x6C8468));
         CharacterSheetManagerSingleton = new(memory, memory.SelectAddress(0x6C8984, 0x6C8944, 0x6C8944, 0x6C897C));
