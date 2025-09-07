@@ -139,7 +139,7 @@ public sealed class Singletons
         CardGallerySingleton = new(memory, memory.SelectAddress(0x6C9064, 0x6C9024, 0x6C9024, 0x6C905C));
         CharacterManagerSingleton = new(memory, memory.SelectAddress(0x6C8470, 0x6C8430, 0x6C8430, 0x6C8468));
         CharacterSheetManagerSingleton = new(memory, memory.SelectAddress(0x6C8984, 0x6C8944, 0x6C8944, 0x6C897C));
-        CheatInputSystemSingleton = new(memory, memory.SelectAddress(0x6C841C, 0, 0, 0));
+        CheatInputSystemSingleton = new(memory, memory.SelectAddress(0x6C841C, 0x6C83DC, 0x6C83DC, 0x6C8414));
         CoinManagerSingleton = new(memory, memory.SelectAddress(0x6C8450, 0x6C8410, 0x6C8410, 0x6C8448));
         GameFlowSingleton = new(memory, memory.SelectAddress(0x6C9014, 0x6C8FD4, 0x6C8FD4, 0x6C900C));
         GameDataManagerSingleton = new(memory, memory.SelectAddress(0x6C842C, 0x6C83EC, 0x6C83EC, 0x6C8424));
