@@ -96,4 +96,21 @@ public static class PointerArrayExtensions
 
         return new(memory, memory.ReadUInt32(address + 16), (int)memory.ReadUInt32(address + 12));
     }
+
+    /// <summary>
+    /// Creates a <see cref="PointerArray{T}"/> from a <c>SwapArray</c> in SHAR.
+    /// </summary>
+    /// <param name="memory">
+    /// The <see cref="ProcessMemory"/> to use.
+    /// </param>
+    /// <param name="class">
+    /// The <see cref="Class"/> the array is in.
+    /// </param>
+    /// <param name="offset">
+    /// The address offset in the class.
+    /// </param>
+    /// <returns>
+    /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
+    /// </returns>
+    public static PointerArray<T> FromSwapArray<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => FromPtrArray<T>(memory, @class, offset);
 }
