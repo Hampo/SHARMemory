@@ -107,14 +107,14 @@ public class RenderManager : ChunkListenerCallback
         set => WriteBoolean(InVisibilityVolumeOffset, value);
     }
 
-    internal const uint UnknownOffset = InVisibilityVolumeOffset + 3; // Padding
-    public float Unknown
+    internal const uint AverageFrameTimeOffset = InVisibilityVolumeOffset + 3; // Padding
+    public float AverageFrameTime
     {
-        get => ReadSingle(UnknownOffset);
-        set => WriteSingle(UnknownOffset, value);
+        get => ReadSingle(AverageFrameTimeOffset);
+        set => WriteSingle(AverageFrameTimeOffset, value);
     }
 
-    internal const uint EnableMotionBlurOffset = UnknownOffset + sizeof(float);
+    internal const uint EnableMotionBlurOffset = AverageFrameTimeOffset + sizeof(float);
     public bool EnableMotionBlur
     {
         get => ReadBoolean(EnableMotionBlurOffset);
