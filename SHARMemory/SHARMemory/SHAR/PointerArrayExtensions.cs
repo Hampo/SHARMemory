@@ -101,6 +101,7 @@ public static class PointerArrayExtensions
     /// Creates a <see cref="PointerArray{T}"/> from a <c>SwapArray</c> in SHAR.
     /// </summary>
     /// <param name="memory">
+    /// The <see cref="ProcessMemory"/> to use.
     /// The <see cref="SHAR.Memory"/> to use.
     /// </param>
     /// <param name="class">
