@@ -112,5 +112,5 @@ public static class PointerArrayExtensions
     /// <returns>
     /// A new <see cref="PointerArray{T}"/> at the <paramref name="offset"/> in <paramref name="class"/>.
     /// </returns>
-    public static PointerArray<T> FromSwapArray<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 8), (int)@class.ReadUInt32(offset));
+    public static PointerArray<T> FromSwapArray<T>(ProcessMemory memory, Class @class, uint offset) where T : Class => new(memory, @class.ReadUInt32(offset + 8), (int)@class.ReadUInt32(offset + 4));
 }
