@@ -860,6 +860,9 @@ public sealed class Watcher
             return;
         }
 
+        var newTrafficVehicleAddresses = new HashSet<uint>();
+        var newTrafficVehicleAddresses2 = new HashSet<uint>();
+
         var newTrafficVehicles = trafficManager.Vehicles.ToArray();
         foreach (var newTrafficVehicle in newTrafficVehicles)
         {
@@ -869,6 +872,7 @@ public sealed class Watcher
             if (newTrafficVehicle.Vehicle is Vehicle vehicle && !trafficVehicles2.Contains(vehicle.Address))
             {
                 trafficVehicles2.Add(vehicle.Address);
+                newTrafficVehicleAddresses2.Add(vehicle.Address);
                 await NewTrafficVehicle.InvokeAsync(Memory, new NewTrafficVehicleEventArgs(vehicle), CancellationToken.None);
             }
 
@@ -876,10 +880,11 @@ public sealed class Watcher
                 continue;
 
             trafficVehicles.Add(newTrafficVehicle.Address);
+            newTrafficVehicleAddresses.Add(newTrafficVehicle.Address);
             await TrafficVehicleCreated.InvokeAsync(Memory, new TrafficVehicleCreatedEventArgs(newTrafficVehicle), CancellationToken.None);
         }
 
-        trafficVehicles.RemoveWhere(address => !newTrafficVehicles.Any(x => x?.Address == address));
-        trafficVehicles2.RemoveWhere(address => !newTrafficVehicles.Any(x => x?.Vehicle?.Address == address));
+        trafficVehicles.RemoveWhere(address => !newTrafficVehicleAddresses.Contains(address));
+        trafficVehicles2.RemoveWhere(address => !newTrafficVehicleAddresses2.Contains(address));
     }
 }
