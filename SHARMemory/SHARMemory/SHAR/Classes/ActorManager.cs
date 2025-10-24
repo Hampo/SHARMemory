@@ -13,6 +13,7 @@ public class ActorManager : EventListener
     public PointerSwapArray<Actor> ActorList => new(Memory, Address + ActorListOffset);
 
     internal const uint SpawnPointListOffset = ActorListOffset + PointerSwapArray<Actor>.MemorySize;
+    public PointerSwapArray<SpawnPoint> SpawnPointList => new(Memory, Address + SpawnPointListOffset);
 
     internal const uint ActorBankOffset = SpawnPointListOffset + PointerSwapArray<SpawnPoint>.MemorySize;
     public PointerSwapArray<Actor> ActorBank => new(Memory, Address + ActorBankOffset);
