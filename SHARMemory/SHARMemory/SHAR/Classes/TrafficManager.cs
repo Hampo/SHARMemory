@@ -95,9 +95,9 @@ public class TrafficManager : Class
     }
 
     internal const uint TrafficModelGroupsOffset = TrafficEnabledOffset + 4; // Padding
-    // TODO: This. Scary.
+    public ClassArray<TrafficModelGroup> TrafficModelGroups => new(Memory, Address + TrafficModelGroupsOffset, TrafficModelGroup.Size, MaxTrafficModelGroups);
 
-    internal const uint CurrTrafficModelGroupOffset = TrafficModelGroupsOffset + 3840; // TrafficModelGroup.Size * MaxTrafficModelGroups
+    internal const uint CurrTrafficModelGroupOffset = TrafficModelGroupsOffset + TrafficModelGroup.Size * MaxTrafficModelGroups;
     public int CurrTrafficModelGroup
     {
         get => ReadInt32(CurrTrafficModelGroupOffset);
