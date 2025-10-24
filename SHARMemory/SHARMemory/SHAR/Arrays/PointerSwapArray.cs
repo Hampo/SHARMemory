@@ -15,7 +15,7 @@ public class PointerSwapArray<T> : IEnumerable<T> where T : Class
     /// </summary>
     public readonly uint Address;
     /// <summary>
-    /// How many elements are in this array.
+    /// How many elements are allocated for this array.
     /// </summary>
     public int Size => Memory.ReadInt32(Address);
     /// <summary>
