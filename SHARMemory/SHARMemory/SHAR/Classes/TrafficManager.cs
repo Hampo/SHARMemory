@@ -1,5 +1,6 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
+using SHARMemory.SHAR.Arrays;
 using SHARMemory.SHAR.Structs;
 
 namespace SHARMemory.SHAR.Classes;
@@ -104,5 +105,8 @@ public class TrafficManager : Class
         set => WriteInt32(CurrTrafficModelGroupOffset, value);
     }
 
-    // TODO: QueuedTrafficHorns
+    internal const uint QueuedTrafficHornsOffset = CurrTrafficModelGroupOffset + sizeof(int);
+    public StructSwapArray<TrafficHornQueue> QueuedTrafficHorns => new(Memory, Address + QueuedTrafficHornsOffset, TrafficHornQueue.Size);
+
+    internal const uint Size = QueuedTrafficHornsOffset + StructSwapArray<TrafficHornQueue>.BaseSize + TrafficHornQueue.Size;
 }
