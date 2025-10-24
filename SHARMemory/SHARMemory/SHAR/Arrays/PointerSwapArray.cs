@@ -9,6 +9,8 @@ namespace SHARMemory.SHAR.Arrays;
 /// <typeparam name="T">The <see cref="Class"/> used in the array.</typeparam>
 public class PointerSwapArray<T> : IEnumerable<T> where T : Class
 {
+    internal const uint MemorySize = sizeof(int) + sizeof(int) + sizeof(uint) + sizeof(uint);
+
     private readonly Memory Memory;
     /// <summary>
     /// The base address of the SwapArray.

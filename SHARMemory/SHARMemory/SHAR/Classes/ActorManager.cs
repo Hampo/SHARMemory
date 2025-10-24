@@ -12,10 +12,10 @@ public class ActorManager : EventListener
     internal const uint ActorListOffset = EventListenerVFTableOffset + sizeof(uint);
     public PointerSwapArray<Actor> ActorList => new(Memory, Address + ActorListOffset);
 
-    internal const uint SpawnPointListOffset = ActorListOffset + 16;
+    internal const uint SpawnPointListOffset = ActorListOffset + PointerSwapArray<Actor>.MemorySize;
 
-    internal const uint ActorBankOffset = SpawnPointListOffset + 16;
+    internal const uint ActorBankOffset = SpawnPointListOffset + PointerSwapArray<SpawnPoint>.MemorySize;
     public PointerSwapArray<Actor> ActorBank => new(Memory, Address + ActorBankOffset);
 
-    internal const uint RemoveQueueOffset = ActorBankOffset + 16;
+    internal const uint RemoveQueueOffset = ActorBankOffset + PointerSwapArray<Actor>.MemorySize;
 }
