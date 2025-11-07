@@ -941,7 +941,7 @@ public class ProcessMemory : IDisposable
         }
     }
     /// <summary>
-    /// Allocates memory and writes <paramref name="Value"/> in <see cref="Process"/>.
+    /// Allocates <paramref name="Length"/> bytes of memory in <see cref="Process"/>.
     /// </summary>
     /// <param name="Length">
     /// The number of bytes to allocate.
