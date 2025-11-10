@@ -99,38 +99,21 @@ public class IGuiScreenRewards : CGuiScreen
         set => WriteInt32(CurrentPreviewClothingOffset, value);
     }
 
-    internal const uint Bitfield_0x2D70OFfset = CurrentPreviewClothingOffset + sizeof(int);
-    private byte Bitfield_0x2D70
-    {
-        get => ReadByte(Bitfield_0x2D70OFfset);
-        set => WriteByte(Bitfield_0x2D70OFfset, value);
-    }
-
+    internal const uint IsLoadingOffset = CurrentPreviewClothingOffset + sizeof(int);
     public bool IsLoading
     {
-        get => (Bitfield_0x2D70 & 0b00000001) != 0;
-        set
-        {
-            if (value)
-                Bitfield_0x2D70 |= 0b00000001;
-            else
-                Bitfield_0x2D70 &= 0b11111110;
-        }
+        get => ReadBitfield(IsLoadingOffset, 0);
+        set => WriteBitfield(IsLoadingOffset, 0, value);
     }
 
+    internal const uint IsLoadingRewardOffset = IsLoadingOffset + 0;
     public bool IsLoadingReward
     {
-        get => (Bitfield_0x2D70 & 0b00000010) != 0;
-        set
-        {
-            if (value)
-                Bitfield_0x2D70 |= 0b00000010;
-            else
-                Bitfield_0x2D70 &= 0b11111101;
-        }
+        get => ReadBitfield(IsLoadingRewardOffset, 1);
+        set => WriteBitfield(IsLoadingRewardOffset, 1, value);
     }
 
-    internal const uint LockedOverlayOffset = Bitfield_0x2D70OFfset + 4; // Padding
+    internal const uint LockedOverlayOffset = IsLoadingRewardOffset + 4; // Padding
     public FeEntity LockedOverlay => Memory.ClassFactory.Create<FeEntity>(ReadUInt32(LockedOverlayOffset));
 
     internal const uint LockedLevelOffset = LockedOverlayOffset + sizeof(uint);
