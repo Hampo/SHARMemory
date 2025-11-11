@@ -27,7 +27,30 @@ public class IGuiScreenRewards : CGuiScreen
         Stability,
     }
     
-    public IGuiScreenRewards(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
+    public IGuiScreenRewards(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator)
+    {
+        if (memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.GUIScreenRewards_MaxCarPreviews, out uint MaxCarPreviewsAddress) && memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.GUIScreenRewards_CarPreviewsOffset, out uint CarPreviewsOffsetAddress))
+        {
+            _maxPreviewVehicles = memory.ReadInt32(MaxCarPreviewsAddress);
+            _previewVehiclesOffset = memory.ReadUInt32(CarPreviewsOffsetAddress);
+        }
+        else
+        {
+            _maxPreviewVehicles = MAX_NUM_PREVIEW_VEHICLES;
+            _previewVehiclesOffset = PreviewVehiclesOffset;
+        }
+
+        if (memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.GUIScreenRewards_MaxSkinPreviews, out uint MaxSkinPreviewsAddress) && memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.GUIScreenRewards_SkinPreviewsOffset, out uint SkinPreviewsOffsetAddress))
+        {
+            _maxPreviewClothing = memory.ReadInt32(MaxSkinPreviewsAddress);
+            _previewClothingOffset = memory.ReadUInt32(SkinPreviewsOffsetAddress);
+        }
+        else
+        {
+            _maxPreviewClothing = MAX_NUM_PREVIEW_CLOTHING;
+            _previewClothingOffset = PreviewClothingOffset;
+        }
+    }
 
     internal const uint LoadingManagerProcessRequestsCallbackVFTableOffset = PlayTransitionAnimationLastOffset + 4; // Padding
 
@@ -66,7 +89,9 @@ public class IGuiScreenRewards : CGuiScreen
     public FeEntity PreviewName => Memory.ClassFactory.Create<FeEntity>(ReadUInt32(PreviewNameOffset));
 
     internal const uint PreviewVehiclesOffset = PreviewNameOffset + sizeof(uint);
-    public StructArray<PreviewObject> PreviewVehicles => new(Memory, Address + PreviewVehiclesOffset, PreviewObject.Size, MAX_NUM_PREVIEW_VEHICLES);
+    private readonly uint _previewVehiclesOffset;
+    private readonly int _maxPreviewVehicles;
+    public StructArray<PreviewObject> PreviewVehicles => new(Memory, Address + _previewVehiclesOffset, PreviewObject.Size, _maxPreviewVehicles);
 
     internal const uint NumPreviewVehiclesOffset = PreviewVehiclesOffset + PreviewObject.Size * MAX_NUM_PREVIEW_VEHICLES;
     public int NumPreviewVehicles
@@ -83,7 +108,9 @@ public class IGuiScreenRewards : CGuiScreen
     }
 
     internal const uint PreviewClothingOffset = CurrentPreviewVehicleOffset + sizeof(int);
-    public StructArray<PreviewObject> PreviewClothing => new(Memory, Address + PreviewClothingOffset, PreviewObject.Size, MAX_NUM_PREVIEW_CLOTHING);
+    private readonly uint _previewClothingOffset;
+    private readonly int _maxPreviewClothing;
+    public StructArray<PreviewObject> PreviewClothing => new(Memory, Address + _previewClothingOffset, PreviewObject.Size, _maxPreviewClothing);
 
     internal const uint NumPreviewClothingOffset = PreviewClothingOffset + PreviewObject.Size * MAX_NUM_PREVIEW_CLOTHING;
     public int NumPreviewClothing
