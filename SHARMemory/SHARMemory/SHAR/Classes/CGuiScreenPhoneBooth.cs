@@ -8,7 +8,7 @@ public class CGuiScreenPhoneBooth : IGuiScreenRewards
 {
     public CGuiScreenPhoneBooth(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
-    internal const uint DamagedInfoOffset = VehicleRatingsOffset + 4 * NUM_VEHICLE_RATINGS;
+    internal const uint DamagedInfoOffset = VehicleRatingsOffset + sizeof(uint) * NUM_VEHICLE_RATINGS;
     public FeEntity DamagedInfo => Memory.ClassFactory.Create<FeEntity>(ReadUInt32(DamagedInfoOffset));
 
     internal const uint VehicleDamagedOffset = DamagedInfoOffset + sizeof(uint);

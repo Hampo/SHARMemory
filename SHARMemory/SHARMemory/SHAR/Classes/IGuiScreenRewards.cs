@@ -166,4 +166,5 @@ public class IGuiScreenRewards : CGuiScreen
     }
 
     internal const uint VehicleRatingsOffset = StatsOverlayToggleOffset + 4; // Padding
+    public PointerArray<PhoneBoothStars> VehicleRatings => new(Memory, Address + VehicleRatingsOffset, NUM_VEHICLE_RATINGS);
 }
