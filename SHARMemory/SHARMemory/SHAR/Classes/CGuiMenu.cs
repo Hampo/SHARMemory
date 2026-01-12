@@ -1,6 +1,7 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
 using System;
+using System.Drawing;
 using static SHARMemory.SHAR.Classes.CGuiManager;
 
 namespace SHARMemory.SHAR.Classes;
@@ -8,6 +9,8 @@ namespace SHARMemory.SHAR.Classes;
 [ClassFactory.TypeInfoName(".?AVCGuiMenu@@")]
 public class CGuiMenu : CGuiEntity
 {
+    public static readonly Color DEFAULT_DISABLED_ITEM_COLOUR = Color.FromArgb(128, 128, 128);
+
     public enum MenuTypes
     {
         Text,
