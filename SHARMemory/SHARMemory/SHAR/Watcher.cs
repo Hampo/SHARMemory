@@ -170,6 +170,11 @@ public sealed class Watcher
     /// </summary>
     public event AsyncEventHandler<NewParkedCarEventArgs> NewParkedCar;
 
+    /// <summary>
+    /// An event handler for when a new free Vehicle is created.
+    /// </summary>
+    public event AsyncEventHandler<NewFreeCarEventArgs> NewFreeCar;
+
     private readonly Memory Memory;
 
     private bool Running = false;
@@ -981,11 +986,13 @@ public sealed class Watcher
     }
 
     private HashSet<uint> parkedCars = [];
+    private uint lastFreeCar = 0;
     private async Task CheckParkedCarManager()
     {
         if (Memory.Globals.ParkedCarManager is not ParkedCarManager parkedCarManager)
         {
             parkedCars.Clear();
+            lastFreeCar = 0;
             return;
         }
 
@@ -1007,5 +1014,14 @@ public sealed class Watcher
         }
 
         parkedCars.RemoveWhere(address => !newParkedCarAddresses.Contains(address));
+
+        var freeCar = parkedCarManager.FreeCar;
+        var freeCarAddress = freeCar.Car?.Address ?? 0;
+        if (freeCarAddress != lastFreeCar)
+        {
+            lastFreeCar = freeCarAddress;
+            if (freeCarAddress != 0)
+                await NewFreeCar.InvokeAsync(Memory, new NewFreeCarEventArgs(freeCar.Car), CancellationToken.None);
+        }
     }
 }
