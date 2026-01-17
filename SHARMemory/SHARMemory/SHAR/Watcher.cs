@@ -17,6 +17,7 @@ using SHARMemory.SHAR.Events.InputManager;
 using SHARMemory.SHAR.Events.TrafficManager;
 using SHARMemory.SHAR.Events.CGuiSystem;
 using SHARMemory.SHAR.Events.PresentationManager;
+using SHARMemory.SHAR.Events.ParkedCarManager;
 
 namespace SHARMemory.SHAR;
 
@@ -163,6 +164,11 @@ public sealed class Watcher
     /// An event handler for when a new traffic Vehicle is created.
     /// </summary>
     public event AsyncEventHandler<CurrentEventChangedEventArgs> CurrentEventChanged;
+
+    /// <summary>
+    /// An event handler for when a new parked Vehicle is created.
+    /// </summary>
+    public event AsyncEventHandler<NewParkedCarEventArgs> NewParkedCar;
 
     private readonly Memory Memory;
 
@@ -334,6 +340,9 @@ public sealed class Watcher
 
                 if (CurrentEventChanged.HasSubscribers())
                     await CheckPresentationManager();
+
+                if (NewParkedCar.HasSubscribers())
+                    await CheckParkedCarManager();
             }
             catch (Exception ex)
             {
@@ -969,5 +978,34 @@ public sealed class Watcher
             lastPresentationEvent = currentEvent?.Address ?? 0;
             await CurrentEventChanged.InvokeAsync(Memory, new(lastPresentationEvent2, currentEvent), CancellationToken.None);
         }
+    }
+
+    private HashSet<uint> parkedCars = [];
+    private async Task CheckParkedCarManager()
+    {
+        if (Memory.Globals.ParkedCarManager is not ParkedCarManager parkedCarManager)
+        {
+            parkedCars.Clear();
+            return;
+        }
+
+        var newParkedCarAddresses = new HashSet<uint>();
+
+        var parkedCarInfo = parkedCarManager.ParkedCars.ToArray();
+        foreach (var parkedCar in parkedCarInfo)
+        {
+            var car = parkedCar.Car;
+            if (car == null)
+                continue;
+
+            newParkedCarAddresses.Add(car.Address);
+            if (!parkedCars.Contains(car.Address))
+            {
+                parkedCars.Add(car.Address);
+                await NewParkedCar.InvokeAsync(Memory, new NewParkedCarEventArgs(car), CancellationToken.None);
+            }
+        }
+
+        parkedCars.RemoveWhere(address => !newParkedCarAddresses.Contains(address));
     }
 }
