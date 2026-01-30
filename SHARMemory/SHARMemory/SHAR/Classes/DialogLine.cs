@@ -33,7 +33,14 @@ public class DialogLine : PlayableDialog
         set => WriteByte(RoleOffset, (byte)value);
     }
 
-    internal const uint CharacterIndexOffset = RoleOffset + sizeof(byte);
+    internal const uint ConversationPositionOffset = RoleOffset + sizeof(byte);
+    public byte ConversationPosition
+    {
+        get => ReadByte(ConversationPositionOffset);
+        set => WriteByte(ConversationPositionOffset, value);
+    }
+
+    internal const uint CharacterIndexOffset = ConversationPositionOffset + sizeof(byte);
     public byte CharacterIndex
     {
         get => ReadByte(CharacterIndexOffset);
