@@ -13,16 +13,10 @@ public class TriggerVolumeTracker : EventListener
 
     public TriggerVolumeTracker(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator)
     {
-        if (memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.MaxTriggers, out uint MaxTriggersAddress) && memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.TriggersOffset, out uint TriggersOffsetAddress))
-        {
-            _maxTriggerVolumes = memory.ReadInt32(MaxTriggersAddress);
+        if (memory.ModLauncherOrdinalAddresses.TryGetValue(Memory.ModLauncherOrdinals.TriggersOffset, out uint TriggersOffsetAddress))
             _triggerVolumesOffset = memory.ReadUInt32(TriggersOffsetAddress);
-        }
         else
-        {
-            _maxTriggerVolumes = MAX_VOLUMES;
             _triggerVolumesOffset = TriggerVolumesOffset;
-        }
     }
 
     internal const uint TriggerSphereOffset = EventListenerVFTableOffset + sizeof(uint);
@@ -37,6 +31,5 @@ public class TriggerVolumeTracker : EventListener
 
     internal const uint TriggerVolumesOffset = TriggerCountOffset + sizeof(uint);
     private readonly uint _triggerVolumesOffset;
-    private readonly int _maxTriggerVolumes;
-    public PointerArray<TriggerVolume> TriggerVolumes => new(Memory, Address + _triggerVolumesOffset, _maxTriggerVolumes);
+    public PointerArray<TriggerVolume> TriggerVolumes => new(Memory, Address + _triggerVolumesOffset, (int)TriggerCount);
 }
