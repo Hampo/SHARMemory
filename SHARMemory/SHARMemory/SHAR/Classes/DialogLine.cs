@@ -46,4 +46,12 @@ public class DialogLine : PlayableDialog
         get => ReadByte(CharacterIndexOffset);
         set => WriteByte(CharacterIndexOffset, value);
     }
+
+    public string GetCharacterName()
+    {
+        var characters = Memory.Globals.DialogLine.Characters;
+        var character = characters[CharacterIndex];
+        var characterName = character.GetName(Memory);
+        return characterName;
+    }
 }
