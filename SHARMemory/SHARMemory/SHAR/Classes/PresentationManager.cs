@@ -18,7 +18,7 @@ public class PresentationManager : Class // : EventListener
 
     //public TransitionPlayer TransitionPlayer => Memory.ClassFactory.Create<TransitionPlayer>(ReadUInt32(96));
 
-    //public PlayerDrawable PlayerDrawable => Memory.ClassFactory.Create<PlayerDrawable>(ReadUInt32(100));
+    public PlayerDrawable PlayerDrawable => Memory.ClassFactory.Create<PlayerDrawable>(ReadUInt32(100));
 
     //public PresentationAnimator PCAnimator => Memory.ClassFactory.Create<PresentationAnimator>(ReadUInt32(104));
 
