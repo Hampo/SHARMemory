@@ -4,7 +4,7 @@ using SHARMemory.Memory.RTTI;
 namespace SHARMemory.SHAR.Classes;
 
 [ClassFactory.TypeInfoName(".?AVPresentationManager@@")]
-public class PresentationManager : Class // : EventListener
+public class PresentationManager : EventListener
 {
     public PresentationManager(Memory memory, uint address, CompleteObjectLocator completeObjectLocator) : base(memory, address, completeObjectLocator) { }
 
