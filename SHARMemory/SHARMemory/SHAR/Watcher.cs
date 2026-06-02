@@ -18,6 +18,7 @@ using SHARMemory.SHAR.Events.TrafficManager;
 using SHARMemory.SHAR.Events.CGuiSystem;
 using SHARMemory.SHAR.Events.PresentationManager;
 using SHARMemory.SHAR.Events.ParkedCarManager;
+using SHARMemory.SHAR.Events.Character;
 
 namespace SHARMemory.SHAR;
 
@@ -49,6 +50,11 @@ public sealed class Watcher
     /// An event handler for when a Save Game is loaded.
     /// </summary>
     public event AsyncEventHandler<LoadGameEventArgs> LoadGame;
+
+    /// <summary>
+    /// An event handler for when the player character collides.
+    /// </summary>
+    public event AsyncEventHandler<CollisionEventArgs> Collision;
 
     /// <summary>
     /// An event handler for when a Mission is completed.
@@ -302,6 +308,9 @@ public sealed class Watcher
                 if (GameStateChanged.HasSubscribers())
                     await CheckGameDataManager();
 
+                if (Collision.HasSubscribers())
+                    await CheckPlayerCharacter();
+
                 if (BonusMissionComplete.HasSubscribers() ||
                     CarPurchased.HasSubscribers() ||
                     CoinsChanged.HasSubscribers() ||
@@ -389,6 +398,52 @@ public sealed class Watcher
             {
                 lastFileOperation = newFileOperation;
             }
+        }
+    }
+
+    private int currentCollision = -1;
+    private bool inCharacterCollision = false;
+    private bool inVehicleCollision = false;
+    private async Task CheckPlayerCharacter()
+    {
+        var player = Memory.Singletons.CharacterManager?.Player;
+        if (player == null)
+        {
+            currentCollision = -1;
+            inCharacterCollision = false;
+            inVehicleCollision = false;
+            return;
+        }
+
+        var newInCharacterCollision = player.CollidedThisFrame;
+        if (newInCharacterCollision != inCharacterCollision)
+        {
+            inCharacterCollision = newInCharacterCollision;
+            if (newInCharacterCollision)
+                await Collision.InvokeAsync(Memory, new(player, false), CancellationToken.None);
+        }
+
+        //var newCurrentCollision = player.CurrentCollision;
+        //if (newCurrentCollision != currentCollision)
+        //{
+        //    currentCollision = newCurrentCollision;
+        //    if (newCurrentCollision > 0)
+        //        await Collision.InvokeAsync(Memory, new(player, false), CancellationToken.None);
+        //}
+
+        var vehicle = player.TargetVehicle;
+        if (vehicle == null)
+        {
+            inVehicleCollision = false;
+            return;
+        }
+
+        var newInVehicleCollision = vehicle.CollidedWithVehicle;
+        if (newInVehicleCollision != inVehicleCollision)
+        {
+            inVehicleCollision = newInVehicleCollision;
+            if (newInVehicleCollision)
+                await Collision.InvokeAsync(Memory, new(player, true), CancellationToken.None);
         }
     }
 

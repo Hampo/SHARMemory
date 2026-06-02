@@ -1,6 +1,7 @@
 ﻿using SHARMemory.Memory;
 using SHARMemory.Memory.RTTI;
 using SHARMemory.SHAR.Structs;
+using SHARMemory.SHAR.Structs.Character;
 
 namespace SHARMemory.SHAR.Classes;
 

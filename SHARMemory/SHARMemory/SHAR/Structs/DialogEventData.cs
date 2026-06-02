@@ -1,5 +1,4 @@
 ﻿using SHARMemory.Memory;
-using SHARMemory.SHAR.Classes;
 using System;
 
 namespace SHARMemory.SHAR.Structs;
@@ -9,9 +8,9 @@ public struct DialogEventData
 {
     public const int Size = sizeof(uint) + sizeof(uint) + sizeof(ulong) + sizeof(ulong) + sizeof(uint);
 
-    public Character Char1;
+    public Classes.Character Char1;
 
-    public Character Char2;
+    public Classes.Character Char2;
 
     public ulong CharUID1;
 
@@ -19,7 +18,7 @@ public struct DialogEventData
 
     public uint DialogName;
 
-    public DialogEventData(Character char1, Character char2, ulong charUID1, ulong charUID2, uint dialogName)
+    public DialogEventData(Classes.Character char1, Classes.Character char2, ulong charUID1, ulong charUID2, uint dialogName)
     {
         Char1 = char1;
         Char2 = char2;
@@ -37,9 +36,9 @@ internal class DialogEventDataStruct : Struct
 
     public override object FromBytes(ProcessMemory Memory, byte[] Bytes, int Offset = 0)
     {
-        Character char1 = Memory.ClassFactory.Create<Character>(BitConverter.ToUInt32(Bytes, Offset));
+        Classes.Character char1 = Memory.ClassFactory.Create<Classes.Character>(BitConverter.ToUInt32(Bytes, Offset));
         Offset += sizeof(uint);
-        Character char2 = Memory.ClassFactory.Create<Character>(BitConverter.ToUInt32(Bytes, Offset));
+        Classes.Character char2 = Memory.ClassFactory.Create<Classes.Character>(BitConverter.ToUInt32(Bytes, Offset));
         Offset += sizeof(uint);
         ulong charUID1 = BitConverter.ToUInt64(Bytes, Offset);
         Offset += sizeof(ulong);

@@ -12,7 +12,7 @@ public struct CharacterInfo
 
     public string Name;
 
-    public Character Character;
+    public Classes.Character Character;
 
     public Locator Locator;
 
@@ -24,7 +24,7 @@ public struct CharacterInfo
 
     public string VehicleName;
 
-    public CharacterInfo(string name, Character character, Locator locator, Locator carLocator, ZoneEventLocator zoneEventLocator, Vehicle vehicle, string vehicleName)
+    public CharacterInfo(string name, Classes.Character character, Locator locator, Locator carLocator, ZoneEventLocator zoneEventLocator, Vehicle vehicle, string vehicleName)
     {
         Name = name;
         Character = character;
@@ -46,7 +46,7 @@ internal class CharacterInfoStruct : Struct
     {
         string Name = ProcessMemory.NullTerminate(Encoding.UTF8.GetString(Bytes, Offset, 16));
         Offset += 16;
-        Character Character = Memory.ClassFactory.Create<Character>(BitConverter.ToUInt32(Bytes, Offset));
+        Classes.Character Character = Memory.ClassFactory.Create<Classes.Character>(BitConverter.ToUInt32(Bytes, Offset));
         Offset += sizeof(uint);
         Locator Locator = Memory.ClassFactory.Create<Locator>(BitConverter.ToUInt32(Bytes, Offset));
         Offset += sizeof(uint);
