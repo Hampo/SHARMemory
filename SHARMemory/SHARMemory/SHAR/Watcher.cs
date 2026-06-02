@@ -57,6 +57,11 @@ public sealed class Watcher
     public event AsyncEventHandler<CollisionEventArgs> Collision;
 
     /// <summary>
+    /// An event handler for when the player vehicle health changes.
+    /// </summary>
+    public event AsyncEventHandler<VehicleHealthChangedEventArgs> VehicleHealthChanged;
+
+    /// <summary>
     /// An event handler for when a Mission is completed.
     /// </summary>
     public event AsyncEventHandler<MissionCompleteEventArgs> MissionComplete;
@@ -401,17 +406,14 @@ public sealed class Watcher
         }
     }
 
-    private int currentCollision = -1;
     private bool inCharacterCollision = false;
-    private bool inVehicleCollision = false;
+    private float? lastVehicleHealth = null;
     private async Task CheckPlayerCharacter()
     {
         var player = Memory.Singletons.CharacterManager?.Player;
         if (player == null)
         {
-            currentCollision = -1;
             inCharacterCollision = false;
-            inVehicleCollision = false;
             return;
         }
 
@@ -420,30 +422,26 @@ public sealed class Watcher
         {
             inCharacterCollision = newInCharacterCollision;
             if (newInCharacterCollision)
-                await Collision.InvokeAsync(Memory, new(player, false), CancellationToken.None);
+                await Collision.InvokeAsync(Memory, new(player), CancellationToken.None);
         }
-
-        //var newCurrentCollision = player.CurrentCollision;
-        //if (newCurrentCollision != currentCollision)
-        //{
-        //    currentCollision = newCurrentCollision;
-        //    if (newCurrentCollision > 0)
-        //        await Collision.InvokeAsync(Memory, new(player, false), CancellationToken.None);
-        //}
 
         var vehicle = player.TargetVehicle;
         if (vehicle == null)
         {
-            inVehicleCollision = false;
+            lastVehicleHealth = null;
             return;
         }
 
-        var newInVehicleCollision = vehicle.CollidedWithVehicle;
-        if (newInVehicleCollision != inVehicleCollision)
+        var newVehicleHealth = vehicle.HitPoints;
+        if (!lastVehicleHealth.HasValue)
         {
-            inVehicleCollision = newInVehicleCollision;
-            if (newInVehicleCollision)
-                await Collision.InvokeAsync(Memory, new(player, true), CancellationToken.None);
+            lastVehicleHealth = newVehicleHealth;
+        }
+        else if (newVehicleHealth != lastVehicleHealth.Value)
+        {
+            var lastVehicleHealthValue= lastVehicleHealth.Value;
+            lastVehicleHealth = newVehicleHealth;
+            await VehicleHealthChanged.InvokeAsync(Memory, new(vehicle, lastVehicleHealthValue, newVehicleHealth), CancellationToken.None);
         }
     }
 

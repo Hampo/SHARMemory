@@ -5,11 +5,9 @@ namespace SHARMemory.SHAR.Events.Character;
 public class CollisionEventArgs : EventArgs
 {
     public Classes.Character Character { get; }
-    public bool InVehicle { get; }
 
-    public CollisionEventArgs(Classes.Character character, bool inVehicle)
+    public CollisionEventArgs(Classes.Character character)
     {
         Character = character;
-        InVehicle = inVehicle;
     }
 }
