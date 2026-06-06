@@ -1,0 +1,71 @@
+name: Continuous Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: continuous-build
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore SHARMemory/
+
+      - name: Build Library (Release)
+        run: dotnet build SHARMemory/ --configuration Release --no-restore
+
+      - name: Organize and Zip Release Files
+        shell: pwsh
+        run: |
+          # 1. Create a clean staging directory
+          New-Item -ItemType Directory -Force -Path ./stage/netstandard20
+          New-Item -ItemType Directory -Force -Path ./stage/net45
+          
+          # 2. Dynamically locate the build outputs using wildcards
+          Copy-Item -Path ./SHARMemory/SHARMemory/bin/Release/netstandard2.0/* -Destination ./stage/netstandard20/ -Force -ErrorAction SilentlyContinue
+          Copy-Item -Path ./SHARMemory/SHARMemory/bin/Release/net45/* -Destination ./stage/net45/ -Force -ErrorAction SilentlyContinue
+          
+          # 3. Zip the staging folder into a single clean file
+          Compress-Archive -Path ./stage/* -DestinationPath ./SHARMemory-continuous.zip
+
+      - name: Move continuous-build tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -f continuous-build ${{ github.sha }}
+          git push origin -f continuous-build
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: continuous-build
+          name: Continuous Build
+          body: |
+            Latest automatic build from branch **main**.
+            Commit: ${{ github.sha }}
+            Message: ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: true
+          files: SHARMemory-continuous.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
